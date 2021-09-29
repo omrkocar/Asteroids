@@ -23,4 +23,7 @@
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio.hpp>
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
+#include <imgui-SFML.h>
+
+#include "Core/Log.h"

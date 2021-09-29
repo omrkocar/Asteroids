@@ -29,13 +29,16 @@ project "Asteroids"
 		"Libraries/SFML/include/**.hpp",
 		"Libraries/SFML/include/**.inl",
 		"Libraries/imgui/*.cpp",
-		"Libraries/imgui/*.h"
+		"Libraries/imgui/*.h",
+		"Libraries/imgui-sfml/**.h"
 	}
 
 	includedirs {
 		"Source",
 		"Libraries",
 		"Libraries/SFML/include",
+		"Libraries/imgui-sfml",
+		"Libraries/imgui"
 	}
 
 	libdirs

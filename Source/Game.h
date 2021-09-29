@@ -2,6 +2,12 @@
 
 class World;
 
+namespace fw
+{
+	class Log;
+}
+
+
 class Game
 {
 public:
@@ -16,5 +22,6 @@ public:
 
 private:
 	World* m_pWorld = nullptr;
+	fw::Log* m_pLog = nullptr;
 };
 

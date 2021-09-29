@@ -1,6 +1,0 @@
-[submodule "Libraries/entt"]
-	path = Libraries/entt
-	url = https://github.com/skypjack/entt
-[submodule "Libraries/imgui"]
-	path = Libraries/imgui
-	url = https://github.com/ocornut/imgui.git

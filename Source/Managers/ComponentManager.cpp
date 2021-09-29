@@ -1,6 +1,6 @@
 #include "GamePCH.h"
 #include "ComponentManager.h"
-#include "Component.h"
+#include "Components/Component.h"
 
 ComponentManager::ComponentManager()
 {
@@ -24,7 +24,7 @@ void ComponentManager::Update(float deltaTime)
 
 void ComponentManager::AddComponent(Component* pComponent)
 {
-	assert(pComponent != nullptr, "Attempting to add a null component");
+	assert(pComponent != nullptr);
 
 	const char* type = pComponent->GetType();
 

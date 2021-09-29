@@ -1,7 +1,7 @@
 #include "GamePCH.h"
 #include "Actor.h"
 #include "Core/World.h"
-#include "Components/ComponentManager.h"
+#include "Managers/ComponentManager.h"
 #include "Components/Component.h"
 
 Actor::Actor(World* pWorld, const char* name)
