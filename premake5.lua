@@ -1,3 +1,4 @@
+
 -----------------------------------------------------
 -- Workspace
 -----------------------------------------------------
@@ -17,8 +18,7 @@ workspace "Asteroids"
 project "Asteroids"
 	kind		"WindowedApp"
 	location	"build/Asteroids"
-	debugdir	"Asteroids"
-	cppdialect	"C++17"									-- Changing language standard to support std::filesystem
+	cppdialect	"C++17"
 
 	files {
 		"Source/**.cpp",
@@ -26,16 +26,53 @@ project "Asteroids"
 		"premake5.lua",
 		".gitignore",
 		"GenerateProjectFiles.bat",
-		"readme.txt",
+		"Libraries/SFML/include/**.hpp",
+		"Libraries/SFML/include/**.inl",
+		"Libraries/imgui/*.cpp",
+		"Libraries/imgui/*.h"
 	}
 
 	includedirs {
 		"Source",
+		"Libraries",
+		"Libraries/SFML/include",
+	}
+
+	libdirs
+	{
+		"Libraries/SFML/lib"
 	}
 
 	links {
-		
+		"opengl32",
+		"winmm",
+		"gdi32"
 	}
 
-	--pchheader "GamePCH.h"
-	--pchsource "Game/Source/WinMain.cpp"
+	defines
+	{
+		"SFML_STATIC"
+	}
+
+	filter "configurations:Debug"
+		links {
+			"sfml-window-s-d.lib",
+			"sfml-audio-s-d.lib",
+			"sfml-system-s-d.lib",
+			"sfml-graphics-s-d.lib",
+		}
+	
+	filter "configurations:Release"
+		links {
+			"sfml-window-s.lib",
+			"sfml-audio-s.lib",
+			"sfml-system-s.lib",
+			"sfml-graphics-s.lib",
+		}
+	
+
+	pchheader "GamePCH.h"
+	pchsource "Source/WinMain.cpp"
+
+	filter "files:Framework/Libraries/imgui/*.cpp"
+		flags { "NoPCH" }

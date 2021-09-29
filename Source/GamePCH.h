@@ -17,3 +17,10 @@
 #include <vector>
 #include <queue>
 #include <string>
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio.hpp>
+
+#include "imgui/imgui.h"
