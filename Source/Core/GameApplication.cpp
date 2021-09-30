@@ -23,7 +23,7 @@ GameApplication::~GameApplication()
 bool GameApplication::Init()
 {
 	m_pGame->Init();
-	LOG(ERROR, "Game Initialized...");
+	LOG(INFO, "Game Initialized...");
 	return true;
 }
 
@@ -38,13 +38,6 @@ bool GameApplication::Update()
 	sf::Time deltaTime = m_pClock->restart();
 	ImGui::SFML::Update(*m_pWindow, deltaTime);
 	m_pGame->Update(deltaTime.asSeconds());
-	return true;
-}
-
-bool GameApplication::Draw()
-{
-	if (!m_pWindow->isOpen())
-		return false;
 
 	sf::Event event;
 	while (m_pWindow->pollEvent(event))
@@ -57,6 +50,13 @@ bool GameApplication::Draw()
 		}
 	}
 
+	return true;
+}
+
+bool GameApplication::Draw()
+{
+	if (!m_pWindow->isOpen())
+		return false;
 
 	if (ImGui::Button("Update window title")) {
 		m_pWindow->setTitle("Button Clicked");

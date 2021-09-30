@@ -1,26 +1,28 @@
 #include "GamePCH.h"
 #include "SpriteComponent.h"
+#include "Managers/ResourceManager.h"
+#include "Actors/Actor.h"
+#include "Core/World.h"
+#include "Game.h"
 
-namespace
-{
-	static constexpr const char* initialPath = "../Textures/";
-}
 
 
 SpriteComponent::SpriteComponent(const std::string& textureName)
 {
-	m_pTexture = new sf::Texture();
-	if (!m_pTexture->loadFromFile(initialPath + textureName))
-	{
-		// Error
-	}
+	m_Name = textureName;
+}
 
-	m_pSprite = new sf::Sprite();
-	m_pSprite->setTexture(*m_pTexture);
+SpriteComponent::~SpriteComponent()
+{
+	delete m_pSprite;
 }
 
 void SpriteComponent::Init()
 {
+	ResourceManager* pResourceManager = m_pOwner->GetWorld()->GetGame()->GetResourceManager();
 
+	m_pSprite = new sf::Sprite();
+	m_pTexture = pResourceManager->GetTexture(m_Name);
+	m_pSprite->setTexture(*m_pTexture);
+	m_pSprite->setPosition(sf::Vector2f(400, 400));
 }
-

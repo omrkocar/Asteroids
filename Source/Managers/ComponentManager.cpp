@@ -1,6 +1,9 @@
 #include "GamePCH.h"
+
 #include "ComponentManager.h"
 #include "Components/Component.h"
+#include "Components/SpriteComponent.h"
+#include "Actors/Actor.h"
 
 ComponentManager::ComponentManager()
 {
@@ -12,9 +15,20 @@ ComponentManager::~ComponentManager()
 
 }
 
-void ComponentManager::Draw(const sf::RenderWindow& window)
+void ComponentManager::Draw(sf::RenderWindow* pWindow)
 {
+	std::vector<Component*>& list = m_Components[SpriteComponent::GetStaticType()];
+	for (int i = 0; i < list.size(); i++)
+	{
+		SpriteComponent* pSpriteComponent = static_cast<SpriteComponent*>(list[i]);
 
+		Actor* pActor = pSpriteComponent->GetOwner();
+
+		if (pActor != nullptr)
+		{
+			pWindow->draw(*pSpriteComponent->GetSprite());
+		}
+	}
 }
 
 void ComponentManager::Update(float deltaTime)

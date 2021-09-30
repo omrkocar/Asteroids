@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Manager.h"
+
 class Component;
 
 namespace sf
@@ -7,13 +9,13 @@ namespace sf
 	class RenderWindow;
 }
 
-class ComponentManager
+class ComponentManager : public Manager
 {
 public:
 	ComponentManager();
 	~ComponentManager();
 
-	void Draw(const sf::RenderWindow& window);
+	void Draw(sf::RenderWindow* pWindow);
 	void Update(float deltaTime);
 
 	void AddComponent(Component* pComponent);

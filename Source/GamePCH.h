@@ -17,6 +17,7 @@
 #include <vector>
 #include <queue>
 #include <string>
+#include <set>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

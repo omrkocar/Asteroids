@@ -1,36 +1,53 @@
 #include "GamePCH.h"
 #include "World.h"
 #include "Managers/ComponentManager.h"
-#include "Actors/Player.h"
+#include "Managers/ResourceManager.h"
+#include "Components/SpriteComponent.h"
+#include "Game.h"
+#include "Actors/Actor.h"
 
-World::World()
+World::World(Game* pGame)
 {
-	Actor* player = new Actor(this, "Player");
-	m_Actors[player->GetName()] = player;
-	//player->AddComponent()
+	m_pGame = pGame;
 }
 
 World::~World()
 {
-	delete m_pComponentManager;
 }
 
 void World::Init()
 {
-	m_pComponentManager = new ComponentManager();
+	Actor* player = new Actor(this, "Player");
+	m_Actors[player->GetName()] = player;
+	player->AddComponent(new SpriteComponent("Ship.png"));
+	
+	
 }
 
 void World::Update(float delta)
 {
-	m_pComponentManager->Update(delta);
+	for (const auto& [name, actor] : m_Actors)
+	{
+		actor->Update(delta);
+	}
 }
 
-void World::Draw(const sf::RenderWindow& window)
+void World::Draw(sf::RenderWindow* pWindow)
 {
-	m_pComponentManager->Draw(window);
+	GetComponentManager()->Draw(pWindow);
 }
 
 Actor* World::GetActorByName(std::string_view name)
 {
 	return m_Actors[name];
+}
+
+ComponentManager* World::GetComponentManager()
+{
+	return m_pGame->GetComponentManager();
+}
+
+ResourceManager* World::GetResourceManager()
+{
+	return m_pGame->GetResourceManager();
 }

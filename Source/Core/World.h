@@ -1,6 +1,8 @@
 #pragma once
 
 class ComponentManager;
+class ResourceManager;
+class Game;
 
 namespace sf
 {
@@ -12,7 +14,7 @@ class Actor;
 class World
 {
 public:
-	World();
+	World(Game* pGame);
 	~World();
 
 public:
@@ -20,14 +22,24 @@ public:
 
 	virtual void Update(float delta);
 
-	virtual void Draw(const sf::RenderWindow& window);
-
-	ComponentManager* GetComponentManager() { return m_pComponentManager; }
+	virtual void Draw(sf::RenderWindow* pWindow);
 
 	Actor* GetActorByName(std::string_view name);
 
+	ComponentManager* GetComponentManager();
+	ResourceManager* GetResourceManager();
+
+	Game* GetGame() { return m_pGame; }
+
+	//template<typename T>
+	//T* GetManager()
+	//{
+	//	m_pGame->GetManager<T>();
+	//}
+
 private:
-	ComponentManager* m_pComponentManager = nullptr;
+
+	Game* m_pGame = nullptr;
 
 	std::map<std::string_view, Actor*> m_Actors;
 };

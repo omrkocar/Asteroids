@@ -15,6 +15,8 @@ public:
 	SpriteComponent() = default;
 	SpriteComponent(const std::string& textureName);
 
+	~SpriteComponent();
+
 	static const char* GetStaticType() { return "SpriteComponent"; }
 	virtual const char* GetType() override { return GetStaticType(); }
 	static Component* Create() { return new SpriteComponent(); }
@@ -30,4 +32,6 @@ public:
 protected:
 	sf::Texture* m_pTexture;
 	sf::Sprite* m_pSprite;
+
+	std::string m_Name;
 };
