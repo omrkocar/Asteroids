@@ -27,10 +27,11 @@ namespace Saz
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		spd::Log::Init();
+		m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
-		Saz::ResourceManager* pResourceManager = Saz::ResourceManager::GetInstance();
-		pResourceManager->CreateTexture("Ship.png");
+		m_pResourceManager = new Saz::ResourceManager();
+		m_pResourceManager->LoadTexture("Ship.png");
 		
 		{
 			Saz::WindowProps windowProps ;
@@ -43,6 +44,8 @@ namespace Saz
 	Application::~Application()
 	{
 		delete m_SFMLWindow;
+		delete m_pResourceManager;
+		delete m_ImGuiLog;
 		glfwTerminate();
 	}
 
@@ -72,6 +75,7 @@ namespace Saz
 	void Application::Update()
 	{
 		m_EntityWorld.Update();
+		m_ImGuiLog->Update();
 	}
 
 	void Application::Run(int argc, char* argv[])

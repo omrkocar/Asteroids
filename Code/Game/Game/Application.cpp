@@ -17,7 +17,7 @@ Application::Application()
 
 Application::~Application()
 {
-	
+	Destroy();
 }
 
 void Application::Init()
@@ -44,12 +44,13 @@ void Application::Update()
 	if (ImGui::Button("Create Entity with Sprite and Transform"))
 	{
 		ecs::Entity entity = m_EntityWorld.CreateEntity();
-		sf::Texture* pTexture = Saz::ResourceManager::GetInstance()->GetTexture("Ship.png");
+		sf::Texture* pTexture = m_pResourceManager->GetTexture("Ship.png");
 
 		SpriteComponent& spriteComp = m_EntityWorld.AddComponent<SpriteComponent>(entity);
 		spriteComp.m_Texture = pTexture;
 		TransformComponent& transformComp = m_EntityWorld.AddComponent<TransformComponent>(entity);
 		transformComp.m_Position = vec2(600.0f, 360.0f);
+		LOG(INFO, "A new entity is created");
 	}
 
 	if (ImGui::Button("Add Input"))
@@ -59,6 +60,8 @@ void Application::Update()
 		{
 			if (!m_EntityWorld.HasComponent<Input::InputComponent>(entity))
 				m_EntityWorld.AddComponent<Input::InputComponent>(entity);
+
+			LOG(WARNING, "Input is given to all entities");
 		}
 	}
 
@@ -71,13 +74,13 @@ void Application::Update()
 		vec2& pos = transformComponent.m_Position;
 
 		if (inputComponent.IsKeyHeld(Input::EKeyboard::A))
-			pos.x -= 1.f;
+			pos.x -= 0.5f;
 		if (inputComponent.IsKeyHeld(Input::EKeyboard::D))
-			pos.x += 1.f;
+			pos.x += 0.5f;
 		if (inputComponent.IsKeyHeld(Input::EKeyboard::W))
-			pos.y += 1.f;
+			pos.y += 0.5f;
 		if (inputComponent.IsKeyHeld(Input::EKeyboard::S))
-			pos.y -= 1.f;
+			pos.y -= 0.5f;
 	}
 
 	ImGui::EndFrame();

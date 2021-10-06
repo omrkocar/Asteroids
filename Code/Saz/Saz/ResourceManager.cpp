@@ -12,7 +12,6 @@ namespace
 
 namespace Saz
 {
-
 	ResourceManager::ResourceManager()
 	{
 
@@ -26,20 +25,14 @@ namespace Saz
 		}
 	}
 
-	Saz::ResourceManager* ResourceManager::GetInstance()
-	{
-		static ResourceManager* instance = new ResourceManager();
-		return instance;
-	}
-
 	sf::Texture* ResourceManager::GetTexture(const String& name)
 	{
-		//SAZ_ASSERT(m_Textures, "No texture found with the given name!");
+		SAZ_ASSERT((m_Textures.find(name) != m_Textures.end()), "No texture found with the given name! It might not be loaded yet!");
 		return m_Textures[name];
 	}
 
 
-	sf::Texture* ResourceManager::CreateTexture(const String& filename)
+	sf::Texture* ResourceManager::LoadTexture(const String& filename)
 	{
 		sf::Texture* pTexture = new sf::Texture();
 		pTexture->loadFromFile(initialPath + filename);
