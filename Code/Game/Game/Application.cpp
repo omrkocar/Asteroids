@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <entt/entt.hpp>
+#include "Saz/TagComponent.h"
 
 Application::Application()
 {
@@ -47,10 +48,12 @@ void Application::Update()
 		sf::Texture* pTexture = m_pResourceManager->GetTexture("Ship.png");
 
 		SpriteComponent& spriteComp = m_EntityWorld.AddComponent<SpriteComponent>(entity);
+		TagComponent& tagComp = m_EntityWorld.AddComponent<TagComponent>(entity);
+		tagComp.m_Tag = "Player";
 		spriteComp.m_Texture = pTexture;
 		TransformComponent& transformComp = m_EntityWorld.AddComponent<TransformComponent>(entity);
 		transformComp.m_Position = vec2(600.0f, 360.0f);
-		LOG(INFO, "A new entity is created");
+		IMGUI_LOG_INFO("A new entity is created");
 	}
 
 	if (ImGui::Button("Add Input"))
@@ -61,7 +64,8 @@ void Application::Update()
 			if (!m_EntityWorld.HasComponent<Input::InputComponent>(entity))
 				m_EntityWorld.AddComponent<Input::InputComponent>(entity);
 
-			LOG(WARNING, "Input is given to all entities");
+			TagComponent& tagComp = m_EntityWorld.GetComponent<TagComponent>(entity);
+			IMGUI_LOG_WARNING("Input is given to '%s'", tagComp.m_Tag.c_str());
 		}
 	}
 
