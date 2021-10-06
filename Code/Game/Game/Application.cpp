@@ -5,6 +5,7 @@
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
 #include <Saz/SpriteComponent.h>
+#include <Saz/ResourceManager.h>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <entt/entt.hpp>
@@ -38,18 +39,17 @@ void Application::Update()
 {
 	Saz::Application::Update();
 
+	// #temporary
 	auto& registry = m_EntityWorld.m_Registry;
 	if (ImGui::Button("Create Entity with Sprite and Transform"))
 	{
 		ecs::Entity entity = m_EntityWorld.CreateEntity();
-		sf::Texture* texture = new sf::Texture();
-		if (texture->loadFromFile("D:/Dev/Saz/Code/Game/Data/Textures/Ship.png"))
-		{
-			SpriteComponent& spriteComp = m_EntityWorld.AddComponent<SpriteComponent>(entity);
-			spriteComp.m_Texture = texture;
-			TransformComponent& transformComp = m_EntityWorld.AddComponent<TransformComponent>(entity);
-			transformComp.m_Position = vec2(600.0f, 360.0f);
-		}
+		sf::Texture* pTexture = Saz::ResourceManager::GetInstance()->GetTexture("Ship.png");
+
+		SpriteComponent& spriteComp = m_EntityWorld.AddComponent<SpriteComponent>(entity);
+		spriteComp.m_Texture = pTexture;
+		TransformComponent& transformComp = m_EntityWorld.AddComponent<TransformComponent>(entity);
+		transformComp.m_Position = vec2(600.0f, 360.0f);
 	}
 
 	if (ImGui::Button("Add Input"))

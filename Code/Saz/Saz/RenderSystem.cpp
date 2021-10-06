@@ -4,8 +4,6 @@
 #include "Saz/SpriteComponent.h"
 #include "Saz/TransformComponent.h"
 
-#include "GLFW/Window.h"
-
 #include "SFML/Window.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -60,5 +58,4 @@ namespace ecs
 			m_SFMLWindow.m_Texture.draw(sprite);
 		}
 	}
-
 }

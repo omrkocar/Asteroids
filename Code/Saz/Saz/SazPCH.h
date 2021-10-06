@@ -9,6 +9,7 @@
 	#include <windowsx.h>
 #endif
 
+
 #include <assert.h>
 #include <filesystem>
 #include <fstream>  
@@ -26,7 +27,7 @@
 #include <vector>
 
 #include <Core/DynamicArray.h>
-#include <Core/HashMap.h>
+#include <Core/Map.h>
 #include <Core/Input.h>
 #include <Core/Math.h>
 #include <Core/Random.h>

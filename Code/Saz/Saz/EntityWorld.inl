@@ -37,7 +37,7 @@ void ecs::EntityWorld::RegisterComponent()
 
 	ComponentEntry entry =
 	{
-		core::ToTypeId<TComponent>()
+		Saz::ToTypeId<TComponent>()
 	};
 
 	
@@ -61,7 +61,7 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 template<class TSystem>
 TSystem& ecs::EntityWorld::GetSystem()
 {
-	constexpr core::TypeId typeId = core::ToTypeId<TSystem>();
+	constexpr Saz::TypeId typeId = Saz::ToTypeId<TSystem>();
 
 	auto result = std::find_if(m_SystemEntries.begin(), m_SystemEntries.end(),
 		[&typeId](const SystemEntry& entry)
@@ -81,7 +81,7 @@ void ecs::EntityWorld::RegisterSystem(TArgs&&... args)
 
 	SystemEntry entry =
 	{
-		core::ToTypeId<TSystem>()
+		Saz::ToTypeId<TSystem>()
 		, new TSystem(std::forward<TArgs>(args)...)
 	};
 	entry.m_System->m_World = this;
