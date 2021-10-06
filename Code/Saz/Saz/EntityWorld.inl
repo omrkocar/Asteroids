@@ -69,7 +69,7 @@ TSystem& ecs::EntityWorld::GetSystem()
 			return entry.m_TypeId == typeId;
 		});
 
-	SAZ_ASSERT(result != m_SystemEntries.end());
+	SAZ_ASSERT((result != m_SystemEntries.end()), "Attempting to access an invalid system or it has not been registered yet!");
 	return *dynamic_cast<TSystem*>(result->m_System);
 }
 

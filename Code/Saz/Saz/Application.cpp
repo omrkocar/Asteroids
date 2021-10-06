@@ -7,11 +7,13 @@
 #include "Saz/RenderSystem.h"
 #include "Saz/ResourceManager.h"
 #include "Saz/SFML/Window.h"
+#include "Saz/LevelSystem.h"
 #include "Saz/SpriteComponent.h"
-#include "Saz/TagComponent.h"
+#include "Saz/NameComponent.h"
 #include "Saz/TransformComponent.h"
 
 #include <GLFW/glfw3.h>
+#include "LevelComponent.h"
 
 namespace Saz
 {
@@ -26,12 +28,13 @@ namespace Saz
 	{
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
+
 		spd::Log::Init();
 		m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();
-		m_pResourceManager->LoadTexture("Ship.png");
+		
 		
 		{
 			Saz::WindowProps windowProps ;
@@ -44,8 +47,8 @@ namespace Saz
 	Application::~Application()
 	{
 		delete m_SFMLWindow;
-		delete m_pResourceManager;
 		delete m_ImGuiLog;
+		delete m_pResourceManager;
 		glfwTerminate();
 	}
 
@@ -57,13 +60,15 @@ namespace Saz
 
 	void Application::Register()
 	{
-		m_EntityWorld.RegisterComponent<SpriteComponent>();
-		m_EntityWorld.RegisterComponent<TagComponent>();
-		m_EntityWorld.RegisterComponent<TransformComponent>();
-		m_EntityWorld.RegisterComponent<Input::InputComponent>();
+		m_EntityWorld.RegisterComponent<component::SpriteComponent>();
+		m_EntityWorld.RegisterComponent<component::NameComponent>();
+		m_EntityWorld.RegisterComponent<component::TransformComponent>();
+		m_EntityWorld.RegisterComponent<component::InputComponent>();
+		m_EntityWorld.RegisterComponent<component::LevelComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_SFMLWindow);
+		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
 	}
 
 	void Application::Destroy()

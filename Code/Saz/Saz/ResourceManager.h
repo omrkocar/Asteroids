@@ -13,10 +13,10 @@ namespace Saz
 		ResourceManager();
 		~ResourceManager();
 
-		sf::Texture* GetTexture(const String& name);
-		sf::Texture* LoadTexture(const String& filename);
+		const sf::Texture& GetTexture(const String& name);
+		const sf::Texture& LoadTexture(const String& filename);
 
 	private:
-		Map<String, sf::Texture*> m_Textures;
+		Map<String, sf::Texture> m_Textures;
 	};
 }

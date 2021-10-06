@@ -7,7 +7,8 @@
 
 namespace
 {
-	static constexpr const char* initialPath = "D:/Dev/Saz/Code/Game/Data/Textures/";
+	// #todo
+	const String initialPath = "D:/Dev/Saz/Data/Textures/";
 }
 
 namespace Saz
@@ -19,26 +20,23 @@ namespace Saz
 
 	ResourceManager::~ResourceManager()
 	{
-		for (const auto& [name, texture] : m_Textures)
-		{
-			delete texture;
-		}
+		
 	}
 
-	sf::Texture* ResourceManager::GetTexture(const String& name)
+	const sf::Texture& ResourceManager::GetTexture(const String& name)
 	{
 		SAZ_ASSERT((m_Textures.find(name) != m_Textures.end()), "No texture found with the given name! It might not be loaded yet!");
 		return m_Textures[name];
 	}
 
-
-	sf::Texture* ResourceManager::LoadTexture(const String& filename)
+	const sf::Texture& ResourceManager::LoadTexture(const String& filename)
 	{
-		sf::Texture* pTexture = new sf::Texture();
-		pTexture->loadFromFile(initialPath + filename);
-		m_Textures[filename] = pTexture;
+		sf::Texture texture;
+		bool loadSuccess = texture.loadFromFile(initialPath + filename);
+		SAZ_ASSERT(loadSuccess, "Texture is not loaded. Make sure the file path is correct!");
+		if (loadSuccess)
+			m_Textures[filename] = texture;
 
-		return pTexture;
+		return texture;
 	}
-
 }

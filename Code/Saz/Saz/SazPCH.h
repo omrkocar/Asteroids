@@ -30,6 +30,7 @@
 #include <Core/Map.h>
 #include <Core/Input.h>
 #include <Core/Math.h>
+#include <Core/FilePath.h>
 #include <Core/Random.h>
 #include <Core/Set.h>
 #include <Core/String.h>

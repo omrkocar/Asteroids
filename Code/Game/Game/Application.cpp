@@ -6,10 +6,12 @@
 #include <Saz/InputComponent.h>
 #include <Saz/SpriteComponent.h>
 #include <Saz/ResourceManager.h>
+#include <Saz/NameComponent.h>
+#include <Saz/LevelSystem.h>
+#include <Saz/SFML/Window.h>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <entt/entt.hpp>
-#include "Saz/TagComponent.h"
 
 Application::Application()
 {
@@ -23,7 +25,14 @@ Application::~Application()
 
 void Application::Init()
 {
-	Saz::Application::Init();	
+	Saz::Application::Init();
+
+	m_pResourceManager->LoadTexture("Ship.png");
+	m_pResourceManager->LoadTexture("Hollow_Knight.png");
+	m_pResourceManager->LoadTexture("Island.png");
+
+	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
+	levelSystem.LoadFromFile(FilePath("D:/Dev/Saz/Data/Scenes/DefaultScene.scene"));
 }
 
 void Application::Destroy()
@@ -40,41 +49,13 @@ void Application::Update()
 {
 	Saz::Application::Update();
 
-	// #temporary
 	auto& registry = m_EntityWorld.m_Registry;
-	if (ImGui::Button("Create Entity with Sprite and Transform"))
-	{
-		ecs::Entity entity = m_EntityWorld.CreateEntity();
-		sf::Texture* pTexture = m_pResourceManager->GetTexture("Ship.png");
-
-		SpriteComponent& spriteComp = m_EntityWorld.AddComponent<SpriteComponent>(entity);
-		TagComponent& tagComp = m_EntityWorld.AddComponent<TagComponent>(entity);
-		tagComp.m_Tag = "Player";
-		spriteComp.m_Texture = pTexture;
-		TransformComponent& transformComp = m_EntityWorld.AddComponent<TransformComponent>(entity);
-		transformComp.m_Position = vec2(600.0f, 360.0f);
-		IMGUI_LOG_INFO("A new entity is created");
-	}
-
-	if (ImGui::Button("Add Input"))
-	{
-		const auto view = registry.view<TransformComponent, SpriteComponent>();
-		for (const ecs::Entity& entity : view)
-		{
-			if (!m_EntityWorld.HasComponent<Input::InputComponent>(entity))
-				m_EntityWorld.AddComponent<Input::InputComponent>(entity);
-
-			TagComponent& tagComp = m_EntityWorld.GetComponent<TagComponent>(entity);
-			IMGUI_LOG_WARNING("Input is given to '%s'", tagComp.m_Tag.c_str());
-		}
-	}
-
-	const auto view = registry.view<TransformComponent, SpriteComponent, Input::InputComponent>();
+	const auto view = registry.view<component::TransformComponent, component::SpriteComponent, component::InputComponent>();
 	for (const ecs::Entity& entity : view)
 	{
-		const auto& spriteComponent = view.get<SpriteComponent>(entity);
-		auto& transformComponent = view.get<TransformComponent>(entity);
-		auto& inputComponent = view.get<Input::InputComponent>(entity);
+		const auto& spriteComponent = view.get<component::SpriteComponent>(entity);
+		auto& transformComponent = view.get<component::TransformComponent>(entity);
+		auto& inputComponent = view.get<component::InputComponent>(entity);
 		vec2& pos = transformComponent.m_Position;
 
 		if (inputComponent.IsKeyHeld(Input::EKeyboard::A))
