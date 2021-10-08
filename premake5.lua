@@ -34,6 +34,7 @@ workspace "Saz"
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS",
+		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"
 		
 	}
 

@@ -1,23 +1,17 @@
 #pragma once
 
-#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-
-
+#include <SFML/Graphics/Sprite.hpp>
+#include <optional>
 
 namespace component
 {
-	struct SpriteComponent
+	struct RenderComponent
 	{
-		sf::Texture m_Texture;
-	};
-
-	// #todo 
-	union RenderComponent
-	{
-		sf::RectangleShape* m_RectangleShape;
-		sf::CircleShape* m_CircleShape;
+		std::optional<sf::RectangleShape*> m_RectangleShape = std::nullopt;
+		std::optional<sf::CircleShape*> m_CircleShape = std::nullopt;
+		std::optional<sf::Sprite*> m_Sprite = std::nullopt;
 	};
 }
 

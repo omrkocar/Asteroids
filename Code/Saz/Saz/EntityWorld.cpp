@@ -2,6 +2,7 @@
 #include "EntityWorld.h"
 
 #include "Saz/System.h"
+#include "TransformComponent.h"
 
 namespace ecs
 {
@@ -27,5 +28,13 @@ namespace ecs
 		for (ecs::SystemEntry& entry : m_SystemEntries)
 			entry.m_System->Update();
 	}
+
+	void EntityWorld::DestroyAllEntities()
+	{
+		m_Registry.each([this](auto entity) {
+			m_Registry.destroy(entity);
+			});
+	}
+
 }
 

@@ -54,6 +54,8 @@ namespace ecs
 		template<class TSystem, typename... TArgs>
 		void RegisterSystem(TArgs&&... args);
 
+		void DestroyAllEntities();
+
 	public:
 		entt::registry m_Registry;
 

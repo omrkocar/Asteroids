@@ -25,6 +25,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <optional>
 
 #include <Core/DynamicArray.h>
 #include <Core/Map.h>

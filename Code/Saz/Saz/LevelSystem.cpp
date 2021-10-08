@@ -20,24 +20,11 @@ namespace ecs
 
 	}
 
-	LevelSystem::~LevelSystem()
-	{
-
-	}
-
-	void LevelSystem::Init()
-	{
-
-	}
-
-	void LevelSystem::Update()
-	{
-
-	}
-
 	bool LevelSystem::LoadFromFile(const String& filename)
 	{
-		FilePath relativePath = filename;
+		m_World->DestroyAllEntities();
+
+		FilePath relativePath = "D:/Dev/Saz/Data/" + filename;
 		const char* jsonSceneFile = Saz::file::LoadCompleteFile(relativePath.u8string().c_str(), nullptr);
 		if (!jsonSceneFile)
 		{
@@ -56,17 +43,15 @@ namespace ecs
 		{
 			const ecs::Entity entity = m_World->CreateEntity();
 
-			{
-				component::LevelComponent& levelComponent = m_World->AddComponent<component::LevelComponent>(entity);
-				levelComponent.m_Name = relativePath.stem().string();
-				levelComponent.m_Path = relativePath.string();
-			}
-
-			{
-				component::NameComponent& nameComp = m_World->AddComponent<component::NameComponent>(entity);
-				const String& entityName = obj["Name"].GetString();
-				nameComp.m_Name = !entityName.empty() ? entityName : "InvalidName";
-			}
+			
+			component::LevelComponent& levelComponent = m_World->AddComponent<component::LevelComponent>(entity);
+			levelComponent.m_Name = relativePath.stem().string();
+			levelComponent.m_Path = relativePath.string();
+			
+			component::NameComponent& nameComp = m_World->AddComponent<component::NameComponent>(entity);
+			const String& entityName = obj["Name"].GetString();
+			nameComp.m_Name = !entityName.empty() ? entityName : "InvalidName";
+		
 
 			if (obj.HasMember("IsPlayer"))
 			{
@@ -81,7 +66,7 @@ namespace ecs
 			{
 				for (rapidjson::Value& component : obj["Components"].GetArray())
 				{
-					const String& componentType = component["Type"].GetString();
+					const String& componentType = component["ComponentType"].GetString();
 					if (componentType == "TransformComponent")
 					{
 						component::TransformComponent& transformComponent = m_World->AddComponent<component::TransformComponent>(entity);
@@ -90,40 +75,48 @@ namespace ecs
 						if (component.HasMember("Scale"))
 							Saz::file::JSONLoadVec2(component, "Scale", &transformComponent.m_Scale);
 					}
-					if (componentType == "SpriteComponent")
-					{
-						component::SpriteComponent& spriteComponent = m_World->AddComponent<component::SpriteComponent>(entity);
-						const String& textureName = component["TextureName"].GetString();
-						spriteComponent.m_Texture = m_ResourceManager.GetTexture(textureName);
-					}
 					if (componentType == "RenderComponent")
 					{
 						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
-						size_t b = sizeof(renderComp);
-						StringView shapeType = component["ShapeType"].GetString();
-						if (shapeType == "Rectangle")
-						{
-							if (component.HasMember("Size"))
-							{
-								float x = component["Size"][0].GetFloat();
-								float y = component["Size"][1].GetFloat();
+						StringView type = component["Type"].GetString();
 
-								renderComp.m_RectangleShape = m_ResourceManager.CreateRectangle("Rectangle", vec2(x, y));
-								const String& textureName = component["TextureName"].GetString();
-								renderComp.m_RectangleShape->setTexture(&m_ResourceManager.GetTexture(textureName));
-							}							
-						}
-						else if (shapeType == "Circle")
+						if (type == "Sprite")
 						{
-							const float radius = component["Radius"].GetFloat();
-							const int pointCount = component["PointCount"].GetInt();
+							component::SpriteComponent& spriteComponent = m_World->AddComponent<component::SpriteComponent>(entity);
 							const String& textureName = component["TextureName"].GetString();
+							renderComp.m_Sprite = m_ResourceManager.CreateSprite();
+							sf::Sprite* sprite = renderComp.m_Sprite.value();
+							sprite->setTexture(m_ResourceManager.GetTexture(textureName));
+						}
+						else if (type == "Shape")
+						{
+							StringView shapeType = component["ShapeType"].GetString();
 
-							sf::CircleShape* circleShape = renderComp.m_CircleShape;
-							circleShape = m_ResourceManager.CreateCircle("Circle", radius, pointCount);
-							circleShape->setTexture(&m_ResourceManager.GetTexture(textureName));
-							circleShape->setFillColor(sf::Color::Blue);
-							circleShape->setOrigin(radius / 2, radius / 2);
+							if (shapeType == "Rectangle")
+							{
+								if (component.HasMember("Size"))
+								{
+									float x = component["Size"][0].GetFloat();
+									float y = component["Size"][1].GetFloat();
+
+									renderComp.m_RectangleShape = m_ResourceManager.CreateRectangle("Rectangle", vec2(x, y));
+									const String& textureName = component["TextureName"].GetString();
+									renderComp.m_RectangleShape.value()->setTexture(&m_ResourceManager.GetTexture(textureName));
+								}
+							}
+							else if (shapeType == "Circle")
+							{
+								const float radius = component["Radius"].GetFloat();
+								const int pointCount = component["PointCount"].GetInt();
+								const String& textureName = component["TextureName"].GetString();
+
+
+								renderComp.m_CircleShape = m_ResourceManager.CreateCircle("Circle", radius, pointCount);
+								sf::CircleShape* circleShape = renderComp.m_CircleShape.value();
+								circleShape->setTexture(&m_ResourceManager.GetTexture(textureName));
+								circleShape->setFillColor(sf::Color::Blue);
+								circleShape->setOrigin(radius / 2, radius / 2);
+							}
 						}
 					}
 				}

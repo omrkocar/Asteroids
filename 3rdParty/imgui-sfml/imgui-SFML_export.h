@@ -19,7 +19,7 @@
     #endif
 #else
     #define IMGUI_SFML_API
-    #define IMGUI_API
+    //#define IMGUI_API
 #endif
 
 #endif

@@ -7,13 +7,15 @@
 #include "Saz/RenderSystem.h"
 #include "Saz/ResourceManager.h"
 #include "Saz/SFML/Window.h"
+#include "Saz/LevelComponent.h"
 #include "Saz/LevelSystem.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/NameComponent.h"
 #include "Saz/TransformComponent.h"
+#include "Saz/TransformSystem.h"
 
 #include <GLFW/glfw3.h>
-#include "LevelComponent.h"
+#include <Shlwapi.h>
 
 namespace Saz
 {
@@ -34,7 +36,6 @@ namespace Saz
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();
-		
 		
 		{
 			Saz::WindowProps windowProps ;
@@ -60,7 +61,6 @@ namespace Saz
 
 	void Application::Register()
 	{
-		m_EntityWorld.RegisterComponent<component::SpriteComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 		m_EntityWorld.RegisterComponent<component::RenderComponent>();
@@ -70,6 +70,7 @@ namespace Saz
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
+		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
 	}
 
 	void Application::Destroy()

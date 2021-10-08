@@ -5,9 +5,10 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Shape.hpp>
 
 #include <entt/entt.hpp>
-#include <SFML/Graphics/Shape.hpp>
 
 namespace
 {
@@ -28,6 +29,11 @@ namespace Saz
 		{
 			delete shape;
 		}
+
+		for (sf::Sprite* sprite : m_Sprites)
+		{
+			delete sprite;
+		}
 	}
 
 	const sf::Texture& ResourceManager::GetTexture(const String& name)
@@ -42,9 +48,17 @@ namespace Saz
 		bool loadSuccess = texture.loadFromFile(initialPath + filename);
 		SAZ_ASSERT(loadSuccess, "Texture is not loaded. Make sure the file path is correct!");
 		if (loadSuccess)
-			m_Textures[filename] = texture;
+			m_Textures[filename] = std::move(texture);
 
 		return m_Textures[filename];
+	}
+
+	sf::Sprite* ResourceManager::CreateSprite()
+	{
+		sf::Sprite* sprite = new sf::Sprite();
+		m_Sprites.push_back(sprite);
+
+		return sprite;
 	}
 
 	const sf::Shape* ResourceManager::GetShape(const String& name)

@@ -3,32 +3,35 @@
 			"Name": "Player",
 			"IsPlayer":  true,
 			"Components": [{
-					"Type": "TransformComponent",
+					"ComponentType": "TransformComponent",
 					"Pos": [ 450.0, 500.0 ],
 					"Scale": [ 1.0, 1.0 ]
 				}, {
-					"Type": "SpriteComponent",
+					"ComponentType": "RenderComponent",
+					"Type":  "Sprite",
 					"TextureName": "Ship.png"
 			}]
 		}, {
 			"Name": "Background",
 			"Components": [{
-					"Type": "TransformComponent",
+					"ComponentType": "TransformComponent",
 					"Pos": [ 640.0, 360.0 ],
 					"Scale": [0.75, 0.75]
 				}, {
-					"Type": "SpriteComponent",
+					"ComponentType": "RenderComponent",
+					"Type": "Sprite",
 					"TextureName": "Island.png"
 			}]
 		}, {
-			"Name": "Background",
+			"Name": "Water",
 			"Components": [{
-					"Type": "TransformComponent",
+					"ComponentType": "TransformComponent",
 					"Pos": [ 640.0, 360.0 ],
 					"Scale": [1.0, 1.0]
 				}, {
-					"Type": "RenderComponent",
-					"ShapeType": "Circle",
+					"ComponentType": "RenderComponent",
+					"Type": "Shape",
+					"ShapeType":  "Circle",
 					"Radius": 50.0,
 					"PointCount": 4,
 					"TextureName": "Water.png"

@@ -14,10 +14,6 @@ namespace ecs
 	public:
 		
 		LevelSystem(Saz::ResourceManager& resourceManager);
-		~LevelSystem();
-
-		virtual void Init() override;
-		virtual void Update() override;
 
 		bool LoadFromFile(const String& filename);
 

@@ -39,11 +39,13 @@ void Application::Init()
 
 	// #todo: Fix the paths asap
 	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
-	levelSystem.LoadFromFile("D:/Dev/Saz/Data/Scenes/DefaultScene.scene");
+	levelSystem.LoadFromFile("Scenes/DefaultScene.scene");
 
 	auto entity = m_EntityWorld.CreateEntity();
 	sf::RectangleShape* plane = m_pResourceManager->CreateRectangle("Plane", vec2(100.0f, 10.0f), sf::Color::Blue);
 	component::RenderComponent& renderComp = m_EntityWorld.AddComponent<component::RenderComponent>(entity);
+
+	IMGUI_LOG_INFO("Registry Size: %d", m_EntityWorld.m_Registry.size());
 }
 
 void Application::Destroy()
@@ -60,25 +62,34 @@ void Application::Update()
 {
 	Saz::Application::Update();
 
-	auto& registry = m_EntityWorld.m_Registry;
-	const auto view = registry.view<component::TransformComponent, component::InputComponent>();
-	for (const ecs::Entity& entity : view)
-	{
-		auto& transformComponent = view.get<component::TransformComponent>(entity);
-		auto& inputComponent = view.get<component::InputComponent>(entity);
-		vec2& pos = transformComponent.m_Position;
-
-		if (inputComponent.IsKeyHeld(Input::EKeyboard::A))
-			pos.x -= 0.5f;
-		if (inputComponent.IsKeyHeld(Input::EKeyboard::D))
-			pos.x += 0.5f;
-		if (inputComponent.IsKeyHeld(Input::EKeyboard::W))
-			pos.y += 0.5f;
-		if (inputComponent.IsKeyHeld(Input::EKeyboard::S))
-			pos.y -= 0.5f;
-	}
+	DrawMenuBar();
 
 	ImGui::EndFrame();
+}
+
+void Application::DrawMenuBar()
+{
+	ImGui::BeginMainMenuBar();
+
+	if (ImGui::BeginMenu("Level"))
+	{
+		if (ImGui::MenuItem("Clear Level"))
+		{
+			m_EntityWorld.DestroyAllEntities();
+			IMGUI_LOG_INFO("Registry Size: %d", m_EntityWorld.m_Registry.size());
+		}
+
+		if (ImGui::MenuItem("Load Default Level"))
+		{
+			ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
+			levelSystem.LoadFromFile("Scenes/DefaultScene.scene");
+			IMGUI_LOG_INFO("Registry Size: %d", m_EntityWorld.m_Registry.size());
+		}
+
+		ImGui::EndMenu();
+	}
+
+	ImGui::EndMainMenuBar();
 }
 
 Saz::Application* Saz::CreateApplication()

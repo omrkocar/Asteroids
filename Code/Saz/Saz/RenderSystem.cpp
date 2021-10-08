@@ -39,38 +39,29 @@ namespace ecs
 	{
 		auto& registry = m_World->m_Registry;
 
-		const auto spriteView = registry.view<component::SpriteComponent, component::TransformComponent>();
-		for (const ecs::Entity& view : spriteView)
-		{
-			const auto& spriteComponent = spriteView.get<component::SpriteComponent>(view);
-			const auto& transformComponent = spriteView.get<component::TransformComponent>(view);
-
-			const sf::Texture& texture = spriteComponent.m_Texture;
-
-			sf::Sprite sprite;
-			sprite.setTexture(spriteComponent.m_Texture);
-			sprite.setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
-			sprite.setScale(transformComponent.m_Scale.x, transformComponent.m_Scale.x * -1.0f);
-			sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
-
-			m_SFMLWindow.m_Texture.draw(sprite);
-		}
-
 		const auto renderView = registry.view<component::RenderComponent, component::TransformComponent>();
 		for (const ecs::Entity& view : renderView)
 		{
 			const auto& renderComp = renderView.get<component::RenderComponent>(view);
 			const auto& transformComponent = renderView.get<component::TransformComponent>(view);
 			
-			if (renderComp.m_RectangleShape)
+			if (renderComp.m_RectangleShape.has_value())
 			{
-				renderComp.m_RectangleShape->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
-				m_SFMLWindow.m_Texture.draw(*renderComp.m_RectangleShape);
+				renderComp.m_RectangleShape.value()->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
+				m_SFMLWindow.m_Texture.draw(*renderComp.m_RectangleShape.value());
 			}
-			else if (renderComp.m_CircleShape)
+			else if (renderComp.m_CircleShape.has_value())
 			{
-				renderComp.m_CircleShape->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
-				m_SFMLWindow.m_Texture.draw(*renderComp.m_CircleShape);
+				renderComp.m_CircleShape.value()->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
+				m_SFMLWindow.m_Texture.draw(*renderComp.m_CircleShape.value());
+			}
+			else if (renderComp.m_Sprite.has_value())
+			{
+				sf::Sprite* sprite = renderComp.m_Sprite.value();
+				sprite->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
+				sprite->setOrigin(sprite->getTexture()->getSize().x / 2.0f, sprite->getTexture()->getSize().y / 2.0f);
+				sprite->setScale(transformComponent.m_Scale.x, transformComponent.m_Scale.y * -1.0f);
+				m_SFMLWindow.m_Texture.draw(*renderComp.m_Sprite.value());
 			}
 		}
 	}
