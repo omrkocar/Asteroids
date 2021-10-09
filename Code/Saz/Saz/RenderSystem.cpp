@@ -11,7 +11,6 @@
 #include <SFML/Graphics/Transformable.hpp>
 
 #include <entt/entt.hpp>
-#include "RenderComponents.h"
 
 namespace ecs
 {	

@@ -1,8 +1,8 @@
 #include "SazPCH.h"
-
 #include "InputSystem.h"
+
 #include "Saz/InputComponent.h"
-#include "SFML/Window.h"
+#include "Saz/SFML/Window.h"
 
 #include <entt/entt.hpp>
 

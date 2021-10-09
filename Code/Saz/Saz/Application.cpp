@@ -17,7 +17,6 @@
 #include "Saz/TransformSystem.h"
 
 #include <GLFW/glfw3.h>
-#include <Shlwapi.h>
 
 namespace Saz
 {

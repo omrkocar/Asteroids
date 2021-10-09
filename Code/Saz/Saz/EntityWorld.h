@@ -1,9 +1,11 @@
 #pragma once
 
 #include <Saz/Core.h>
-#include <entt/entt.hpp>
-#include <Core/DynamicArray.h>
 #include <Saz/TypeId.h>
+
+#include <Core/DynamicArray.h>
+
+#include <entt/entt.hpp>
 
 namespace Saz
 {
