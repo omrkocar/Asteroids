@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Saz/EntityWorld.h"
+#include "Saz/GameTime.h"
 #include "Saz/InputComponent.h"
 #include "Saz/InputSystem.h"
 #include "Saz/RenderSystem.h"
@@ -9,6 +10,7 @@
 #include "Saz/SFML/Window.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/LevelSystem.h"
+#include "Saz/MovementComponent.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/NameComponent.h"
 #include "Saz/TransformComponent.h"
@@ -61,15 +63,16 @@ namespace Saz
 
 	void Application::Register()
 	{
-		m_EntityWorld.RegisterComponent<component::NameComponent>();
-		m_EntityWorld.RegisterComponent<component::TransformComponent>();
-		m_EntityWorld.RegisterComponent<component::RenderComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();
+		m_EntityWorld.RegisterComponent<component::MovementComponent>();
+		m_EntityWorld.RegisterComponent<component::NameComponent>();
+		m_EntityWorld.RegisterComponent<component::RenderComponent>();
+		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
+		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_SFMLWindow);
 		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
 	}
 
@@ -79,9 +82,9 @@ namespace Saz
 		m_EntityWorld.Destroy();
 	}
 
-	void Application::Update()
+	void Application::Update(const Saz::GameTime& gameTime)
 	{
-		m_EntityWorld.Update();
+		m_EntityWorld.Update(gameTime);
 		m_ImGuiLog->Update();
 	}
 
@@ -90,13 +93,21 @@ namespace Saz
 		Register();
 		Init();
 
+		sf::Clock clock;
+		Saz::GameTime gameTime;
+
 		while (m_Running)
 		{
-			m_SFMLWindow->Update();
+			gameTime.m_Time = clock.restart();
+			gameTime.m_DeltaTime = gameTime.m_Time.asSeconds();
+			gameTime.m_TotalTime += gameTime.m_DeltaTime;
+			gameTime.m_Frame++;
+
+			m_SFMLWindow->Update(gameTime);
 			if (m_SFMLWindow->ShouldClose())
 				break;
 
-			Update();
+			Update(gameTime);
 
 			m_SFMLWindow->Render();
 		}

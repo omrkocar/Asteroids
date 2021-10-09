@@ -16,7 +16,7 @@ public:
 	virtual void Init() override;
 	virtual void Destroy() override;
 	virtual void Register() override;
-	virtual void Update() override;
+	virtual void Update(const Saz::GameTime& gameTime) override;
 	
 private:
 

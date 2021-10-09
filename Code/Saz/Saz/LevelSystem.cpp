@@ -1,14 +1,15 @@
 #include "SazPCH.h"
 #include "LevelSystem.h"
 
-#include "Saz/RenderSystem.h"
-#include "Saz/ResourceManager.h"
-#include "Saz/RenderComponents.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/LevelComponent.h"
-#include "Saz/NameComponent.h"
 #include "Saz/FileHelpers.h"
 #include "Saz/InputComponent.h"
+#include "Saz/LevelComponent.h"
+#include "Saz/MovementComponent.h"
+#include "Saz/NameComponent.h"
+#include "Saz/RenderComponents.h"
+#include "Saz/RenderSystem.h"
+#include "Saz/ResourceManager.h"
+#include "Saz/TransformComponent.h"
 
 #include <entt/entt.hpp>
 
@@ -57,7 +58,7 @@ namespace ecs
 			{
 				if (obj["IsPlayer"].GetBool() == true)
 				{
-					component::InputComponent& inputComponent = m_World->AddComponent<component::InputComponent>(entity);
+					m_World->AddComponent<component::InputComponent>(entity);
 				}
 			}
 		
@@ -75,6 +76,12 @@ namespace ecs
 						if (component.HasMember("Scale"))
 							Saz::file::JSONLoadVec2(component, "Scale", &transformComponent.m_Scale);
 					}
+					if (componentType == "MovementComponent")
+					{
+						component::MovementComponent& movementComponent = m_World->AddComponent<component::MovementComponent>(entity);
+						const float speed = component["Speed"].GetFloat();
+						movementComponent.m_Speed = speed;
+					}
 					if (componentType == "RenderComponent")
 					{
 						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
@@ -82,7 +89,6 @@ namespace ecs
 
 						if (type == "Sprite")
 						{
-							component::SpriteComponent& spriteComponent = m_World->AddComponent<component::SpriteComponent>(entity);
 							const String& textureName = component["TextureName"].GetString();
 							renderComp.m_Sprite = m_ResourceManager.CreateSprite();
 							sf::Sprite* sprite = renderComp.m_Sprite.value();

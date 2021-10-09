@@ -4,6 +4,8 @@
 
 namespace Saz
 {
+	class GameTime;
+
 	namespace glfw
 	{
 		class Window;
@@ -25,7 +27,7 @@ namespace ecs
 		~RenderSystem();
 
 		virtual void Init() override;
-		virtual void Update() override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
 
 		void RenderSFML();
 

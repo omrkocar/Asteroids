@@ -30,7 +30,7 @@ namespace ecs
 		
 	}
 
-	void RenderSystem::Update()
+	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
 		RenderSFML();
 	}

@@ -4,6 +4,8 @@
 
 namespace Saz
 {
+	class GameTime;
+
 	struct WindowProps
 	{
 		String m_Title;
@@ -26,7 +28,7 @@ namespace Saz
 		virtual void Init() {}
 		virtual void Destroy() {}
 
-		virtual void Update() = 0;
+		virtual void Update(const Saz::GameTime& gameTime) = 0;
 
 		virtual ivec2 GetSize() const = 0;
 

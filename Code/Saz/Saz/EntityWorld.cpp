@@ -23,10 +23,10 @@ namespace ecs
 		m_SystemEntries.clear();
 	}
 
-	void EntityWorld::Update()
+	void EntityWorld::Update(const Saz::GameTime& gameTime)
 	{
 		for (ecs::SystemEntry& entry : m_SystemEntries)
-			entry.m_System->Update();
+			entry.m_System->Update(gameTime);
 	}
 
 	void EntityWorld::DestroyAllEntities()

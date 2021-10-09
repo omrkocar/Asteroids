@@ -24,7 +24,7 @@ namespace ecs
 
 	}
 
-	void InputSystem::Update()
+	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
 

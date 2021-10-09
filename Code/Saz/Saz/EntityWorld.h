@@ -5,6 +5,11 @@
 #include <Core/DynamicArray.h>
 #include <Saz/TypeId.h>
 
+namespace Saz
+{
+	class GameTime;
+}
+
 namespace ecs
 {
 	class System;
@@ -26,7 +31,7 @@ namespace ecs
 		void Init();
 		void Destroy();
 
-		void Update();
+		void Update(const Saz::GameTime& gameTime);
 
 		bool IsAlive(const ecs::Entity& entity) const;
 

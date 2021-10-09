@@ -2,6 +2,11 @@
 
 #include <Saz/System.h>
 
+namespace Saz
+{
+	class GameTime;
+}
+
 namespace ecs 
 {
 	class SAZ_API TransformSystem final : public System
@@ -11,7 +16,8 @@ namespace ecs
 		TransformSystem();
 
 		virtual void Init() override;
-		virtual void Update() override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
 
+		float speed;
 	};
 }

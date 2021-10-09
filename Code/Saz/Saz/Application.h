@@ -6,6 +6,7 @@
 namespace Saz
 {
 	class ResourceManager;
+	class GameTime;
 
 	namespace glfw
 	{
@@ -41,7 +42,7 @@ namespace Saz
 		virtual void Init();
 		virtual void Register();
 		virtual void Destroy();
-		virtual void Update();
+		virtual void Update(const Saz::GameTime& gameTime);
 
 		const ecs::EntityWorld& GetWorld();
 		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }

@@ -5,6 +5,7 @@
 namespace Saz
 {
 	class ResourceManager;
+	class GameTime;
 }
 
 namespace ecs 

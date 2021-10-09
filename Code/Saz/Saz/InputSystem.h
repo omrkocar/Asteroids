@@ -4,6 +4,8 @@
 
 namespace Saz
 {
+	class GameTime;
+
 	namespace sfml
 	{
 		class Window;
@@ -21,7 +23,7 @@ namespace ecs
 		~InputSystem();
 
 		virtual void Init() override;
-		virtual void Update() override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
 		Saz::sfml::Window& m_SFMLWindow;

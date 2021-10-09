@@ -1,6 +1,8 @@
 #include "SazPCH.h"
 #include "Window.h"
 
+#include "Saz/GameTime.h"
+
 #include <Core/Input.h>
 
 #include <imgui-sfml/imgui-SFML.h>
@@ -219,10 +221,8 @@ namespace Saz::sfml
 		ImGui::SFML::Shutdown();
 	}
 
-	void Window::Update()
+	void Window::Update(const Saz::GameTime& gameTime)
 	{
-		m_Time = m_Clock.restart();
-
 		sf::Event eventData;
 		while (m_Window.pollEvent(eventData))
 		{
@@ -244,7 +244,7 @@ namespace Saz::sfml
 		m_MouseDelta = m_MousePos - mousePos;
 		m_MousePos = mousePos;
 
-		ImGui::SFML::Update(m_Window, m_Time);
+		ImGui::SFML::Update(m_Window, gameTime.m_Time);
 		
 	}
 

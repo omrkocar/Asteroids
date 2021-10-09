@@ -14,7 +14,7 @@ namespace ecs
 		virtual void Init() {}
 		virtual void Destroy() {}
 
-		virtual void Update() {};
+		virtual void Update(const Saz::GameTime& gameTime) {};
 
 	protected:
 		ecs::EntityWorld* m_World = nullptr;

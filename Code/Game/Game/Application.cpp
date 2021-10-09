@@ -58,9 +58,9 @@ void Application::Register()
 	Saz::Application::Register();
 }
 
-void Application::Update()
+void Application::Update(const Saz::GameTime& gameTime)
 {
-	Saz::Application::Update();
+	Saz::Application::Update(gameTime);
 
 	DrawMenuBar();
 

@@ -29,7 +29,7 @@ namespace Saz::sfml
 		void Init() override;
 		void Destroy() override;
 
-		void Update() override;
+		void Update(const Saz::GameTime& gameTime) override;
 		void Render();
 
 		ivec2 GetSize() const override { return m_Size; }

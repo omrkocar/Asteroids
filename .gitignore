@@ -7,4 +7,5 @@ Projects
 .sln
 /*.sln
 *.vcxproj
+*.vcxproj.user
 *.filters
