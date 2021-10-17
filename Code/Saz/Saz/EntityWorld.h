@@ -31,6 +31,7 @@ namespace ecs
 	{
 	public:
 		void Init();
+		void PostInit();
 		void Destroy();
 
 		void Update(const Saz::GameTime& gameTime);

@@ -8,21 +8,10 @@
 					"Scale": [ 1.0, 1.0, 1.0 ]
 				}, {
 					"ComponentType": "RenderComponent",
-					"Type":  "Sprite",
-					"TextureName": "Ship.png"
+					"Color":  [ 1.0, 0.8, 0.1]
 				}, {
 					"ComponentType": "MovementComponent",
 					"Speed": 1000.0
-			}]
-		}, {
-			"Name": "Background",
-			"Components": [{
-					"ComponentType": "TransformComponent",
-					"Pos": [ 640.0, 360.0, 0.0 ],
-					"Scale": [0.75, 0.75, 1.0]
-				}, {
-					"ComponentType": "RenderComponent",
-					"TextureName": "Island.png"
 			}]
 		}, {
 			"Name": "Camera",

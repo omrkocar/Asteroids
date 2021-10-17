@@ -50,6 +50,7 @@ namespace Saz
 
 	protected:
 		virtual void Init();
+		virtual void PostInit();
 		virtual void Register();
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
@@ -59,23 +60,10 @@ namespace Saz
 		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }
 
 
-	protected:
-		void CreatePipelineLayout();
-		void CreatePipeline();
-		void CreateCommandBuffers();
-		void FreeCommandBuffers();
-		void LoadModels();
-		void RecreateSwapChain();
-		void RecordCommandBuffer(int imageIndex);
-
 		Saz::sfml::Window* m_SFMLWindow = nullptr;
 		Saz::glfw::Window* m_GLFWWindow = nullptr;
 
-		std::unique_ptr<vulkan::Pipeline> m_Pipeline;
 		std::unique_ptr<vulkan::Device> m_Device;
-		std::unique_ptr<vulkan::SwapChain> m_SwapChain;
-		std::unique_ptr<vulkan::Model> m_Model;
-		VkPipelineLayout m_PipelineLayout;
 		DynamicArray<VkCommandBuffer> m_CommandBuffers;
 
 		Saz::ResourceManager* m_pResourceManager;

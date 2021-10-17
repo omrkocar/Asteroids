@@ -14,16 +14,16 @@
 
 namespace vulkan {
 
-	Renderer::Renderer(glfw::Window& window, vulkan::Device& device)
-		: m_Window{ window }, m_Device{ device } 
+	Renderer::Renderer(Saz::glfw::Window& window, vulkan::Device& device)
+		: m_Window{ window }, m_Device{ device }
 	{
 		RecreateSwapChain();
 		CreateCommandBuffers();
 	}
 
-	Renderer::~Renderer() 
-	{ 
-		FreeCommandBuffers(); 
+	Renderer::~Renderer()
+	{
+		FreeCommandBuffers();
 	}
 
 	void Renderer::RecreateSwapChain() {
@@ -41,9 +41,8 @@ namespace vulkan {
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_SwapChain);
 			m_SwapChain = std::make_unique<SwapChain>(m_Device, extent, oldSwapChain);
 
-			if (!oldSwapChain->compareSwapFormats(*m_SwapChain.get())) {
-				throw std::runtime_error("Swap chain image(or depth) format has changed!");
-			}
+			bool success = !oldSwapChain->compareSwapFormats(*m_SwapChain.get());
+			SAZ_ASSERT(success, "Swap chain image(or depth) format has changed!");
 		}
 	}
 
@@ -74,7 +73,14 @@ namespace vulkan {
 	VkCommandBuffer Renderer::GetCurrentCommandBuffer() const
 	{
 		SAZ_ASSERT(m_IsFrameStarted, "Cannot get command buffer when frame not in progress");
-		return m_CommandBuffers[m_CurrentFrameIndex];
+		return m_CommandBuffers[m_FrameIndex];
+	}
+
+	int Renderer::GetFrameIndex() const
+	{
+		SAZ_ASSERT(m_IsFrameStarted, "Cannot get frame index when frame not in progress");
+		return m_FrameIndex;
+		
 	}
 
 	VkCommandBuffer Renderer::BeginFrame() {
@@ -108,7 +114,7 @@ namespace vulkan {
 
 		auto result = m_SwapChain->submitCommandBuffers(&commandBuffer, &m_ImageIndex);
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
-			m_Window().HasResized()) {
+			m_Window.HasResized()) {
 			m_Window.SetResized(false);
 			RecreateSwapChain();
 		}
@@ -120,8 +126,9 @@ namespace vulkan {
 		m_FrameIndex = (m_FrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
 	}
 
-	void Renderer::BeginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-		SAZ_ASSERT(m_IsFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
+	void Renderer::BeginSwapChainRenderPass(VkCommandBuffer commandBuffer)
+	{
+		SAZ_ASSERT(m_IsFrameStarted, "Can't call BeginSwapChainRenderPass if frame is not in progress");
 		SAZ_ASSERT(commandBuffer == GetCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
 
 		VkRenderPassBeginInfo renderPassInfo{};
@@ -130,7 +137,7 @@ namespace vulkan {
 		renderPassInfo.framebuffer = m_SwapChain->getFrameBuffer(m_ImageIndex);
 
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = m_SwapChain->getSwapChainExtent();
+		renderPassInfo.renderArea.extent = { (uint32_t)m_SwapChain->getSwapChainExtent().x, (uint32_t)m_SwapChain->getSwapChainExtent().y };
 
 		std::array<VkClearValue, 2> clearValues{};
 		clearValues[0].color = { 0.01f, 0.01f, 0.01f, 1.0f };
@@ -143,26 +150,25 @@ namespace vulkan {
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_SwapChain->getSwapChainExtent().width);
-		viewport.height = static_cast<float>(m_SwapChain->getSwapChainExtent().height);
+		viewport.width = static_cast<float>(m_SwapChain->getSwapChainExtent().x);
+		viewport.height = static_cast<float>(m_SwapChain->getSwapChainExtent().y);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		VkRect2D scissor{ {0, 0}, m_SwapChain->getSwapChainExtent() };
+		VkRect2D scissor{ {0, 0}, { (uint32_t)m_SwapChain->getSwapChainExtent().x,  (uint32_t)m_SwapChain->getSwapChainExtent().y} };
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	}
 
-	void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-		SAZ_ASSERT(m_IsFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
+	void Renderer::EndSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+		SAZ_ASSERT(m_IsFrameStarted, "Can't call EndSwapChainRenderPass if frame is not in progress");
 		SAZ_ASSERT(commandBuffer == GetCurrentCommandBuffer(), "Can't end render pass on command buffer from a different frame");
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	VkRenderPass LveRenderer::HetSwapChainRenderPass() const
+	VkRenderPass Renderer::GetSwapChainRenderPass() const
 	{
 		return m_SwapChain->getRenderPass();
 	}
 
 
 }  // namespace vulkan
-

@@ -2,29 +2,34 @@
 
 #include <Vulkan/vulkan.h>
 
-namespace vulkan {
-	class Renderer {
+namespace Saz::glfw
+{
+	class Window;
+}
+
+namespace vulkan
+{
+	class Device;
+	class SwapChain;
+}
+
+namespace vulkan 
+{
+	class SAZ_API Renderer final
+	{
 	public:
-		Renderer(glfw::Window& window, vulkan::Device& device);
+		Renderer(Saz::glfw::Window& window, vulkan::Device& device);
 		~Renderer();
 
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
 
-		VkRenderPass HetSwapChainRenderPass() const;
-		bool IsFrameInProgress() const { return isFrameStarted; }
+		VkRenderPass GetSwapChainRenderPass() const;
+		bool IsFrameInProgress() const { return m_IsFrameStarted; }
 
-		VkCommandBuffer HetCurrentCommandBuffer() const {
-			assert(isFrameStarted && "Cannot get command buffer when frame not in progress");
-			return commandBuffers[currentFrameIndex];
-		}
+		VkCommandBuffer GetCurrentCommandBuffer() const;
 
-		VkCommandBuffer getCurrentCommandBuffer() const;
-
-		int getFrameIndex() const {
-			assert(isFrameStarted && "Cannot get frame index when frame not in progress");
-			return currentFrameIndex;
-		}
+		int GetFrameIndex() const;
 
 		VkCommandBuffer BeginFrame();
 		void EndFrame();
@@ -36,14 +41,13 @@ namespace vulkan {
 		void FreeCommandBuffers();
 		void RecreateSwapChain();
 
-		glfw::Window& m_Window;
+		Saz::glfw::Window& m_Window;
 		vulkan::Device& m_Device;
-		std::unique_ptr<SwapChain> m_SwapChain;
+		std::unique_ptr<vulkan::SwapChain> m_SwapChain;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
 		uint32_t m_ImageIndex = 0;
-		uint32_t m_FrameIndex = 0;
-		int m_CurrentFrameIndex{ 0 };
+		int m_FrameIndex{ 0 };
 		bool m_IsFrameStarted{ false };
 	};
 }  // namespace lve

@@ -54,6 +54,7 @@ class SwapChain {
   ivec2 chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 
   VkFormat swapChainImageFormat;
+  VkFormat swapChainDepthFormat;
   ivec2 swapChainExtent;
 
   DynamicArray<VkFramebuffer> swapChainFramebuffers;

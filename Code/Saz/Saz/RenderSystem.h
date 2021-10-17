@@ -2,6 +2,8 @@
 
 #include <Saz/System.h>
 
+#include <Vulkan/vulkan.h>
+
 namespace Saz
 {
 	class GameTime;
@@ -17,21 +19,37 @@ namespace Saz
 	}
 }
 
+namespace vulkan
+{
+	class Device;
+	class Pipeline;
+	class Renderer;
+}
+
 namespace ecs 
 {
 	class SAZ_API RenderSystem final : public System
 	{
 	public:
 		
-		RenderSystem(Saz::sfml::Window& sfmlWindow);
+		RenderSystem(vulkan::Device& device, Saz::glfw::Window& window);
 		~RenderSystem();
 
-		virtual void Init() override;
+		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
+		void LoadObjects();
+		void CreatePipelineLayout();
+		void CreatePipeline();
 		void RenderSFML();
 
 	private:
-		Saz::sfml::Window& m_SFMLWindow;
+		vulkan::Device& m_Device;
+		Saz::glfw::Window& m_GLFWWindow;
+
+		vulkan::Renderer* m_Renderer = nullptr;
+
+		std::unique_ptr<vulkan::Pipeline> m_Pipeline;
+		VkPipelineLayout m_PipelineLayout;
 	};
 }

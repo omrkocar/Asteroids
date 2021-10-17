@@ -86,10 +86,7 @@ namespace ecs
 					if (componentType == "RenderComponent")
 					{
 						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
-						const String& textureName = component["TextureName"].GetString();
-						renderComp.m_Sprite = m_ResourceManager.CreateSprite();
-						sf::Sprite& sprite = *renderComp.m_Sprite;
-						sprite.setTexture(m_ResourceManager.GetTexture(textureName));	
+						Saz::file::JSONLoadVec3(component, "Color", &renderComp.color);
 					}
 					if (componentType == "CameraComponent")
 					{

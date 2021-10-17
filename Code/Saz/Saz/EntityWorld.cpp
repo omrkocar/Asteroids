@@ -11,6 +11,12 @@ namespace ecs
 			entry.m_System->Init();
 	}
 
+	void EntityWorld::PostInit()
+	{
+		for (ecs::SystemEntry& entry : m_SystemEntries)
+			entry.m_System->PostInit();
+	}
+
 	void EntityWorld::Destroy()
 	{
 		m_ComponentEntries.clear();

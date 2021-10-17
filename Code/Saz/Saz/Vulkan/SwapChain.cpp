@@ -123,10 +123,9 @@ namespace vulkan {
 		return result;
 	}
 
-
 	bool SwapChain::compareSwapFormats(const SwapChain& swapChain) const
 	{
-		return swapChain.swapchain == swapChainDepthFormat &&
+		return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
 			swapChain.swapChainImageFormat == swapChainImageFormat;
 	}
 
@@ -299,6 +298,7 @@ namespace vulkan {
 
 	void SwapChain::createDepthResources() {
 		VkFormat depthFormat = findDepthFormat();
+		swapChainDepthFormat = depthFormat;
 		ivec2 swapChainExtent = getSwapChainExtent();
 
 		depthImages.resize(imageCount());

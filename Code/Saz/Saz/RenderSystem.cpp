@@ -6,62 +6,127 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 
-#include "SFML/Window.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Shape.hpp>
-#include <SFML/Graphics/Transformable.hpp>
+#include "Saz/Vulkan/Pipeline.h"
+#include "Saz/Vulkan/Renderer.h"
+#include "Saz/Vulkan/Model.h"
+#include "Saz/Vulkan/Device.h"
+#include "Saz/GLFW/Window.h"
 
 #include <entt/entt.hpp>
 
+
+namespace 
+{
+	struct SimplePushConstantData
+	{
+		Matrix transform = Matrix::Identity;
+		vec2 offset;
+		alignas(16) vec3 color;
+	};
+}
 namespace ecs
 {	
-	RenderSystem::RenderSystem(Saz::sfml::Window& sfmlWindow)
-		: m_SFMLWindow(sfmlWindow)
+	RenderSystem::RenderSystem(vulkan::Device& device, Saz::glfw::Window& window)
+		: m_Device(device)
+		, m_GLFWWindow(window)
 	{
-	
+		m_Renderer = new vulkan::Renderer(m_GLFWWindow, m_Device);
+
+		CreatePipelineLayout();
+		CreatePipeline();
 	}
 
 	RenderSystem::~RenderSystem()
 	{
+		delete m_Renderer;
+		vkDestroyPipelineLayout(m_Device.device(), m_PipelineLayout, nullptr);
 	}
 
-	void RenderSystem::Init()
+	void RenderSystem::PostInit()
 	{
-		
+		LoadObjects();
 	}
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
-		RenderSFML();
+		auto& registry = m_World->m_Registry;
+
+		if (auto commandBuffer = m_Renderer->BeginFrame())
+		{
+			m_Pipeline->Bind(commandBuffer);
+
+			m_Renderer->BeginSwapChainRenderPass(commandBuffer);
+			
+			const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
+			for (const auto& entity : view)
+			{
+				component::TransformComponent& transformComponent = view.get<component::TransformComponent>(entity);
+				component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
+
+				SimplePushConstantData push{};
+				push.offset = vec2(transformComponent.m_Position.x, transformComponent.m_Position.y);
+				push.color = renderComponent.color;
+
+				transformComponent.m_Rotation += Rotator(0.001f);
+				
+				vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+				renderComponent.model->Bind(commandBuffer);
+				renderComponent.model->Draw(commandBuffer);
+			}
+
+			m_Renderer->EndSwapChainRenderPass(commandBuffer);
+			m_Renderer->EndFrame();
+		}
 	}
 
-	void RenderSystem::RenderSFML()
+	void RenderSystem::LoadObjects()
 	{
-		//auto& registry = m_World->m_Registry;
+		DynamicArray<vulkan::Vertex> vertices
+		{
+			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+		};
 
-		//const auto cameraView = registry.view<component::CameraComponent, component::TransformComponent>();
-		//for (const ecs::Entity& cameraEntity : cameraView)
-		//{
-		//	// Render Comp
-		//	{
-		//		const auto renderView = registry.view<component::RenderComponent, component::TransformComponent>();
-		//		for (const ecs::Entity& view : renderView)
-		//		{
-		//			const auto& renderComp = renderView.get<component::RenderComponent>(view);
-		//			const auto& transformComponent = renderView.get<component::TransformComponent>(view);
+		auto model = std::make_shared<vulkan::Model>(m_Device, vertices);
 
-		//			sf::Sprite* sprite = renderComp.m_Sprite;
-		//			const sf::Texture* texture = renderComp.m_Sprite->getTexture();
-		//			if (sprite && texture)
-		//			{
-		//				sprite->setPosition(transformComponent.m_Position.x, transformComponent.m_Position.y);
-		//				sprite->setOrigin(texture->getSize().x / 2.0f, texture->getSize().y / 2.0f);
-		//				sprite->setScale(transformComponent.m_Scale.x, transformComponent.m_Scale.y * -1.0f);
-		//				m_SFMLWindow.m_Texture.draw(*sprite);
-		//			}
-		//		}
-		//	}
-		//}
+		auto& registry = m_World->m_Registry;
+		const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
+		for (const auto& entity : view)
+		{
+			component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
+
+			renderComponent.model = model;
+		}
+	}
+
+	void RenderSystem::CreatePipelineLayout()
+	{
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(SimplePushConstantData);
+
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = 0;
+		pipelineLayoutInfo.pSetLayouts = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
+
+		bool success = vkCreatePipelineLayout(m_Device.device(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout) == VK_SUCCESS;
+		SAZ_ASSERT(success, "Failed to create Pipeline Layout!");
+	}
+
+	void RenderSystem::CreatePipeline()
+	{
+		SAZ_ASSERT(m_PipelineLayout != nullptr, "Cannot create pipeline before pipeline layout!");
+
+		vulkan::PipelineConfig pipelineConfig{};
+		vulkan::Pipeline::DefaultPipelineConfig(pipelineConfig);
+
+		pipelineConfig.renderPass = m_Renderer->GetSwapChainRenderPass();
+		pipelineConfig.pipelineLayout = m_PipelineLayout;
+		m_Pipeline = std::make_unique<vulkan::Pipeline>(m_Device, pipelineConfig);
 	}
 }
