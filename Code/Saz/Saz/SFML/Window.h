@@ -33,6 +33,7 @@ namespace Saz::sfml
 		void Render();
 
 		ivec2 GetSize() const override { return m_Size; }
+		void SetSize(ivec2 newSize) override { m_Size = newSize; }
 
 		bool ShouldClose() const override;
 

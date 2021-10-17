@@ -9,7 +9,6 @@
 	#include <windowsx.h>
 #endif
 
-
 #include <assert.h>
 #include <filesystem>
 #include <fstream>  
@@ -19,10 +18,13 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
+
 
 #include <map>
 #include <queue>
 #include <set>
+#include <unordered_set>
 #include <string>
 #include <vector>
 #include <optional>
@@ -33,6 +35,8 @@
 #include <Core/Math.h>
 #include <Core/FilePath.h>
 #include <Core/Random.h>
+#include <Core/Matrix.h>
+#include <Core/Rotator.h>
 #include <Core/Set.h>
 #include <Core/String.h>
 #include <Core/Vector.h>

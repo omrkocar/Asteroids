@@ -8,9 +8,7 @@ namespace sf
 	class VertexArray;
 }
 
-#define M_PI 3.1415926535897932384626433832795f
 
-const float FEQUALEPSILON = 0.00001f;
 
 struct Math
 {

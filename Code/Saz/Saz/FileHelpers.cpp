@@ -50,9 +50,32 @@ namespace Saz::file
 		writer.EndArray();
 	}
 
+	void JSONSaveVec3(WriterType& writer, const char* key, vec3 value)
+	{
+		writer.Key(key);
+		writer.StartArray();
+		writer.Double(value.x);
+		writer.Double(value.y);
+		writer.Double(value.z);
+		writer.EndArray();
+	}
+
+
+	void JSONLoadVec3(rapidjson::Value& object, const char* key, vec3* value)
+	{
+		SAZ_ASSERT(value, "Value is nullptr");
+
+		if (object.HasMember(key))
+		{
+			value->x = object[key][0].GetFloat();
+			value->y = object[key][1].GetFloat();
+			value->z = object[key][2].GetFloat();
+		}
+	}
+
 	void JSONLoadInt(rapidjson::Value& object, const char* key, int* value)
 	{
-		assert(value != nullptr);
+		SAZ_ASSERT(value, "Value is nullptr");
 
 		if (object.HasMember(key))
 		{
@@ -62,7 +85,7 @@ namespace Saz::file
 
 	void JSONLoadVec2(rapidjson::Value& object, const char* key, vec2* value)
 	{
-		assert(value != nullptr);
+		SAZ_ASSERT(value, "Value is nullptr");
 
 		if (object.HasMember(key))
 		{
@@ -70,4 +93,22 @@ namespace Saz::file
 			value->y = object[key][1].GetFloat();
 		}
 	}
+
+	bool LoadFileAsChar(const FilePath& filepath, DynamicArray<char>& out_DynamicArray)
+	{
+		std::ifstream file{ filepath, std::ios::ate | std::ios::binary };
+
+		if (!file.is_open())
+			return false;
+
+		const size_t fileSize = (size_t)file.tellg();
+		out_DynamicArray.resize(fileSize);
+		file.seekg(0);
+
+		file.read(out_DynamicArray.data(), fileSize);
+		file.close();
+
+		return true;
+	}
+
 }

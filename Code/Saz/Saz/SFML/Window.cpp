@@ -234,6 +234,10 @@ namespace Saz::sfml
 			case sf::Event::Closed:
 				m_Window.close();
 				break;
+			case sf::Event::Resized:
+				sf::FloatRect visibleArea(0, 0, eventData.size.width, eventData.size.height);
+				m_Window.setView(sf::View(visibleArea));
+				break;
 			};
 		}
 

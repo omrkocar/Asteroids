@@ -3,6 +3,7 @@
 
 #include "Saz/FileHelpers.h"
 #include "Saz/InputComponent.h"
+#include "Saz/CameraComponent.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/MovementComponent.h"
 #include "Saz/NameComponent.h"
@@ -25,7 +26,7 @@ namespace ecs
 	{
 		m_World->DestroyAllEntities();
 
-		FilePath relativePath = "D:/Dev/Saz/Data/" + filename;
+		FilePath relativePath = "D:/Dev/Saz/Data/Scenes/" + filename;
 		const char* jsonSceneFile = Saz::file::LoadCompleteFile(relativePath.u8string().c_str(), nullptr);
 		if (!jsonSceneFile)
 		{
@@ -72,9 +73,9 @@ namespace ecs
 					{
 						component::TransformComponent& transformComponent = m_World->AddComponent<component::TransformComponent>(entity);
 						if (component.HasMember("Pos"))
-							Saz::file::JSONLoadVec2(component, "Pos", &transformComponent.m_Position);
+							Saz::file::JSONLoadVec3(component, "Pos", &transformComponent.m_Position);
 						if (component.HasMember("Scale"))
-							Saz::file::JSONLoadVec2(component, "Scale", &transformComponent.m_Scale);
+							Saz::file::JSONLoadVec3(component, "Scale", &transformComponent.m_Scale);
 					}
 					if (componentType == "MovementComponent")
 					{
@@ -85,45 +86,14 @@ namespace ecs
 					if (componentType == "RenderComponent")
 					{
 						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
-						StringView type = component["Type"].GetString();
-
-						if (type == "Sprite")
-						{
-							const String& textureName = component["TextureName"].GetString();
-							renderComp.m_Sprite = m_ResourceManager.CreateSprite();
-							sf::Sprite* sprite = renderComp.m_Sprite.value();
-							sprite->setTexture(m_ResourceManager.GetTexture(textureName));
-						}
-						else if (type == "Shape")
-						{
-							StringView shapeType = component["ShapeType"].GetString();
-
-							if (shapeType == "Rectangle")
-							{
-								if (component.HasMember("Size"))
-								{
-									float x = component["Size"][0].GetFloat();
-									float y = component["Size"][1].GetFloat();
-
-									renderComp.m_RectangleShape = m_ResourceManager.CreateRectangle("Rectangle", vec2(x, y));
-									const String& textureName = component["TextureName"].GetString();
-									renderComp.m_RectangleShape.value()->setTexture(&m_ResourceManager.GetTexture(textureName));
-								}
-							}
-							else if (shapeType == "Circle")
-							{
-								const float radius = component["Radius"].GetFloat();
-								const int pointCount = component["PointCount"].GetInt();
-								const String& textureName = component["TextureName"].GetString();
-
-
-								renderComp.m_CircleShape = m_ResourceManager.CreateCircle("Circle", radius, pointCount);
-								sf::CircleShape* circleShape = renderComp.m_CircleShape.value();
-								circleShape->setTexture(&m_ResourceManager.GetTexture(textureName));
-								circleShape->setFillColor(sf::Color::Blue);
-								circleShape->setOrigin(radius / 2, radius / 2);
-							}
-						}
+						const String& textureName = component["TextureName"].GetString();
+						renderComp.m_Sprite = m_ResourceManager.CreateSprite();
+						sf::Sprite& sprite = *renderComp.m_Sprite;
+						sprite.setTexture(m_ResourceManager.GetTexture(textureName));	
+					}
+					if (componentType == "CameraComponent")
+					{
+						m_World->AddComponent<component::CameraComponent>(entity);
 					}
 				}
 			}		

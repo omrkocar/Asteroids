@@ -26,7 +26,7 @@ namespace ecs
 
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
-		auto& registry = m_World->m_Registry;
+		/*auto& registry = m_World->m_Registry;
 
 		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 		m_MousePrevious = std::move(m_MouseCurrent);
@@ -45,6 +45,6 @@ namespace ecs
 			component.m_MouseCurrent = m_MouseCurrent;
 			component.m_MouseDelta = mouseDelta;
 			component.m_MousePosition = mousePos;
-		}
+		}*/
 	}
 }

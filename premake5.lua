@@ -11,6 +11,8 @@ workspace "Saz"
 	cppdialect	"C++17"
 
 	outputdir = "%{cfg.buildcfg}_%{cfg.platform}"
+
+	
 	
 	targetdir ("%{wks.location}/Build/%{prj.name}/" .. outputdir )
 	objdir ("%{wks.location}/Intermediate/%{prj.name}/" .. outputdir)
@@ -34,8 +36,7 @@ workspace "Saz"
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS",
-		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS"
-		
+		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
 	}
 
 	files 

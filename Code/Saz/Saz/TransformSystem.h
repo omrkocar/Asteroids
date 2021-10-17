@@ -17,7 +17,5 @@ namespace ecs
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-
-		float speed;
 	};
 }

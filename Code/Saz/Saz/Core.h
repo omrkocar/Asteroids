@@ -21,13 +21,11 @@
 #endif
 
 #ifdef SAZ_ENABLE_ASSERTS
-	#define SAZ_ASSERT(x, ...) { if(!x) { SAZ_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define SAZ_CORE_ASSERT(x, ...) { if(!x) { SAZ_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define SAZ_ASSERT(x, ...) { if(!(x)) { SAZ_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define SAZ_CORE_ASSERT(x, ...) { if(!(x)) { SAZ_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
 	#define SAZ_ASSERT(x, ...)
 	#define SAZ_CORE_ASSERT(x, ...)
 #endif
 
 #define BIT(x) (1 << x)
-
-#define SAZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

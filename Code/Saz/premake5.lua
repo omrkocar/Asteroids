@@ -30,6 +30,7 @@ project "Saz"
 	IncludeDir["imguisfml"] = "%{wks.location}/3rdParty/imgui-sfml"
 	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
 	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
+	IncludeDir["Vulkan"] = "%{wks.location}/3rdParty/Vulkan/Include/"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
@@ -37,7 +38,7 @@ project "Saz"
 		"%{wks.location}/3rdParty/SFML/Include/",
 		"%{wks.location}/3rdParty/imgui-sfml/",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.glad}",
+		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.imguisfml}",
 		"%{IncludeDir.entt}",
@@ -47,7 +48,8 @@ project "Saz"
 	libdirs
 	{
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
+		--"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/3rdParty/Vulkan/Library/",
 		"%{wks.location}/Build/ImGui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GLFW/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
@@ -55,9 +57,10 @@ project "Saz"
 	links {
 		"Core",
 		"GLFW",
-		"Glad",
+		--"Glad",
+		"vulkan-1.lib",
 		"ImGui",
-		"opengl32.lib",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -67,6 +70,8 @@ project "Saz"
 			"SAZ_PLATFORM_WINDOWS",
 			"SAZ_BUILD_DLL",
 			"GLFW_INCLUDE_NONE",
+			"VK_INSTANCE_LAYERS",
+			"VK_LAYER_PATH",
 		}
 
 

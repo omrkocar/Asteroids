@@ -8,7 +8,7 @@ namespace Saz
 
 	struct WindowProps
 	{
-		String m_Title;
+		StringView m_Title;
 		ivec2 m_Size;
 
 		WindowProps(const String& title = "Saz",
@@ -31,6 +31,7 @@ namespace Saz
 		virtual void Update(const Saz::GameTime& gameTime) = 0;
 
 		virtual ivec2 GetSize() const = 0;
+		virtual void SetSize(ivec2 newSize) = 0;
 
 		virtual bool HasResized() const { return false; }
 		virtual bool ShouldClose() const { return false; }

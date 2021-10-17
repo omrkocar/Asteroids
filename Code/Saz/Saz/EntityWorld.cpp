@@ -2,7 +2,6 @@
 #include "EntityWorld.h"
 
 #include "Saz/System.h"
-#include "Saz/TransformComponent.h"
 
 namespace ecs
 {

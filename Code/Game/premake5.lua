@@ -19,9 +19,7 @@ project "Game"
 
 	files
 	{
-		"%{wks.location}/Data/Textures/*.png",
-		"%{wks.location}/Data/Textures/*.jpg",
-		"%{wks.location}/Data/Scenes/*.scene",
+		"%{wks.location}/Data/**",
 	}
 
 	includedirs {
@@ -31,6 +29,7 @@ project "Game"
 		"%{wks.location}/3rdParty/glad/src/",
 		"%{wks.location}/3rdParty/imgui/",
 		"%{wks.location}/3rdParty/SFML/Include/",
+		"%{wks.location}/3rdParty/Vulkan/Include/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
 	}
@@ -67,6 +66,11 @@ project "Game"
 			"sfml-window.lib",
 		}
 	filter {} -- disable the filter
+
+	buildcommands 
+	{ 
+		"cd %{wks.location}/Data/Shaders/ & call CompileShaders.cmd" 
+	}
 
 	postbuildcommands 
 	{ 
