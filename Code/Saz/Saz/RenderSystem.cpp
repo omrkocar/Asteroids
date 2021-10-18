@@ -13,6 +13,7 @@
 #include "Saz/GLFW/Window.h"
 
 #include <entt/entt.hpp>
+#include "GameTime.h"
 
 
 namespace 
@@ -20,7 +21,6 @@ namespace
 	struct SimplePushConstantData
 	{
 		Matrix transform = Matrix::Identity;
-		vec2 offset;
 		alignas(16) vec3 color;
 	};
 }
@@ -56,47 +56,127 @@ namespace ecs
 			m_Pipeline->Bind(commandBuffer);
 
 			m_Renderer->BeginSwapChainRenderPass(commandBuffer);
-			
-			const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
-			for (const auto& entity : view)
+
+			const auto cameraView = registry.view<component::CameraComponent, component::TransformComponent>();
+			for (const auto& entity : cameraView)
 			{
-				component::TransformComponent& transformComponent = view.get<component::TransformComponent>(entity);
-				component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
+					component::CameraComponent& cameraComponent = cameraView.get<component::CameraComponent>(entity);
+				{
+					component::TransformComponent& transformComponent = cameraView.get<component::TransformComponent>(entity);
 
-				SimplePushConstantData push{};
-				push.offset = vec2(transformComponent.m_Position.x, transformComponent.m_Position.y);
-				push.color = renderComponent.color;
+					if (cameraComponent.m_ViewType == ViewType::Orthographic)
+					{
+						cameraComponent.m_ProjectionMatrix.CreateOrtho(-transformComponent.m_Scale.x, transformComponent.m_Scale.x,
+							-transformComponent.m_Scale.y, transformComponent.m_Scale.y,
+							-1000, 1000);
+					}
+					else
+					{
+						cameraComponent.m_ProjectionMatrix.CreatePerspectiveVFoV(60.0f, Screen::width / Screen::height, 0.01f, 1000.0f);
+					}
+				}
 
-				transformComponent.m_Rotation += Rotator(0.001f);
-				
-				vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-				renderComponent.model->Bind(commandBuffer);
-				renderComponent.model->Draw(commandBuffer);
-			}
+				const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
+				for (const auto& entity : view)
+				{
+					component::TransformComponent& transformComponent = view.get<component::TransformComponent>(entity);
+					component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
 
-			m_Renderer->EndSwapChainRenderPass(commandBuffer);
-			m_Renderer->EndFrame();
+					transformComponent.m_Rotation.x = std::fmod(Math::RadiansToDegrees(gameTime.m_TotalTime) * 0.5f, 360.0f);
+					transformComponent.m_Rotation.y = std::fmod(Math::RadiansToDegrees(gameTime.m_TotalTime) * 2.0f, 360.0f);
+
+					Matrix transform;
+					transform.CreateSRT(transformComponent.m_Scale, transformComponent.m_Rotation, transformComponent.m_Position);
+
+					SimplePushConstantData push{};
+					push.transform = cameraComponent.m_ProjectionMatrix * cameraComponent.m_ViewMatrix * transform;
+					push.color = renderComponent.color;
+
+					vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+					renderComponent.model->Bind(commandBuffer);
+					renderComponent.model->Draw(commandBuffer);
+				}
+
+				m_Renderer->EndSwapChainRenderPass(commandBuffer);
+				m_Renderer->EndFrame();
+
+			}			
 		}
+	}
+
+	std::unique_ptr<vulkan::Model> RenderSystem::CreateCube(vulkan::Device& device, vec3 offset)
+	{
+		DynamicArray<vulkan::Vertex> vertices{
+
+			// left face (white)
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+			// right face (yellow)
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+			// top face (orange, remember y axis points down)
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+			// bottom face (red)
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+			// nose face (blue)
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+			// tail face (green)
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+		};
+		for (auto& v : vertices) {
+			v.position += offset;
+		}
+		return std::make_unique<vulkan::Model>(device, vertices);
 	}
 
 	void RenderSystem::LoadObjects()
 	{
-		DynamicArray<vulkan::Vertex> vertices
-		{
-			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-		};
-
-		auto model = std::make_shared<vulkan::Model>(m_Device, vertices);
+		std::shared_ptr<vulkan::Model> model = CreateCube(m_Device, { 0.0f, 0.0f, 0.0f });
 
 		auto& registry = m_World->m_Registry;
 		const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
 		for (const auto& entity : view)
 		{
 			component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
+			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
 
 			renderComponent.model = model;
+			transformComp.m_Position = { 0.0f, 0.0f, 0.5f };
+			transformComp.m_Scale = { 0.5f, 0.5f, 0.5f };
 		}
 	}
 

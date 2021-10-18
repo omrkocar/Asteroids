@@ -54,15 +54,6 @@ namespace ecs
 			const String& entityName = obj["Name"].GetString();
 			nameComp.m_Name = !entityName.empty() ? entityName : "InvalidName";
 		
-
-			if (obj.HasMember("IsPlayer"))
-			{
-				if (obj["IsPlayer"].GetBool() == true)
-				{
-					m_World->AddComponent<component::InputComponent>(entity);
-				}
-			}
-		
 			// #todo: clean this up
 			if (obj.HasMember("Components"))
 			{
@@ -91,6 +82,10 @@ namespace ecs
 					if (componentType == "CameraComponent")
 					{
 						m_World->AddComponent<component::CameraComponent>(entity);
+					}
+					if (componentType == "InputComponent")
+					{
+						m_World->AddComponent<component::InputComponent>(entity);
 					}
 				}
 			}		

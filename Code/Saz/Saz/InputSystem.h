@@ -6,7 +6,7 @@ namespace Saz
 {
 	class GameTime;
 
-	namespace sfml
+	namespace glfw
 	{
 		class Window;
 	}
@@ -19,14 +19,14 @@ namespace ecs
 	{
 	public:
 		
-		InputSystem(Saz::sfml::Window& sfmlWindow);
+		InputSystem(Saz::glfw::Window& glfwWindow);
 		~InputSystem();
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
-		Saz::sfml::Window& m_SFMLWindow;
+		Saz::glfw::Window& m_GLFWWindow;
 
 		Set<Input::EKeyboard> m_KeyboardPrevious;
 		Set<Input::EKeyboard> m_KeyboardCurrent;

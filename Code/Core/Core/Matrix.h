@@ -44,6 +44,7 @@ public:
     //    , m14(o.m14), m24(o.m24), m34(o.m34), m44(o.m44) {}
 
     // The following functions will affect existing values in the matrix.
+    Matrix(vec3 scale, vec3 rot, vec3 pos);
 
 	static const Matrix Identity;
 	static const Matrix Zero;

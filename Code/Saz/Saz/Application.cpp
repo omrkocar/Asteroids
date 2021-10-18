@@ -4,6 +4,7 @@
 #include "Saz/CameraComponent.h"
 #include "Saz/EntityWorld.h"
 #include "Saz/GameTime.h"
+#include "Saz/CameraSystem.h"
 #include "Saz/InputComponent.h"
 #include "Saz/InputSystem.h"
 #include "Saz/RenderSystem.h"
@@ -123,10 +124,11 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 
-		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_SFMLWindow);
+		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_GLFWWindow);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Device, *m_GLFWWindow);
 		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
+		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
 	}
 
 	void Application::Destroy()

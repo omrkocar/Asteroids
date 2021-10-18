@@ -238,5 +238,4 @@ namespace Saz::glfw
 		window->m_Size.x = static_cast<uint32_t>(width);
 		window->m_Size.y = static_cast<uint32_t>(height);
 	}
-
 }

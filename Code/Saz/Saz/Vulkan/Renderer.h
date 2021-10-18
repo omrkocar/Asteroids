@@ -11,6 +11,7 @@ namespace vulkan
 {
 	class Device;
 	class SwapChain;
+	class Model;
 }
 
 namespace vulkan 
@@ -25,6 +26,7 @@ namespace vulkan
 		Renderer& operator=(const Renderer&) = delete;
 
 		VkRenderPass GetSwapChainRenderPass() const;
+		float GetAspectRatio() const;
 		bool IsFrameInProgress() const { return m_IsFrameStarted; }
 
 		VkCommandBuffer GetCurrentCommandBuffer() const;
@@ -44,6 +46,7 @@ namespace vulkan
 		Saz::glfw::Window& m_Window;
 		vulkan::Device& m_Device;
 		std::unique_ptr<vulkan::SwapChain> m_SwapChain;
+		vulkan::Model* m_Model = nullptr;
 		std::vector<VkCommandBuffer> m_CommandBuffers;
 
 		uint32_t m_ImageIndex = 0;

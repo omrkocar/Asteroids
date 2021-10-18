@@ -23,6 +23,7 @@ namespace vulkan
 {
 	class Device;
 	class Pipeline;
+	class Model;
 	class Renderer;
 }
 
@@ -38,10 +39,10 @@ namespace ecs
 		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
+		std::unique_ptr<vulkan::Model> CreateCube(vulkan::Device& device, vec3 offset);
 		void LoadObjects();
 		void CreatePipelineLayout();
 		void CreatePipeline();
-		void RenderSFML();
 
 	private:
 		vulkan::Device& m_Device;

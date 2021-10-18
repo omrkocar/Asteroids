@@ -11,12 +11,15 @@
 
 #include <GLFW/glfw3.h>
 #include <Vulkan/vulkan.h>
+#include "../Screen.h"
 
 namespace vulkan {
 
 	Renderer::Renderer(Saz::glfw::Window& window, vulkan::Device& device)
 		: m_Window{ window }, m_Device{ device }
 	{
+		m_Model = new vulkan::Model(m_Device, vulkan::s_CubeIndexedV, vulkan::s_CubeIndexedI);
+
 		RecreateSwapChain();
 		CreateCommandBuffers();
 	}
@@ -41,9 +44,12 @@ namespace vulkan {
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_SwapChain);
 			m_SwapChain = std::make_unique<SwapChain>(m_Device, extent, oldSwapChain);
 
-			bool success = !oldSwapChain->compareSwapFormats(*m_SwapChain.get());
+			bool success = oldSwapChain->compareSwapFormats(*m_SwapChain.get());
 			SAZ_ASSERT(success, "Swap chain image(or depth) format has changed!");
 		}
+
+		Screen::width = extent.x;
+		Screen::height = extent.y;
 	}
 
 	void Renderer::CreateCommandBuffers() {
@@ -170,5 +176,10 @@ namespace vulkan {
 		return m_SwapChain->getRenderPass();
 	}
 
+
+	float Renderer::GetAspectRatio() const
+	{
+		return m_SwapChain->extentAspectRatio();
+	}
 
 }  // namespace vulkan

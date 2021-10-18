@@ -69,7 +69,7 @@ project "Game"
 
 	buildcommands 
 	{ 
-		"cd %{wks.location}/Data/Shaders/ & call CompileShaders.cmd" 
+		"cd %{wks.location}/Data/Shaders & call CompileShaders.bat" 
 	}
 
 	postbuildcommands 

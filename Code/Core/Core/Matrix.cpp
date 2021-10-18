@@ -9,6 +9,11 @@
 
 #include "Matrix.h"
 
+Matrix::Matrix(vec3 scale, vec3 rot, vec3 pos)
+{
+    CreateSRT(scale, rot, pos);
+}
+
 const Matrix Matrix::Identity(
 	1.f, 0.f, 0.f, 0.f,
 	0.f, 1.f, 0.f, 0.f,
