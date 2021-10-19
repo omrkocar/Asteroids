@@ -25,6 +25,7 @@ namespace vulkan
 	class Pipeline;
 	class Model;
 	class Renderer;
+	class Buffer;
 }
 
 namespace ecs 
@@ -39,7 +40,8 @@ namespace ecs
 		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
-		std::unique_ptr<vulkan::Model> CreateCube(vulkan::Device& device, vec3 offset);
+		std::unique_ptr<vulkan::Model> CreateCube(vulkan::Device& device);
+		std::unique_ptr<vulkan::Model> CreatePlane(vulkan::Device& device);
 		void LoadObjects();
 		void CreatePipelineLayout();
 		void CreatePipeline();
@@ -51,6 +53,7 @@ namespace ecs
 		vulkan::Renderer* m_Renderer = nullptr;
 
 		std::unique_ptr<vulkan::Pipeline> m_Pipeline;
+		std::unique_ptr<vulkan::Buffer> m_Buffer;
 		VkPipelineLayout m_PipelineLayout;
 	};
 }

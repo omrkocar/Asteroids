@@ -32,6 +32,7 @@ project "Game"
 		"%{wks.location}/3rdParty/Vulkan/Include/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
+		"%{wks.location}/3rdParty/glm/",
 	}
 
 	libdirs{

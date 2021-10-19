@@ -86,7 +86,7 @@ namespace Saz
 			glfwInit();
 
 			Saz::WindowProps windowProps;
-			windowProps.m_Title = "GLFW Window";
+			windowProps.m_Title = "Saz Engine";
 			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
 			m_GLFWWindow = new glfw::Window(windowProps);
 

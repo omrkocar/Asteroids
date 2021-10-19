@@ -12,7 +12,7 @@
 namespace
 {
 	constexpr float s_TranslateSpeed = 1000.f;
-	constexpr float s_RotateSpeed = 250.0f;
+	constexpr float s_RotateSpeed = 350.0f;
 }
 
 namespace ecs
@@ -41,17 +41,6 @@ namespace ecs
 
 				vec3& position = transformComponent.m_Position;
 				vec3& rotation = transformComponent.m_Rotation;	
-				
-
-				/*vec3 rot(0.0f);
-				if (inputComponent.IsKeyHeld(Input::EKeyboard::J))
-					rot.y += -1.0f;
-				if (inputComponent.IsKeyHeld(Input::EKeyboard::L))
-					rot.y += 1.0f;
-				if (inputComponent.IsKeyHeld(Input::EKeyboard::I))
-					rot.x += 1.0f;
-				if (inputComponent.IsKeyHeld(Input::EKeyboard::K))
-					rot.x += -1.0f;*/
 
 				vec3 translateDir = vec3::Zero();
 
@@ -81,9 +70,6 @@ namespace ecs
 					rotator.y = -inputComponent.m_MouseDelta.x * s_RotateSpeed * gameTime.m_DeltaTime;
 
 					rotation += rotator;
-
-					//SAZ_CORE_INFO("CamRot: vec3({0},{1},{2})", rotation.x, rotation.y, rotation.z);
-					SAZ_CORE_INFO("MouseDeltaX: {0}", inputComponent.m_MouseDelta.x);
 				}
 			}
 		}

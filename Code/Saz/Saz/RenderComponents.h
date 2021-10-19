@@ -11,6 +11,7 @@ namespace component
 		//sf::Sprite* m_Sprite = nullptr;
 		std::shared_ptr<vulkan::Model> model;
 		vec3 color;
+		//StringView m_Type;
 	};
 }
 

@@ -26,6 +26,7 @@
 #include <array>
 #include <set>
 #include <unordered_set>
+#include <unordered_map>
 #include <string>
 #include <vector>
 #include <optional>

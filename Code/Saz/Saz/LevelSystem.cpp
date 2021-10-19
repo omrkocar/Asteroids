@@ -78,6 +78,13 @@ namespace ecs
 					{
 						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
 						Saz::file::JSONLoadVec3(component, "Color", &renderComp.color);
+
+						if (component.HasMember("Type"))
+						{
+							/*const String& type = component["Type"].GetString();
+
+							renderComp.m_Type = type;*/
+						}
 					}
 					if (componentType == "CameraComponent")
 					{

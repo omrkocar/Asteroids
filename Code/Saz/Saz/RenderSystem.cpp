@@ -10,6 +10,8 @@
 #include "Saz/Vulkan/Renderer.h"
 #include "Saz/Vulkan/Model.h"
 #include "Saz/Vulkan/Device.h"
+#include "Saz/Vulkan/Buffer.h"
+#include "Saz/Vulkan/SwapChain.h"
 #include "Saz/GLFW/Window.h"
 
 #include <entt/entt.hpp>
@@ -21,7 +23,13 @@ namespace
 	struct SimplePushConstantData
 	{
 		Matrix transform = Matrix::Identity;
-		alignas(16) vec3 color;
+		Matrix modelMatrix = Matrix::Identity;
+	};
+
+	struct GlobalUbo
+	{
+		Matrix projectionView = Matrix::Identity;
+		vec3 lightDirection = vec3(1.0f, -3.0f, -1.0f).GetNormalized();
 	};
 }
 namespace ecs
@@ -31,6 +39,14 @@ namespace ecs
 		, m_GLFWWindow(window)
 	{
 		m_Renderer = new vulkan::Renderer(m_GLFWWindow, m_Device);
+		m_Buffer = std::make_unique<vulkan::Buffer>(
+			m_Device,
+			sizeof(GlobalUbo),
+			vulkan::SwapChain::MAX_FRAMES_IN_FLIGHT,
+			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			m_Device.properties.limits.minUniformBufferOffsetAlignment);
+		m_Buffer->map();
 
 		CreatePipelineLayout();
 		CreatePipeline();
@@ -53,6 +69,7 @@ namespace ecs
 
 		if (auto commandBuffer = m_Renderer->BeginFrame())
 		{
+			// render
 			m_Pipeline->Bind(commandBuffer);
 
 			m_Renderer->BeginSwapChainRenderPass(commandBuffer);
@@ -76,6 +93,13 @@ namespace ecs
 						cameraComponent.m_ViewMatrix.Inverse();
 						cameraComponent.m_ProjectionMatrix.CreatePerspectiveVFoV(60.0f, Screen::width / Screen::height, 0.01f, 1000.0f);
 					}
+
+					int frameIndex = m_Renderer->GetFrameIndex();
+
+					GlobalUbo ubo{};
+					ubo.projectionView = cameraComponent.m_ProjectionMatrix * cameraComponent.m_ViewMatrix;
+					m_Buffer->writeToBuffer(&ubo, frameIndex);
+					m_Buffer->flushIndex(frameIndex);
 				}
 
 				const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
@@ -84,15 +108,15 @@ namespace ecs
 					component::TransformComponent& transformComponent = view.get<component::TransformComponent>(entity);
 					component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
 
-					transformComponent.m_Rotation.x = std::fmod(Math::ToDegrees(gameTime.m_TotalTime) * 0.5f, 360.0f);
 					transformComponent.m_Rotation.y = std::fmod(Math::ToDegrees(gameTime.m_TotalTime) * 2.0f, 360.0f);
+					transformComponent.m_Rotation.x = std::fmod(Math::ToDegrees(gameTime.m_TotalTime) * 0.5f, 360.0f);
 
 					Matrix transform;
 					transform.CreateSRT(transformComponent.m_Scale, Quaternion::FromRotator(transformComponent.m_Rotation), transformComponent.m_Position);
 
 					SimplePushConstantData push{};
 					push.transform = cameraComponent.m_ProjectionMatrix * cameraComponent.m_ViewMatrix * transform;
-					push.color = renderComponent.color;
+					push.modelMatrix = transform;
 
 					vkCmdPushConstants(commandBuffer, m_PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 					renderComponent.model->Bind(commandBuffer);
@@ -105,68 +129,9 @@ namespace ecs
 		}
 	}
 
-	std::unique_ptr<vulkan::Model> RenderSystem::CreateCube(vulkan::Device& device, vec3 offset)
-	{
-		DynamicArray<vulkan::Vertex> vertices{
-
-			// left face (white)
-			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-			{{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-			{{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-
-			// right face (yellow)
-			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-			{{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-			{{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-
-			// top face (orange, remember y axis points down)
-			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-			{{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-			{{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-
-			// bottom face (red)
-			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-			{{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-			{{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-
-			// nose face (blue)
-			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-			{{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-			{{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-
-			// tail face (green)
-			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-			{{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-			{{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-
-		};
-		for (auto& v : vertices) {
-			v.position += offset;
-		}
-		return std::make_unique<vulkan::Model>(device, vertices);
-	}
-
 	void RenderSystem::LoadObjects()
 	{
-		std::shared_ptr<vulkan::Model> model = CreateCube(m_Device, { 0.0f, 0.0f, 0.0f });
+		std::shared_ptr<vulkan::Model> model = vulkan::Model::CreateModelFromFile(m_Device, "D:/Dev/Saz/Data/Models/ColoredCube.obj");
 
 		auto& registry = m_World->m_Registry;
 		const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
