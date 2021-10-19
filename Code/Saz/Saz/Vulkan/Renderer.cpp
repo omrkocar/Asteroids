@@ -18,7 +18,7 @@ namespace vulkan {
 	Renderer::Renderer(Saz::glfw::Window& window, vulkan::Device& device)
 		: m_Window{ window }, m_Device{ device }
 	{
-		m_Model = new vulkan::Model(m_Device, vulkan::s_CubeIndexedV, vulkan::s_CubeIndexedI);
+		//m_Model = new vulkan::Model(m_Device, vulkan::s_CubeIndexedV, vulkan::s_CubeIndexedI);
 
 		RecreateSwapChain();
 		CreateCommandBuffers();

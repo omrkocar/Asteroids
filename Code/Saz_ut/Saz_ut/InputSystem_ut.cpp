@@ -5,9 +5,7 @@
 #include <Saz/System.h>
 #include <Saz/InputComponent.h>
 #include <Saz/InputSystem.h>
-#include <Saz/SFML/Window.h>
-
-#include <SFML/Window/Keyboard.hpp>
+#include <Saz/GLFW/Window.h>
 
 
 TEST_CASE("Input System")
@@ -17,7 +15,7 @@ TEST_CASE("Input System")
 	world.RegisterComponent<component::InputComponent>();
 
 	Saz::WindowProps props;
-	Saz::sfml::Window window(props);
+	Saz::glfw::Window window(props);
 	world.RegisterSystem<ecs::InputSystem>(window);
 
 	auto entity = world.CreateEntity();

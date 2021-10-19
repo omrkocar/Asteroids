@@ -22,6 +22,7 @@ project "Saz_ut"
 		"%{wks.location}/3rdParty/glad/src/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
+		"%{wks.location}/3rdParty/Vulkan/Include/",
 	}
 
 	libdirs

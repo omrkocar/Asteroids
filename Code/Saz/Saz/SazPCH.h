@@ -41,6 +41,7 @@
 #include <Core/Set.h>
 #include <Core/String.h>
 #include <Core/Vector.h>
+#include <Core/Quaternion.h>
 
 #include "Saz/Core.h"
 #include "Saz/Entity.h"

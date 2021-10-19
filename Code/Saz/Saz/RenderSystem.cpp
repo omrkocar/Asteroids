@@ -72,6 +72,8 @@ namespace ecs
 					}
 					else
 					{
+						cameraComponent.m_ViewMatrix.CreateSRT(vec3(1.0f), Quaternion::FromRotator(transformComponent.m_Rotation), transformComponent.m_Position);
+						cameraComponent.m_ViewMatrix.Inverse();
 						cameraComponent.m_ProjectionMatrix.CreatePerspectiveVFoV(60.0f, Screen::width / Screen::height, 0.01f, 1000.0f);
 					}
 				}
@@ -82,11 +84,11 @@ namespace ecs
 					component::TransformComponent& transformComponent = view.get<component::TransformComponent>(entity);
 					component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
 
-					transformComponent.m_Rotation.x = std::fmod(Math::RadiansToDegrees(gameTime.m_TotalTime) * 0.5f, 360.0f);
-					transformComponent.m_Rotation.y = std::fmod(Math::RadiansToDegrees(gameTime.m_TotalTime) * 2.0f, 360.0f);
+					transformComponent.m_Rotation.x = std::fmod(Math::ToDegrees(gameTime.m_TotalTime) * 0.5f, 360.0f);
+					transformComponent.m_Rotation.y = std::fmod(Math::ToDegrees(gameTime.m_TotalTime) * 2.0f, 360.0f);
 
 					Matrix transform;
-					transform.CreateSRT(transformComponent.m_Scale, transformComponent.m_Rotation, transformComponent.m_Position);
+					transform.CreateSRT(transformComponent.m_Scale, Quaternion::FromRotator(transformComponent.m_Rotation), transformComponent.m_Position);
 
 					SimplePushConstantData push{};
 					push.transform = cameraComponent.m_ProjectionMatrix * cameraComponent.m_ViewMatrix * transform;
@@ -96,11 +98,10 @@ namespace ecs
 					renderComponent.model->Bind(commandBuffer);
 					renderComponent.model->Draw(commandBuffer);
 				}
+			}
 
-				m_Renderer->EndSwapChainRenderPass(commandBuffer);
-				m_Renderer->EndFrame();
-
-			}			
+			m_Renderer->EndSwapChainRenderPass(commandBuffer);
+			m_Renderer->EndFrame();
 		}
 	}
 
@@ -172,11 +173,7 @@ namespace ecs
 		for (const auto& entity : view)
 		{
 			component::RenderComponent& renderComponent = view.get<component::RenderComponent>(entity);
-			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
-
 			renderComponent.model = model;
-			transformComp.m_Position = { 0.0f, 0.0f, 0.5f };
-			transformComp.m_Scale = { 0.5f, 0.5f, 0.5f };
 		}
 	}
 

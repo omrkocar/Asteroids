@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "MathHelpers.h"
+#include "Core/Math.h"
 #include <assert.h>
 
 class vec2
@@ -34,8 +34,8 @@ public:
 	inline float Length() const { return sqrtf(x * x + y * y); }
 	inline float DistanceFrom(const vec2 o) const { return sqrtf((x - o.x) * (x - o.x) + (y - o.y) * (y - o.y)); }
 
-	inline vec2 GetNormalized() const { float len = Length(); if (fequal(len, 0)) return vec2(x, y); len = 1.0f / len; return vec2(x * len, y * len); }
-	inline vec2 Normalize() { float len = Length(); if (!fequal(len, 0)) { x /= len; y /= len; } return *this; }
+	inline vec2 GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return vec2(x, y); len = 1.0f / len; return vec2(x * len, y * len); }
+	inline vec2 Normalize() { float len = Length(); if (!Math::fequal(len, 0)) { x /= len; y /= len; } return *this; }
 	inline void Absolute() { if (x < 0) x *= -1; if (y < 0) y *= -1; }
 	inline vec2 GetAbsolute() const { return vec2(x < 0 ? -x : x, y < 0 ? -y : y); }
 	inline float Dot(const vec2& o) const { return x * o.x + y * o.y; }
@@ -46,8 +46,8 @@ public:
 	inline vec2 WithX(float x) const { return vec2(x, this->y); }
 	inline vec2 WithY(float y) const { return vec2(this->x, y); }
 
-	inline bool operator ==(const vec2& o) const { return fequal(this->x, o.x) && fequal(this->y, o.y); }
-	inline bool operator !=(const vec2& o) const { return !fequal(this->x, o.x) || !fequal(this->y, o.y); }
+	inline bool operator ==(const vec2& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y); }
+	inline bool operator !=(const vec2& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y); }
 
 	inline vec2 operator -() const { return vec2(-this->x, -this->y); }
 	inline vec2 operator *(const float o) const { return vec2(this->x * o, this->y * o); }
@@ -106,8 +106,8 @@ public:
 	inline float Length() const { return sqrtf(x * x + y * y + z * z); }
 	inline float DistanceFrom(const vec3 o) const { return sqrtf((x - o.x) * (x - o.x) + (y - o.y) * (y - o.y) + (z - o.z) * (z - o.z)); }
 
-	inline vec3 GetNormalized() const { float len = Length(); if (fequal(len, 0)) return vec3(x, y, z); len = 1.0f / len; return vec3(x * len, y * len, z * len); }
-	inline vec3 Normalize() { float len = Length(); if (!fequal(len, 0)) { x /= len; y /= len; z /= len; } return *this; }
+	inline vec3 GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return vec3(x, y, z); len = 1.0f / len; return vec3(x * len, y * len, z * len); }
+	inline vec3 Normalize() { float len = Length(); if (!Math::fequal(len, 0)) { x /= len; y /= len; z /= len; } return *this; }
 	inline vec3 Cross(const vec3& o) const { return vec3((y * o.z - z * o.y), (z * o.x - x * o.z), (x * o.y - y * o.x)); }
 	inline float Dot(const vec3& o) const { return x * o.x + y * o.y + z * o.z; }
 	inline vec3 Add(const vec3& o) const { return vec3(this->x + o.x, this->y + o.y, this->z + o.z); }
@@ -121,8 +121,8 @@ public:
 	inline vec3 WithY(float y) const { return vec3(this->x, y, this->z); }
 	inline vec3 WithZ(float z) const { return vec3(this->x, this->y, z); }
 
-	inline bool operator ==(const vec3& o) const { return fequal(this->x, o.x) && fequal(this->y, o.y) && fequal(this->z, o.z); }
-	inline bool operator !=(const vec3& o) const { return !fequal(this->x, o.x) || !fequal(this->y, o.y) || !fequal(this->z, o.z); }
+	inline bool operator ==(const vec3& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y) && Math::fequal(this->z, o.z); }
+	inline bool operator !=(const vec3& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y) || !Math::fequal(this->z, o.z); }
 
 	inline vec3 operator -() const { return vec3(-this->x, -this->y, -this->z); }
 	inline vec3 operator *(const float o) const { return vec3(this->x * o, this->y * o, this->z * o); }
@@ -175,8 +175,8 @@ public:
 	inline float Length() const { return sqrtf(x * x + y * y + z * z + w * w); }
 	inline float DistanceFrom(const vec4 o) const { return sqrtf((x - o.x) * (x - o.x) + (y - o.y) * (y - o.y) + (z - o.z) * (z - o.z) + (w - o.w) * (w - o.w)); }
 
-	inline vec4 GetNormalized() const { float len = Length(); if (fequal(len, 0)) return vec4(x, y, z, w); len = 1.0f / len; return vec4(x * len, y * len, z * len, w * len); }
-	inline vec4 Normalize() { float len = Length(); if (!fequal(len, 0)) { x /= len; y /= len; z /= len; w /= len; } return *this; }
+	inline vec4 GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return vec4(x, y, z, w); len = 1.0f / len; return vec4(x * len, y * len, z * len, w * len); }
+	inline vec4 Normalize() { float len = Length(); if (!Math::fequal(len, 0)) { x /= len; y /= len; z /= len; w /= len; } return *this; }
 	//vec4 CrossProduct(const vec4& b, const vec4& c)
 	// from http://www.gamedev.net/topic/269241-4d-vec-class/
 	//  not sure if right and have no use for it.
@@ -208,8 +208,8 @@ public:
 	inline vec4 WithZ(float z) const { return vec4(this->x, this->y, z, this->w); }
 	inline vec4 WithW(float w) const { return vec4(this->x, this->y, this->z, w); }
 
-	inline bool operator ==(const vec4& o) const { return fequal(this->x, o.x) && fequal(this->y, o.y) && fequal(this->z, o.z) && fequal(this->w, o.w); }
-	inline bool operator !=(const vec4& o) const { return !fequal(this->x, o.x) || !fequal(this->y, o.y) || !fequal(this->z, o.z) || !fequal(this->w, o.w); }
+	inline bool operator ==(const vec4& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y) && Math::fequal(this->z, o.z) && Math::fequal(this->w, o.w); }
+	inline bool operator !=(const vec4& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y) || !Math::fequal(this->z, o.z) || !Math::fequal(this->w, o.w); }
 
 	inline vec4 operator -() const { return vec4(-this->x, -this->y, -this->z, -this->w); }
 	inline vec4 operator *(const float o) const { return vec4(this->x * o, this->y * o, this->z * o, this->w * o); }
@@ -249,7 +249,7 @@ public:
 	inline float Length() const { return sqrtf((float)x * x + y * y); }
 	inline float DistanceFrom(const ivec2 o) const { return sqrtf(((float)x - o.x) * (x - o.x) + (y - o.y) * (y - o.y)); }
 
-	//inline ivec2 Normalize() const {float len = Length(); if( fequal(len,0) ) return ivec2(x,y); len = 1.0f/len; return ivec2(x*len, y*len);}
+	//inline ivec2 Normalize() const {float len = Length(); if( Math::fequal(len,0) ) return ivec2(x,y); len = 1.0f/len; return ivec2(x*len, y*len);}
 
 	inline ivec2 WithX(int x) const { return ivec2(x, this->y); }
 	inline ivec2 WithY(int y) const { return ivec2(this->x, y); }
@@ -310,7 +310,7 @@ public:
 	inline float Length() const { return sqrtf((float)x * x + y * y + z * z); }
 	inline float DistanceFrom(const ivec3 o) const { return sqrtf(((float)x - o.x) * (x - o.x) + (y - o.y) * (y - o.y) + (z - o.z) * (z - o.z)); }
 
-	//inline ivec3 Normalize() const {float len = Length(); if( fequal(len,0) ) return ivec3(x,y,z); len = 1.0f/len; return ivec3(x*len, y*len, z*len);}
+	//inline ivec3 Normalize() const {float len = Length(); if( Math::fequal(len,0) ) return ivec3(x,y,z); len = 1.0f/len; return ivec3(x*len, y*len, z*len);}
 	//inline ivec3 Cross(const ivec3& o) const {return ivec3( (y*o.z - z*o.y), (z*o.x - x*o.z), (x*o.y - y*o.x) );}
 
 	inline vec3 MultiplyComponents(const vec3& o) const { return vec3(this->x * o.x, this->y * o.y, this->z * o.z); }
@@ -380,7 +380,7 @@ public:
 	inline float Length() const { return sqrtf((float)x * x + y * y + z * z + w * w); }
 	inline float DistanceFrom(const ivec4 o) const { return sqrtf(((float)x - o.x) * (x - o.x) + (y - o.y) * (y - o.y) + (z - o.z) * (z - o.z) + (w - o.w) * (w - o.w)); }
 
-	//inline ivec4 Normalize() const {float len = Length(); if( fequal(len,0) ) return ivec4(x,y,z); len = 1.0f/len; return ivec4(x*len, y*len, z*len);}
+	//inline ivec4 Normalize() const {float len = Length(); if( Math::fequal(len,0) ) return ivec4(x,y,z); len = 1.0f/len; return ivec4(x*len, y*len, z*len);}
 	//inline ivec4 Cross(const ivec4& o) const {return ivec4( (y*o.z - z*o.y), (z*o.x - x*o.z), (x*o.y - y*o.x) );}
 
 	inline ivec4 WithX(int x) const { return ivec4(x, this->y, this->z, this->w); }
@@ -435,8 +435,8 @@ public:
 	inline float Length() const { return sqrtf((float)x * x + y * y); }
 	inline float DistanceFrom(const vec2T<MyType>& o) const { return sqrtf(((float)x - o.x) * (x - o.x) + (y - o.y) * (y - o.y)); }
 
-	inline vec2T<MyType> GetNormalized() const { float len = Length(); if (fequal(len, 0)) return vec2T<MyType>(x, y); len = 1.0f / len; return vec2T<MyType>(x * len, y * len); }
-	//inline vec2T<MyType> Normalize() const {float len = Length(); if( fequal(len,0) ) return vec2T<MyType>(x,y); len = 1.0f/len; return vec2T<MyType>(x*len, y*len);}
+	inline vec2T<MyType> GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return vec2T<MyType>(x, y); len = 1.0f / len; return vec2T<MyType>(x * len, y * len); }
+	//inline vec2T<MyType> Normalize() const {float len = Length(); if( Math::fequal(len,0) ) return vec2T<MyType>(x,y); len = 1.0f/len; return vec2T<MyType>(x*len, y*len);}
 
 	inline vec2T<MyType> WithX(MyType x) const { return vec2T<MyType>(x, this->y); }
 	inline vec2T<MyType> WithY(MyType y) const { return vec2T<MyType>(this->x, y); }

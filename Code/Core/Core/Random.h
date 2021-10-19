@@ -1,26 +1,13 @@
 #pragma once
 
-#include <random>
-
-class Random
+namespace Random
 {
-public:
-	Random();
-	Random(int seed);
+	// #todo: specify allowed types
+	template<typename Type>
+	Type Range(const Type& min, const Type& max);
 
-	int RandomInt();
+	template<>
+	inline float Range<float>(const float& min, const float& max);
+}
 
-	int RandomIntInRange(int min, int max);
-
-	float RandomFloatInRange(float min, float max);
-
-	template<typename T>
-	T RandomValueInRange(T min, T max)
-	{
-		std::uniform_real_distribution<T> distribution(min, max);
-		return distribution(m_MersenneTwister);
-	}
-
-private:
-	std::mt19937 m_MersenneTwister;
-};
+#include "Random.inl"
