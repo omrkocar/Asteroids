@@ -12,7 +12,7 @@ struct GLFWwindow;
 
 namespace Saz::glfw
 {
-	class Window final : public Saz::WindowBase
+	class SAZ_API Window final : public Saz::WindowBase
 	{
 
 	public:

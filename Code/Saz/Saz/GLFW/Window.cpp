@@ -185,9 +185,7 @@ namespace Saz::glfw
 
 		glfwSetFramebufferSizeCallback(m_Window, FramebufferResizeCallback);
 
-		glViewport(0, 0, Screen::width, Screen::height);
-
-		
+		glViewport(0, 0, (GLsizei)Screen::width, (GLsizei)Screen::height);
 	}
 
 	Window::~Window()

@@ -23,13 +23,13 @@ workspace "Saz"
 		defines { "_DEBUG", "SAZ_DEBUG", "SAZ_ENABLE_ASSERTS" }
 		optimize "Off"
 		runtime "Debug"
-		--buildoptions "/MDd"
+		buildoptions "/MDd"
 		symbols "On"
 	filter "Release"
 		defines { "NDEBUG", "SAZ_RELEASE" }
 		optimize "Speed"
 		runtime "Release"
-		--buildoptions "/MD"
+		buildoptions "/MD"
 		symbols "Off"
 	filter {} -- disable the filter
 
@@ -59,7 +59,7 @@ workspace "Saz"
 	include "3rdParty/imgui/premake5.lua"
 	include "3rdParty/GLFW/premake5.lua"
 
-	group "ut"
+	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"
 		include "Code/Saz_ut/premake5.lua"
 	group ""

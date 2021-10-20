@@ -10,7 +10,6 @@
 #include "Saz/RenderSystem.h"
 #include "Saz/ResourceManager.h"
 #include "Saz/GLFW/Window.h"
-#include "Saz/SFML/Window.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/LevelSystem.h"
 #include "Saz/MovementComponent.h"
@@ -35,7 +34,10 @@ namespace Saz
 
 	Application::Application()
 	{
-		spd::Log::Init();
+		SAZ_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
+
+		Saz::Log::Init();
 
 		{
 			glfwInit();
@@ -45,9 +47,6 @@ namespace Saz
 			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
 			m_GLFWWindow = new glfw::Window(windowProps);
 		}
-
-		SAZ_ASSERT(!s_Instance, "Application already exists!");
-		s_Instance = this;
 		
 		m_ImGuiLog = new imgui::Log();
 
@@ -72,6 +71,7 @@ namespace Saz
 
 	void Application::PostInit()
 	{
+		m_GLFWWindow->PostInit();
 		m_EntityWorld.PostInit();
 	}
 
@@ -110,13 +110,11 @@ namespace Saz
 		Init();
 		PostInit();
 
-		sf::Clock clock;
 		Saz::GameTime gameTime;
 
 		while (true)
 		{
-			gameTime.m_Time = clock.restart();
-			gameTime.m_DeltaTime = gameTime.m_Time.asSeconds();
+			gameTime.m_DeltaTime = glfwGetTime();
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
@@ -124,9 +122,7 @@ namespace Saz
 
 			m_GLFWWindow->Update(gameTime);
 			if (m_GLFWWindow->ShouldClose())
-				break;
-
-			
+				break;			
 		}
 	}
 }

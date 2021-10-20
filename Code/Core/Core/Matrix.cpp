@@ -160,8 +160,8 @@ void Matrix::Rotate(float angle, float x, float y, float z)
 	float sinAngle, cosAngle;
 	float mag = sqrtf(x * x + y * y + z * z);
 
-	sinAngle = sinf(angle * PI_ONE / 180.0f);
-	cosAngle = cosf(angle * PI_ONE / 180.0f);
+	sinAngle = sinf(angle * PI / 180.0f);
+	cosAngle = cosf(angle * PI / 180.0f);
 	if (mag > 0.0f)
 	{
 		float xx, yy, zz, xy, yz, zx, xs, ys, zs;
@@ -297,7 +297,7 @@ void Matrix::CreatePerspectiveVFoV(float vertfovdegrees, float aspect, float nea
 {
 	float frustumRight, frustumTop;
 
-	frustumTop = tanf(vertfovdegrees / 2 * PI_ONE / 180.0f) * nearZ;
+	frustumTop = tanf(vertfovdegrees / 2 * PI / 180.0f) * nearZ;
 	frustumRight = frustumTop * aspect;
 
 	CreateFrustum(-frustumRight, frustumRight, -frustumTop, frustumTop, nearZ, farZ);
@@ -307,7 +307,7 @@ void Matrix::CreatePerspectiveHFoV(float horfovdegrees, float aspect, float near
 {
 	float frustumRight, frustumTop;
 
-	frustumRight = tanf(horfovdegrees / 2 * PI_ONE / 180.0f) * nearZ;
+	frustumRight = tanf(horfovdegrees / 2 * PI / 180.0f) * nearZ;
 	frustumTop = frustumRight / aspect;
 
 	CreateFrustum(-frustumRight, frustumRight, -frustumTop, frustumTop, nearZ, farZ);
@@ -398,24 +398,24 @@ vec3 Matrix::GetEulerAngles()
 	// rearranged from above and using FEQUALEPSILON to give special cases more chance of hitting
 	if (m32 > 1.0f - EPSILON) // Not a unique solution: thetaZ - thetaY = atan2( -m21, m11 )
 	{
-		float x = PI_ONE / 2;
+		float x = PI / 2;
 		float y = atan2f(m21, m11);
 		float z = 0.0f;
-		return vec3(x, y, z) * 180.0f / PI_ONE;
+		return vec3(x, y, z) * 180.0f / PI;
 	}
 	else if (m32 < -1.0f + EPSILON) // Not a unique solution: thetaZ + thetaY = atan2( -m21, m11 )
 	{
-		float x = -PI_ONE / 2;
+		float x = -PI / 2;
 		float y = -atan2f(m21, m11);
 		float z = 0.0f;
-		return vec3(x, y, z) * 180.0f / PI_ONE;
+		return vec3(x, y, z) * 180.0f / PI;
 	}
 	else
 	{
 		float x = asinf(m32);
 		float y = atan2f(-m31, m33);
 		float z = atan2f(-m12, m22);
-		return vec3(x, y, z) * 180.0f / PI_ONE;
+		return vec3(x, y, z) * 180.0f / PI;
 	}
 }
 

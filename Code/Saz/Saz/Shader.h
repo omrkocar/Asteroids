@@ -2,7 +2,7 @@
 
 #include <glad/glad.h> // include glad to get all the required OpenGL headers
 
-class Shader
+class SAZ_API Shader
 {
 public:
 	// the program ID

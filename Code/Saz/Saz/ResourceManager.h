@@ -1,7 +1,8 @@
 #pragma once
 
-namespace Saz {
-	class ResourceManager
+namespace Saz 
+{
+	class SAZ_API ResourceManager
 	{
 	public:
 		ResourceManager();

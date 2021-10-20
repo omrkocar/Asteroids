@@ -26,6 +26,7 @@ namespace Saz
 		virtual ~WindowBase() {}
 
 		virtual void Init() {}
+		virtual void PostInit() {}
 		virtual void Destroy() {}
 
 		virtual void Update(const Saz::GameTime& gameTime) = 0;
@@ -33,7 +34,6 @@ namespace Saz
 		virtual ivec2 GetSize() const = 0;
 		virtual void SetSize(ivec2 newSize) = 0;
 
-		virtual bool HasResized() const { return false; }
 		virtual bool ShouldClose() const { return false; }
 
 	private:

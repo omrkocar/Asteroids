@@ -11,7 +11,6 @@
 #include <Saz/ResourceManager.h>
 #include <Saz/NameComponent.h>
 #include <Saz/LevelSystem.h>
-#include <Saz/SFML/Window.h>
 
 
 #include <entt/entt.hpp>
@@ -31,9 +30,8 @@ void Application::Init()
 {
 	Saz::Application::Init();
 
-	m_EntityWorld.RegisterSystem<ecs::SceneEditor>(*m_SFMLWindow);
+	m_EntityWorld.RegisterSystem<ecs::SceneEditor>();
 
-	// #todo: Fix the paths asap
 	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
 	levelSystem.LoadFromFile("DefaultScene.scene");
 
@@ -53,10 +51,6 @@ void Application::Register()
 void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
-
-	//DrawMenuBar();
-
-	//ImGui::EndFrame();
 }
 
 void Application::DrawMenuBar()

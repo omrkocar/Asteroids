@@ -27,22 +27,16 @@ project "Saz"
 	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/include"
 	IncludeDir["glad"] = "%{wks.location}/3rdParty/glad/include"
 	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"
-	IncludeDir["imguisfml"] = "%{wks.location}/3rdParty/imgui-sfml"
 	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
 	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
-	IncludeDir["Vulkan"] = "%{wks.location}/3rdParty/Vulkan/Include/"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/3rdParty/",
-		"%{wks.location}/3rdParty/SFML/Include/",
-		"%{wks.location}/3rdParty/imgui-sfml/",
 		"%{wks.location}/3rdParty/glm/",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glad}",
-		"%{IncludeDir.imguisfml}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.spdlog}",
 	}

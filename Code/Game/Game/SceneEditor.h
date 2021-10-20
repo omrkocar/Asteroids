@@ -18,7 +18,7 @@ namespace ecs
 	{
 	public:
 		
-		SceneEditor(Saz::sfml::Window& sfmlWindow);
+		SceneEditor();
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
@@ -27,7 +27,5 @@ namespace ecs
 		void Render();
 
 	private:
-		Saz::sfml::Window& m_SFMLWindow;
-		bool m_IsVisible = true;
 	};
 }
