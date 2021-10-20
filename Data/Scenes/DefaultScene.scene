@@ -8,7 +8,8 @@
 					"Scale": [ 1.0, 1.0, 1.0 ]
 				}, {
 					"ComponentType": "RenderComponent",
-					"Color":  [ 1.0, 0.8, 0.1]
+					"Mesh": "Cube",
+					"Material":  "Lit"
 			}]
 		}, {
 			"Name": "Camera",

@@ -8,10 +8,10 @@ namespace Saz
 
 	struct WindowProps
 	{
-		StringView m_Title;
+		char* m_Title = nullptr;
 		ivec2 m_Size;
 
-		WindowProps(const String& title = "Saz",
+		WindowProps(char* title = "Saz",
 					ivec2 size = ivec2(1280, 720))
 			: m_Title(title), m_Size(size)
 		{}

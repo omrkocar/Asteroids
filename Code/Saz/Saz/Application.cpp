@@ -19,38 +19,9 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 #include "Saz/TransformSystem.h"
-#include "Saz/Vulkan/Pipeline.h"
-#include "Saz/Vulkan/Device.h"
-#include "Saz/Vulkan/SwapChain.h"
-#include "Saz/Vulkan/Model.h"
+#include "Saz/GLFW/Window.h"
 
-
-#include <GLFW/glfw3.h>
-
-namespace
-{
-	void Triangles(
-		std::vector<vulkan::Vertex>& vertices,
-		int depth,
-		vec2 left,
-		vec2 right,
-		vec2 top) 
-	{
-		if (depth <= 0) {
-			vertices.push_back({ top });
-			vertices.push_back({ right });
-			vertices.push_back({ left });
-		}
-		else {
-			auto leftTop = 0.5f * (left + top);
-			auto rightTop = 0.5f * (right + top);
-			auto leftRight = 0.5f * (left + right);
-			Triangles(vertices, depth - 1, left, leftRight, leftTop);
-			Triangles(vertices, depth - 1, leftRight, right, rightTop);
-			Triangles(vertices, depth - 1, leftTop, rightTop, top);
-		}
-	}
-}
+#include <glfw/glfw3.h>
 
 namespace Saz
 {
@@ -66,22 +37,6 @@ namespace Saz
 	{
 		spd::Log::Init();
 
-		SAZ_ASSERT(!s_Instance, "Application already exists!");
-		s_Instance = this;
-
-		
-		m_ImGuiLog = new imgui::Log();
-
-		// #todo Create all textures with a single call here.
-		m_pResourceManager = new Saz::ResourceManager();
-		
-		/*{
-			Saz::WindowProps windowProps ;
-			windowProps.m_Title = "SFML Window";
-			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
-			m_SFMLWindow = new sfml::Window(windowProps);
-		}*/
-
 		{
 			glfwInit();
 
@@ -89,14 +44,20 @@ namespace Saz
 			windowProps.m_Title = "Saz Engine";
 			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
 			m_GLFWWindow = new glfw::Window(windowProps);
-
-			m_Device = std::make_unique<vulkan::Device>(*m_GLFWWindow);
 		}
+
+		SAZ_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
+		
+		m_ImGuiLog = new imgui::Log();
+
+		// #todo Create all textures with a single call here.
+		m_pResourceManager = new Saz::ResourceManager();	
+		
 	}
 
 	Application::~Application()
 	{
-		//delete m_SFMLWindow;
 		delete m_GLFWWindow;
 		delete m_ImGuiLog;
 		delete m_pResourceManager;
@@ -126,7 +87,7 @@ namespace Saz
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_GLFWWindow);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Device, *m_GLFWWindow);
+		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_GLFWWindow);
 		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
 	}
@@ -159,15 +120,13 @@ namespace Saz
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
-			/*m_SFMLWindow->Update(gameTime);
-			if (m_SFMLWindow->ShouldClose())
-				break;*/
+			Update(gameTime);
 
 			m_GLFWWindow->Update(gameTime);
 			if (m_GLFWWindow->ShouldClose())
 				break;
 
-			Update(gameTime);
+			
 		}
 	}
 }

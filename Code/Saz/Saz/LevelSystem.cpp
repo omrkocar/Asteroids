@@ -8,11 +8,12 @@
 #include "Saz/MovementComponent.h"
 #include "Saz/NameComponent.h"
 #include "Saz/RenderComponents.h"
-#include "Saz/RenderSystem.h"
 #include "Saz/ResourceManager.h"
 #include "Saz/TransformComponent.h"
 
 #include <entt/entt.hpp>
+#include "Saz/Application.h"
+#include "Saz/ResourceManager.h"
 
 namespace ecs
 {	
@@ -76,15 +77,19 @@ namespace ecs
 					}
 					if (componentType == "RenderComponent")
 					{
-						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
-						Saz::file::JSONLoadVec3(component, "Color", &renderComp.color);
+						//component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
 
-						if (component.HasMember("Type"))
+						Saz::ResourceManager* pResources = Saz::Application::Get().GetResourceManager();
+
+						/*if (component.HasMember("Mesh"))
 						{
-							/*const String& type = component["Type"].GetString();
-
-							renderComp.m_Type = type;*/
+							renderComp.m_Mesh = pResources->GetMesh(component["Mesh"].GetString());
 						}
+
+						if (component.HasMember("Material"))
+						{
+							renderComp.m_Material = pResources->GetMaterial(component["Material"].GetString());
+						}*/
 					}
 					if (componentType == "CameraComponent")
 					{

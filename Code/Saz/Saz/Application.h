@@ -21,12 +21,9 @@ namespace Saz
 	}
 }
 
-namespace vulkan
+namespace gl
 {
-	class Pipeline;
-	class Device;
-	class SwapChain;
-	class Model;
+	class Window;
 }
 
 namespace imgui
@@ -48,23 +45,22 @@ namespace Saz
 
 		inline static Application& Get() { return *s_Instance; }
 
+		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }
+
 	protected:
 		virtual void Init();
 		virtual void PostInit();
 		virtual void Register();
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
-		void DrawFrame();
 
 		const ecs::EntityWorld& GetWorld();
-		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }
+		
 
 
 		Saz::sfml::Window* m_SFMLWindow = nullptr;
 		Saz::glfw::Window* m_GLFWWindow = nullptr;
-
-		std::unique_ptr<vulkan::Device> m_Device;
-		DynamicArray<VkCommandBuffer> m_CommandBuffers;
+		gl::Window* m_GLWindow = nullptr;
 
 		Saz::ResourceManager* m_pResourceManager;
 

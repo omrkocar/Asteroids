@@ -1,15 +1,9 @@
-#version 450
+uniform vec4 u_Color;
+uniform sampler2D u_Texture;
 
-layout(location = 0) in vec3 fragColor;
-layout (location = 0) out vec4 outColor;
-
-layout(push_constant) uniform Push
-{
-	mat4 transform; // projection * view * model
-	mat4 normalMatrix;
-} push;
+varying vec2 v_UVCoord;
 
 void main()
 {
-	outColor = vec4(fragColor, 1.0f);
+	gl_FragColor = u_Color;
 }

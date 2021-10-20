@@ -13,9 +13,6 @@
 #include <Saz/LevelSystem.h>
 #include <Saz/SFML/Window.h>
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 
 #include <entt/entt.hpp>
 
@@ -35,11 +32,6 @@ void Application::Init()
 	Saz::Application::Init();
 
 	m_EntityWorld.RegisterSystem<ecs::SceneEditor>(*m_SFMLWindow);
-
-	m_pResourceManager->LoadTexture("Ship.png");
-	m_pResourceManager->LoadTexture("Hollow_Knight.png");
-	m_pResourceManager->LoadTexture("Island.png");
-	m_pResourceManager->LoadTexture("Water.png");
 
 	// #todo: Fix the paths asap
 	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();

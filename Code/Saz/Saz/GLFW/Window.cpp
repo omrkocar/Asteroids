@@ -5,7 +5,9 @@
 
 #include <Core/Input.h>
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "../Screen.h"
 
 namespace
 {
@@ -171,12 +173,24 @@ namespace Saz::glfw
 		m_Title = props.m_Title;
 		m_Size = props.m_Size;
 
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		m_Window = glfwCreateWindow(props.m_Size.x, props.m_Size.y, m_Title.c_str(), nullptr, nullptr);
+		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, this);
+		
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::cout << "Failed to initialize GLAD" << std::endl;
+		}
+
 		glfwSetFramebufferSizeCallback(m_Window, FramebufferResizeCallback);
+
+		glViewport(0, 0, Screen::width, Screen::height);
+
+		
 	}
 
 	Window::~Window()
@@ -186,7 +200,7 @@ namespace Saz::glfw
 
 	void Window::Update(const Saz::GameTime& gameTime)
 	{
-		glfwPollEvents();
+		
 
 		double posX, posY;
 		glfwGetCursorPos(m_Window, &posX, &posY);
@@ -196,7 +210,9 @@ namespace Saz::glfw
 		mousePos.y = static_cast<float>(posY);
 		m_MouseDelta = m_MousePos - mousePos;
 		m_MousePos = mousePos;
-		
+
+		glfwSwapBuffers(m_Window);
+		glfwPollEvents();
 	}
 
 	bool Window::ShouldClose() const
@@ -233,9 +249,6 @@ namespace Saz::glfw
 
 	void Window::FramebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height)
 	{
-		auto* window = reinterpret_cast<glfw::Window*>(glfwGetWindowUserPointer(glfwWindow));
-		window->m_HasResized = true;
-		window->m_Size.x = static_cast<uint32_t>(width);
-		window->m_Size.y = static_cast<uint32_t>(height);
+		glViewport(0, 0, width, height);
 	}
 }

@@ -41,6 +41,7 @@ project "Saz"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Vulkan}",
 		"%{IncludeDir.imgui}",
+		"%{IncludeDir.glad}",
 		"%{IncludeDir.imguisfml}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.spdlog}",
@@ -49,7 +50,7 @@ project "Saz"
 	libdirs
 	{
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		--"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
+		"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/3rdParty/Vulkan/Library/",
 		"%{wks.location}/Build/ImGui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GLFW/%{cfg.buildcfg}_%{cfg.platform}/",
@@ -58,7 +59,7 @@ project "Saz"
 	links {
 		"Core",
 		"GLFW",
-		--"Glad",
+		"Glad",
 		"vulkan-1.lib",
 		"ImGui",
 		"opengl32.lib"

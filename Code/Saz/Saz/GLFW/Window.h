@@ -10,6 +10,11 @@ namespace Input
 	enum class EMouse;
 }
 
+namespace Saz
+{
+	class MyGLContext;
+}
+
 struct GLFWwindow;
 
 namespace Saz::glfw
@@ -44,6 +49,8 @@ namespace Saz::glfw
 
 		vec2 m_MousePos = vec2(0.0f);
 		vec2 m_MouseDelta = vec2(0.0f);
+
+		Saz::MyGLContext* m_pMyGLContext;
 
 		bool m_HasResized = false;
 

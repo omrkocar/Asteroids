@@ -1,30 +1,24 @@
-#version 450
+attribute vec3 a_Position;
+attribute vec2 a_UVCoord; // Input from VBO in C++.
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 color;
-layout(location = 2) in vec3 normal;
-layout(location = 3) in vec2 uv;
+uniform mat4 u_WorldTransform;
+uniform mat4 u_ViewTransform;
+uniform mat4 u_ProjectionMatrix;
 
-layout(location = 0) out vec3 fragColor;
+uniform vec2 u_UVScale;
+uniform vec2 u_UVOffset;
 
+varying vec2 v_UVCoord; // Output to frag shader.
 
-layout(push_constant) uniform Push
+void main()
 {
-	mat4 transform; // projection * view * model
-	mat4 normalMatrix;
-} push;
+    vec4 localPos = vec4( a_Position, 1 );
+    vec4 worldPos = u_WorldTransform * localPos;
+    vec4 viewPos = u_ViewTransform * worldPos;
+    vec4 clipPos = u_ProjectionMatrix * viewPos;
 
-const vec3 DIRECTION_TO_LIGHT = normalize(vec3(1.0, -3.0, -1.0));
-const float AMBIENT = 0.02;
+    gl_Position = clipPos;
 
-void main() 
-{
-	gl_Position = push.transform * vec4(position, 1.0);
-
-	// only works correctly if scale is uniform (sx == sy == sz)
-	vec3 normalWorldSpace = normalize(mat3(push.normalMatrix) * normal);
-
-	float lightIntensity = AMBIENT + max(dot(normalWorldSpace, DIRECTION_TO_LIGHT), 0);
-
-	fragColor = lightIntensity * color;
+    // Transform UV coordinates.
+    v_UVCoord = a_UVCoord * u_UVScale + u_UVOffset;
 }
