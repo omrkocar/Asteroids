@@ -36,6 +36,14 @@
 #include <Core/Set.h>
 #include <Core/String.h>
 #include <Core/Vector.h>
+#include <Core/Color.h>
+
+#include <GL/GL.h>
+#include "Saz/GL/glext.h"
+#include "Saz/GL/wglext.h"
+
+#include "GL/GLExtensions.h"
+#include "GL/WGLExtensions.h"
 
 #include "Saz/Core.h"
 #include "Saz/Entity.h"
