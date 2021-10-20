@@ -40,6 +40,5 @@ namespace ecs
 			m_Registry.destroy(entity);
 			});
 	}
-
 }
 

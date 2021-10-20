@@ -3,8 +3,6 @@
 #include <Saz/EntityWorld.h>
 #include <Saz/WindowBase.h>
 
-#include <Vulkan/vulkan.h>
-
 namespace Saz
 {
 	class ResourceManager;

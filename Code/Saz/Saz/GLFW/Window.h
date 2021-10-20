@@ -2,17 +2,10 @@
 
 #include <Saz/WindowBase.h>
 
-#include <Vulkan/vulkan.h>
-
 namespace Input
 {
 	enum class EKeyboard;
 	enum class EMouse;
-}
-
-namespace Saz
-{
-	class MyGLContext;
 }
 
 struct GLFWwindow;
@@ -36,7 +29,6 @@ namespace Saz::glfw
 		void GatherKeyboard(Set<Input::EKeyboard>& out_Keys) const;
 		void GatherMouse(Set<Input::EMouse>& out_Keys, vec2& out_Delta, vec2& out_Position) const;
 
-		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 		bool HasResized() const override { return m_HasResized; }
 		void SetResized(bool value) { m_HasResized = value; }
 
@@ -49,8 +41,6 @@ namespace Saz::glfw
 
 		vec2 m_MousePos = vec2(0.0f);
 		vec2 m_MouseDelta = vec2(0.0f);
-
-		Saz::MyGLContext* m_pMyGLContext;
 
 		bool m_HasResized = false;
 

@@ -2,12 +2,12 @@
 #include "Window.h"
 
 #include "Saz/GameTime.h"
+#include "Saz/Screen.h"
 
 #include <Core/Input.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "../Screen.h"
 
 namespace
 {
@@ -170,9 +170,6 @@ namespace Saz::glfw
 	Window::Window(const Saz::WindowProps& props)
 		: Saz::WindowBase(props)
 	{
-		m_Title = props.m_Title;
-		m_Size = props.m_Size;
-
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -239,12 +236,6 @@ namespace Saz::glfw
 
 		out_Delta = m_MouseDelta;
 		out_Position = m_MousePos;
-	}
-
-	void Window::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
-	{
-		bool success = glfwCreateWindowSurface(instance, m_Window, nullptr, surface) == VK_SUCCESS;
-		SAZ_ASSERT(success, "Failed to create window surface!");
 	}
 
 	void Window::FramebufferResizeCallback(GLFWwindow* glfwWindow, int width, int height)

@@ -51,7 +51,6 @@ project "Saz"
 	{
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/3rdParty/Vulkan/Library/",
 		"%{wks.location}/Build/ImGui/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/GLFW/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
@@ -60,7 +59,6 @@ project "Saz"
 		"Core",
 		"GLFW",
 		"Glad",
-		"vulkan-1.lib",
 		"ImGui",
 		"opengl32.lib"
 	}
