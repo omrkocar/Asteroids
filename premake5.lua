@@ -31,7 +31,7 @@ workspace "Saz"
 		runtime "Release"
 		buildoptions "/MD"
 		symbols "Off"
-	filter {} -- disable the filter
+	filter {}
 
 	defines
 	{
@@ -57,8 +57,6 @@ workspace "Saz"
 	include "Code/Game/premake5.lua"
 	include "3rdParty/imgui/premake5.lua"
 	include "3rdParty/raylib-cpp/premake5.lua"
-	--include "3rdParty/GLFW/premake5.lua"
-	--include "3rdParty/ogre/premake5.lua"
 
 	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"
@@ -72,6 +70,5 @@ project "ZERO_CHECK"
 	location "%{wks.location}/Projects/ZERO_CHECK"
 	files { "%{wks.location}/premake5.lua" }
 
-	-- fix the path
 	buildcommands { "cd %{wks.location} & call GenerateProjectFiles.bat" }
 	buildoutputs { "unused.txt" }

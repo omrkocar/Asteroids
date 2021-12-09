@@ -2,12 +2,13 @@
 #include "InputSystem.h"
 
 #include "Saz/InputComponent.h"
-#include "Saz/NameComponent.h"
+#include "Saz/MovementComponent.h"
 #include "Saz/Window.h"
 
 
 #include <entt/entt.hpp>
 #include "TransformComponent.h"
+#include "GameTime.h"
 
 namespace ecs
 {	
@@ -24,35 +25,34 @@ namespace ecs
 
 	void InputSystem::Init()
 	{
-		/*auto& registry = m_World->m_Registry;
-
-		auto entity = m_World->CreateEntity();
-		m_World->AddComponent<component::NameComponent>(entity).m_Name = "Input";
-		m_World->AddComponent<component::InputComponent>(entity);*/
+		
 	}
 
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
-		const auto view = registry.view<component::InputComponent, component::TransformComponent>();
+		// Temporary
+		const auto view = registry.view<component::InputComponent, component::TransformComponent, component::MovementComponent>();
 		for (const ecs::Entity& entity : view)
 		{
 			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
+			component::MovementComponent& movementComp = view.get<component::MovementComponent>(entity);
+			float moveSpeed = movementComp.m_Speed;
 			if (IsKeyDown(KEY_D))
 			{
-				transformComp.m_Position.x += 0.1f;
+				transformComp.m_Position.x += moveSpeed * gameTime.m_DeltaTime;
 			}
 			if (IsKeyDown(KEY_A))
 			{
-				transformComp.m_Position.x -= 0.1f;
+				transformComp.m_Position.x -= moveSpeed * gameTime.m_DeltaTime;
 			}
 			if (IsKeyDown(KEY_W))
 			{
-				transformComp.m_Position.y -= 0.1f;
+				transformComp.m_Position.y -= moveSpeed * gameTime.m_DeltaTime;
 			}
 			if (IsKeyDown(KEY_S))
 			{
-				transformComp.m_Position.y += 0.1f;
+				transformComp.m_Position.y += moveSpeed * gameTime.m_DeltaTime;
 			}
 		}
 	}

@@ -74,6 +74,7 @@ namespace ecs
 						component::MovementComponent& movementComponent = m_World->AddComponent<component::MovementComponent>(entity);
 						const float speed = component["Speed"].GetFloat();
 						movementComponent.m_Speed = speed;
+						int bp = 1;
 					}
 					if (componentType == "RenderComponent")
 					{
@@ -81,8 +82,8 @@ namespace ecs
 
 						if (component.HasMember("Texture"))
 						{
+							// temp hack. #todo: have ResourceManager handle this
 							renderComp.texture = new raylib::Texture2D(component["Texture"].GetString());
-							int bp = 1;
 						}
 					}
 					if (componentType == "CameraComponent")

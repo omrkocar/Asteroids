@@ -11,6 +11,9 @@
 					"Texture":  "D:/Dev/Saz/Data/Textures/Ship.png"
 				}, {
 					"ComponentType": "InputComponent"
+				}, {
+					"ComponentType": "MovementComponent",
+					"Speed": 500.0
 			}]
 		}, {
 			"Name": "Camera",

@@ -16,7 +16,6 @@
 #include "Saz/NameComponent.h"
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
-#include "Saz/TransformSystem.h"
 #include "Saz/Window.h"
 
 
@@ -65,7 +64,7 @@ namespace Saz
 
 	void Application::Init()
 	{
-		//m_Window->Init();
+		m_Window->Init();
 		m_EntityWorld.Init();
 	}
 
@@ -88,13 +87,12 @@ namespace Saz
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
-		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
 	}
 
 	void Application::Destroy()
 	{
-		//m_SFMLWindow->Destroy();
+		m_Window->Destroy();
 		m_EntityWorld.Destroy();
 	}
 
@@ -114,7 +112,7 @@ namespace Saz
 
 		while (true)
 		{
-			//gameTime.m_DeltaTime = glfwGetTime();
+			gameTime.m_DeltaTime = GetFrameTime();
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
