@@ -185,6 +185,7 @@ namespace imgui
 
 } // imgui
 
+#ifdef _DEBUG
 //#ifdef _DEBUG
 /*
 *	Logs a message in the Log Window.
@@ -196,3 +197,9 @@ namespace imgui
 //#else
 //#define LOG(x, ...)
 //#endif
+#else
+#define IMGUI_LOG_INFO(...)		
+#define IMGUI_LOG_WARNING( ...)	
+#define IMGUI_LOG_ERROR(...)
+
+#endif

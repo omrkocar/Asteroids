@@ -7,21 +7,6 @@ namespace Saz
 {
 	class ResourceManager;
 	class GameTime;
-
-	namespace glfw
-	{
-		class Window;
-	}
-
-	namespace sfml
-	{
-		class Window;
-	}
-}
-
-namespace gl
-{
-	class Window;
 }
 
 namespace imgui
@@ -55,10 +40,7 @@ namespace Saz
 		const ecs::EntityWorld& GetWorld();
 		
 
-
-		Saz::sfml::Window* m_SFMLWindow = nullptr;
-		Saz::glfw::Window* m_GLFWWindow = nullptr;
-		gl::Window* m_GLWindow = nullptr;
+		Saz::Window* m_Window = nullptr;
 
 		Saz::ResourceManager* m_pResourceManager;
 

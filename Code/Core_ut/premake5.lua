@@ -17,7 +17,6 @@ project "Core_ut"
 	{
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/Code/Core/",
-		"%{wks.location}/3rdParty/Vulkan/Include/",
 	}
 
 	libdirs 

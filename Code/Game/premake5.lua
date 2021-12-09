@@ -25,13 +25,9 @@ project "Game"
 	includedirs {
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include/",
-		"%{wks.location}/3rdParty/glad/include/",
-		"%{wks.location}/3rdParty/glad/src/",
 		"%{wks.location}/3rdParty/imgui/",
-		"%{wks.location}/3rdParty/glad/include",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/3rdParty/glm/",
 	}
 
 	libdirs{

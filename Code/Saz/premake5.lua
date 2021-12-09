@@ -10,6 +10,11 @@ project "Saz"
 	pchheader "SazPCH.h"
 	pchsource "Saz/SazPCH.cpp"
 
+	defines 
+	{
+		"RAYLIB_CPP_NO_MATH" 
+	}
+
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
@@ -39,22 +44,21 @@ project "Saz"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.spdlog}",
+		"%{wks.location}/3rdParty/raylib-cpp/include",
+		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
 	}
 
 	libdirs
 	{
 		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/Glad/%{cfg.buildcfg}_%{cfg.platform}/",
 		"%{wks.location}/Build/ImGui/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/GLFW/%{cfg.buildcfg}_%{cfg.platform}/",
 	}
 
 	links {
 		"Core",
-		"GLFW",
-		"Glad",
 		"ImGui",
-		"opengl32.lib"
+		"RayLib",
+		"opengl32.lib",
 	}
 
 	filter "system:windows"
@@ -63,11 +67,14 @@ project "Saz"
 		defines{
 			"SAZ_PLATFORM_WINDOWS",
 			"SAZ_BUILD_DLL",
-			"GLFW_INCLUDE_NONE",
-			"VK_INSTANCE_LAYERS",
-			"VK_LAYER_PATH",
 		}
 
+	postbuildcommands
+	{
+		
+	}
 
 	filter "files:%{wks.location}/3rdParty/**.cpp"
 		flags { "NoPCH" }
+
+	

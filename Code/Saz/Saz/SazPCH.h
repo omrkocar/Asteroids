@@ -5,8 +5,8 @@
 #endif
 
 #ifdef SAZ_PLATFORM_WINDOWS
-	#include <Windows.h>
-	#include <windowsx.h>
+	//#include <Windows.h>
+	//#include <windowsx.h>
 #endif
 
 #include <assert.h>
@@ -16,7 +16,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <memory.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
 

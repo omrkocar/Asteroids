@@ -2,7 +2,6 @@
 
 namespace Random
 {
-	// #todo: specify allowed types
 	template<typename Type>
 	Type Range(const Type& min, const Type& max);
 

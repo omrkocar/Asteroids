@@ -9,7 +9,6 @@
 #include "Saz/InputSystem.h"
 #include "Saz/RenderSystem.h"
 #include "Saz/ResourceManager.h"
-#include "Saz/GLFW/Window.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/LevelSystem.h"
 #include "Saz/MovementComponent.h"
@@ -18,9 +17,9 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 #include "Saz/TransformSystem.h"
-#include "Saz/GLFW/Window.h"
+#include "Saz/Window.h"
 
-#include <glfw/glfw3.h>
+
 
 namespace Saz
 {
@@ -37,18 +36,20 @@ namespace Saz
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
+
+
 		Saz::Log::Init();
 
 		{
-			glfwInit();
 
 			Saz::WindowProps windowProps;
 			windowProps.m_Title = "Saz Engine";
 			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
-			m_GLFWWindow = new glfw::Window(windowProps);
+			m_Window = new Window(windowProps);
+			m_Window->Init();
 		}
 		
-		m_ImGuiLog = new imgui::Log();
+		//m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();	
@@ -57,21 +58,20 @@ namespace Saz
 
 	Application::~Application()
 	{
-		delete m_GLFWWindow;
+		delete m_Window;
 		delete m_ImGuiLog;
 		delete m_pResourceManager;
-		glfwTerminate();
 	}
 
 	void Application::Init()
 	{
-		//m_SFMLWindow->Init();
+		//m_Window->Init();
 		m_EntityWorld.Init();
 	}
 
 	void Application::PostInit()
 	{
-		m_GLFWWindow->PostInit();
+		m_Window->PostInit();
 		m_EntityWorld.PostInit();
 	}
 
@@ -85,9 +85,9 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 
-		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_GLFWWindow);
+		//m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_GLFWWindow);
+		//m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_GLFWWindow);
 		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
 	}
@@ -114,15 +114,19 @@ namespace Saz
 
 		while (true)
 		{
-			gameTime.m_DeltaTime = glfwGetTime();
+			//gameTime.m_DeltaTime = glfwGetTime();
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
+			m_Window->BeginDrawing();
+
 			Update(gameTime);
 
-			m_GLFWWindow->Update(gameTime);
-			if (m_GLFWWindow->ShouldClose())
-				break;			
+			m_Window->Update(gameTime);
+			if (m_Window->ShouldClose())
+				break;
+
+			m_Window->EndDrawing();
 		}
 	}
 }
