@@ -4,11 +4,13 @@
 			"IsPlayer":  true,
 			"Components": [{
 					"ComponentType": "TransformComponent",
-				"Pos": [ 0.0, 1.0, 0.0 ],
+				"Pos": [ 360.0, 360.0, 0.0 ],
 					"Scale": [ 1.0, 1.0, 1.0 ]
 				}, {
 					"ComponentType": "RenderComponent",
 					"Texture":  "D:/Dev/Saz/Data/Textures/Ship.png"
+				}, {
+					"ComponentType": "InputComponent"
 			}]
 		}, {
 			"Name": "Camera",

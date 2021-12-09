@@ -32,9 +32,7 @@ namespace Saz
 	void Window::BeginDrawing()
 	{
 		::BeginDrawing();
-		m_Window->ClearBackground(::RAYWHITE);
-
-		RayDrawText("Congrats! You created your first window!", 190, 200, 20, ::LIGHTGRAY);
+		m_Window->ClearBackground(::BLUE);
 	}
 
 	void Window::EndDrawing()

@@ -7,11 +7,12 @@
 
 
 #include <entt/entt.hpp>
+#include "TransformComponent.h"
 
 namespace ecs
 {	
-	InputSystem::InputSystem(Saz::glfw::Window& glfwWindow)
-		: m_GLFWWindow(glfwWindow)
+	InputSystem::InputSystem(Saz::Window& window)
+		: m_Window(window)
 	{
 
 	}
@@ -33,7 +34,26 @@ namespace ecs
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
-
-		
+		const auto view = registry.view<component::InputComponent, component::TransformComponent>();
+		for (const ecs::Entity& entity : view)
+		{
+			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
+			if (IsKeyDown(KEY_D))
+			{
+				transformComp.m_Position.x += 0.1f;
+			}
+			if (IsKeyDown(KEY_A))
+			{
+				transformComp.m_Position.x -= 0.1f;
+			}
+			if (IsKeyDown(KEY_W))
+			{
+				transformComp.m_Position.y -= 0.1f;
+			}
+			if (IsKeyDown(KEY_S))
+			{
+				transformComp.m_Position.y += 0.1f;
+			}
+		}
 	}
 }

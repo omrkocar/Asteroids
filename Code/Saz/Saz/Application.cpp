@@ -85,7 +85,7 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 
-		//m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
+		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::TransformSystem>();
