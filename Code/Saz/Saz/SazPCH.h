@@ -44,7 +44,7 @@
 #include <Core/Color.h>
 #include <Core/Quaternion.h>
 
-#include "Core.h"
+#include "Saz/Core.h"
 #include "Saz/Entity.h"
 #include "Saz/TypeId.h"
 #include "Saz/Log.h"

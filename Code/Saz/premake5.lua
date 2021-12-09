@@ -56,7 +56,6 @@ project "Saz"
 		"Core",
 		"ImGui",
 		"RayLib",
-		"opengl32.lib",
 	}
 
 	filter "system:windows"

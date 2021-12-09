@@ -21,7 +21,6 @@ namespace Saz
 		explicit Window(const Saz::WindowProps& props);
 		~Window() override;
 
-		void Init();
 		void Update(const Saz::GameTime& gameTime);
 
 		void BeginDrawing();

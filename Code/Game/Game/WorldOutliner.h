@@ -15,7 +15,8 @@ namespace ecs
 		
 		WorldOutliner();
 
-		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
+
+		bool m_IsActive = true;
 	};
 }

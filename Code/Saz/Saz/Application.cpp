@@ -48,7 +48,6 @@ namespace Saz
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();	
-		
 	}
 
 	Application::~Application()
@@ -75,13 +74,13 @@ namespace Saz
 
 	void Application::Register()
 	{
+		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();
 		m_EntityWorld.RegisterComponent<component::MovementComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
 		m_EntityWorld.RegisterComponent<component::RenderComponent>();
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
-		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::LevelSystem>(*m_pResourceManager);
@@ -125,6 +124,7 @@ namespace Saz
 			m_Window->Update(gameTime);
 			if (m_Window->ShouldClose())
 				break;
+
 
 			EndRLImGui();
 			m_Window->EndDrawing();

@@ -2,8 +2,8 @@
 
 #include "Application.h"
 
-#include "WorldOutliner.h"
-#include "SceneEditor.h"
+#include "Game/WorldOutliner.h"
+#include "Game/SceneEditor.h"
 
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
@@ -31,6 +31,7 @@ void Application::Init()
 	Saz::Application::Init();
 
 	m_EntityWorld.RegisterSystem<ecs::SceneEditor>();
+	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 
 	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
 	levelSystem.LoadFromFile("DefaultScene.scene");
@@ -77,6 +78,7 @@ void Application::Update(const Saz::GameTime& gameTime)
 	}
 
 	DrawMenuBar();
+	//ImGui::ShowDemoWindow();
 }
 
 void Application::DrawMenuBar()
@@ -96,6 +98,36 @@ void Application::DrawMenuBar()
 			ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
 			levelSystem.LoadFromFile("DefaultScene.scene");
 			IMGUI_LOG_INFO("Registry Size: %d", m_EntityWorld.m_Registry.size());
+		}
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Debug"))
+	{
+		auto& registry = m_EntityWorld.m_Registry;
+		if (ImGui::MenuItem("Create Entity with Sprite and Transform"))
+		{
+			ecs::Entity entity = m_EntityWorld.CreateEntity();
+			raylib::Texture* pTexture = new raylib::Texture("D:/Dev/Saz/Data/Textures/Ship.png");
+
+			component::RenderComponent& renderComp = m_EntityWorld.AddComponent<component::RenderComponent>(entity);
+			renderComp.texture = pTexture;
+			component::TransformComponent& transformComp = m_EntityWorld.AddComponent<component::TransformComponent>(entity);
+			transformComp.m_Position = vec2(600.0f, 360.0f);
+			IMGUI_LOG_INFO("A new entity is created");
+		}
+
+		if (ImGui::MenuItem("Add Input"))
+		{
+			const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
+			for (const ecs::Entity& entity : view)
+			{
+				if (!m_EntityWorld.HasComponent<component::InputComponent>(entity))
+					m_EntityWorld.AddComponent<component::InputComponent>(entity);
+
+				IMGUI_LOG_INFO("Input is given to all entities");
+			}
 		}
 
 		ImGui::EndMenu();

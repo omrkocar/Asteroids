@@ -14,6 +14,7 @@ namespace ecs
 	public:
 		
 		CameraSystem();
+		virtual void Destroy() override;
 
 		virtual void Update(const Saz::GameTime& gameTime) override;
 	};

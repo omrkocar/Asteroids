@@ -158,11 +158,6 @@ namespace Saz
 		
 	}
 
-	void Window::Init()
-	{
-		
-	}
-
 	void Window::Update(const Saz::GameTime& gameTime)
 	{
 		m_MousePos.x = static_cast<float>(GetMouseX());
