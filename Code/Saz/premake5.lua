@@ -29,20 +29,19 @@ project "Saz"
 	}
 
 	IncludeDir = {}
-	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/include"
-	IncludeDir["glad"] = "%{wks.location}/3rdParty/glad/include"
 	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"
 	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
 	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
+		"%{wks.location}/Code/Saz/",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.imgui}",
-		"%{IncludeDir.glad}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.entt}",
+		"%{wks.location}/3rdParty/raylib-cpp",
+		"%{wks.location}/3rdParty/raylib-cpp/rlImGui",
 		"%{wks.location}/3rdParty/raylib-cpp/include",
 		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
 	}

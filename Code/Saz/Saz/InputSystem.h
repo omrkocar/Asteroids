@@ -26,9 +26,9 @@ namespace ecs
 	private:
 		Saz::Window& m_Window;
 
-		/*Set<Input::EKeyboard> m_KeyboardPrevious;
+		Set<Input::EKeyboard> m_KeyboardPrevious;
 		Set<Input::EKeyboard> m_KeyboardCurrent;
 		Set<Input::EMouse> m_MousePrevious;
-		Set<Input::EMouse> m_MouseCurrent;*/
+		Set<Input::EMouse> m_MouseCurrent;
 	};
 }

@@ -11,6 +11,7 @@
 #include <Saz/ResourceManager.h>
 #include <Saz/NameComponent.h>
 #include <Saz/LevelSystem.h>
+#include <Saz/GameTime.h>
 
 #include <entt/entt.hpp>
 
@@ -50,6 +51,32 @@ void Application::Register()
 void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
+
+	auto& registry = m_EntityWorld.m_Registry;
+	const auto view = registry.view<component::TransformComponent, component::InputComponent>();
+	for (const ecs::Entity& entity : view)
+	{
+		component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
+		component::InputComponent& inputComponent = view.get<component::InputComponent>(entity);
+		if (inputComponent.IsKeyHeld(Input::EKeyboard::A))
+		{
+			transformComp.m_Position.x -= 500.0f * gameTime.m_DeltaTime;
+		}
+		if (inputComponent.IsKeyHeld(Input::EKeyboard::D))
+		{
+			transformComp.m_Position.x += 500.0f * gameTime.m_DeltaTime;
+		}
+		if (inputComponent.IsKeyHeld(Input::EKeyboard::W))
+		{
+			transformComp.m_Position.y -= 500.0f * gameTime.m_DeltaTime;
+		}
+		if (inputComponent.IsKeyHeld(Input::EKeyboard::S))
+		{
+			transformComp.m_Position.y += 500.0f * gameTime.m_DeltaTime;
+		}
+	}
+
+	DrawMenuBar();
 }
 
 void Application::DrawMenuBar()

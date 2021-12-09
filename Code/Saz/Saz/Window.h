@@ -42,7 +42,7 @@ namespace Saz
 		String m_Title = { };
 		ivec2 m_Size = { };
 
-		raylib::Window* m_Window;
+		std::unique_ptr<raylib::Window> m_Window;
 
 		vec2 m_MousePos = vec2(0.0f);
 		vec2 m_MouseDelta = vec2(0.0f);

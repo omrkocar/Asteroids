@@ -33,6 +33,7 @@ project "Game"
 		"%{wks.location}/3rdParty/imgui/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
+		"%{wks.location}/3rdParty/raylib-cpp",
 		"%{wks.location}/3rdParty/raylib-cpp/include",
 		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
 	}

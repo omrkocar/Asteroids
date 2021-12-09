@@ -37,8 +37,6 @@ namespace ecs
 			component::RenderComponent& renderComp = view.get<component::RenderComponent>(entity);
 			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
 			
-
-
 			renderComp.texture->Draw(::Vector2{ transformComp.m_Position.x, transformComp.m_Position.y });
 		}
 	}

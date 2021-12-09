@@ -44,7 +44,7 @@
 #include <Core/Color.h>
 #include <Core/Quaternion.h>
 
-#include "Saz/Core.h"
+#include "Core.h"
 #include "Saz/Entity.h"
 #include "Saz/TypeId.h"
 #include "Saz/Log.h"
@@ -56,3 +56,5 @@
 #include <rapidjson/prettywriter.h>
 
 #include <raylib-cpp.hpp>
+#include <rlImGui/rlImGui.h>
+#include <imgui/imgui.h>

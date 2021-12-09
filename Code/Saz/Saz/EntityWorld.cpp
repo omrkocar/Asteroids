@@ -38,7 +38,7 @@ namespace ecs
 	{
 		m_Registry.each([this](auto entity) {
 			m_Registry.destroy(entity);
-			});
+		});
 	}
 }
 

@@ -15,6 +15,8 @@ project "RayLib"
 		"%{RayIncludeDir.RayLib}/src/*.h",
 		"%{RayIncludeDir.RayLib}/src/*.c",
 		"%{wks.location}/3rdParty/raylib-cpp/premake5.lua",
+		"%{wks.location}/3rdParty/raylib-cpp/rlImGui/*.cpp",
+		"%{wks.location}/3rdParty/raylib-cpp/rlImGui/*.h",
 		"%{wks.location}/3rdParty/raylib-cpp/include/**.hpp"
 	}
 
@@ -22,6 +24,8 @@ project "RayLib"
 	{
 		"%{RayIncludeDir.RayLib}/src",
 		"%{RayIncludeDir.RayLib}/src/external/glfw/include",
+		"%{wks.location}/3rdParty",
+		"%{wks.location}/3rdParty/imgui",
 	}
 
 	defines{"PLATFORM_DESKTOP"}
@@ -37,5 +41,6 @@ project "RayLib"
 		"kernel32",
 		"opengl32",
 		"kernel32",
-		"gdi32"
+		"gdi32",
+		"ImGui"
 	}

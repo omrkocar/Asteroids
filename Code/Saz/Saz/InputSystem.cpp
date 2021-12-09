@@ -31,29 +31,24 @@ namespace ecs
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
-		// Temporary
-		const auto view = registry.view<component::InputComponent, component::TransformComponent, component::MovementComponent>();
+
+		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
+		m_MousePrevious = std::move(m_MouseCurrent);
+
+		vec2 mouseDelta, mousePos;
+		m_Window.GatherKeyboard(m_KeyboardCurrent);
+		m_Window.GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
+
+		const auto view = registry.view<component::InputComponent>();
 		for (const ecs::Entity& entity : view)
 		{
-			component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
-			component::MovementComponent& movementComp = view.get<component::MovementComponent>(entity);
-			float moveSpeed = movementComp.m_Speed;
-			if (IsKeyDown(KEY_D))
-			{
-				transformComp.m_Position.x += moveSpeed * gameTime.m_DeltaTime;
-			}
-			if (IsKeyDown(KEY_A))
-			{
-				transformComp.m_Position.x -= moveSpeed * gameTime.m_DeltaTime;
-			}
-			if (IsKeyDown(KEY_W))
-			{
-				transformComp.m_Position.y -= moveSpeed * gameTime.m_DeltaTime;
-			}
-			if (IsKeyDown(KEY_S))
-			{
-				transformComp.m_Position.y += moveSpeed * gameTime.m_DeltaTime;
-			}
+			component::InputComponent& inputComponent = view.get<component::InputComponent>(entity);
+			inputComponent.m_KeyboardCurrent = m_KeyboardCurrent;
+			inputComponent.m_KeyboardPrevious = m_KeyboardPrevious;
+			inputComponent.m_MousePrevious = m_MousePrevious;
+			inputComponent.m_MouseCurrent = m_MouseCurrent;
+			inputComponent.m_MouseDelta = mouseDelta;
+			inputComponent.m_MousePosition = mousePos;
 		}
 	}
 }

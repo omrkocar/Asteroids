@@ -18,8 +18,6 @@
 #include "Saz/TransformComponent.h"
 #include "Saz/Window.h"
 
-
-
 namespace Saz
 {
 
@@ -35,8 +33,6 @@ namespace Saz
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-
-
 		Saz::Log::Init();
 
 		{
@@ -48,7 +44,7 @@ namespace Saz
 			m_Window->Init();
 		}
 		
-		//m_ImGuiLog = new imgui::Log();
+		m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();	
@@ -66,6 +62,9 @@ namespace Saz
 	{
 		m_Window->Init();
 		m_EntityWorld.Init();
+
+		SetupRLImGui(true);
+		ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 	}
 
 	void Application::PostInit()
@@ -99,7 +98,7 @@ namespace Saz
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		m_EntityWorld.Update(gameTime);
-		//m_ImGuiLog->Update();
+		m_ImGuiLog->Update();
 	}
 
 	void Application::Run(int argc, char* argv[])
@@ -109,14 +108,17 @@ namespace Saz
 		PostInit();
 
 		Saz::GameTime gameTime;
+		bool a = true;
 
 		while (true)
 		{
+			m_Window->BeginDrawing();
+			BeginRLImGui();
+
 			gameTime.m_DeltaTime = GetFrameTime();
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
-			m_Window->BeginDrawing();
 
 			Update(gameTime);
 
@@ -124,7 +126,10 @@ namespace Saz
 			if (m_Window->ShouldClose())
 				break;
 
+			EndRLImGui();
 			m_Window->EndDrawing();
 		}
+
+		ShutdownRLImGui();
 	}
 }
