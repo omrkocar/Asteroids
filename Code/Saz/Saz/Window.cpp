@@ -5,19 +5,18 @@
 #include "Saz/Screen.h"
 
 #include <Core/Input.h>
-#include <raylib/src/raylib.h>
 
 namespace Saz
 {
 	Window::Window(const Saz::WindowProps& props)
 		: Saz::WindowBase(props)
 	{
-		InitWindow(props.m_Size.x, props.m_Size.y, props.m_Title);
+		m_Window = new raylib::Window(props.m_Size.x, props.m_Size.y, props.m_Title);
 	}
 
 	Window::~Window()
 	{
-		
+		delete m_Window;
 	}
 
 	void Window::Init()
@@ -33,9 +32,9 @@ namespace Saz
 	void Window::BeginDrawing()
 	{
 		::BeginDrawing();
-		ClearBackground(::RAYWHITE);
+		m_Window->ClearBackground(::RAYWHITE);
 
-		DrawPoly(Vector2{ 300, 300 }, 4, 500, 0.0, ::BLUE);
+		RayDrawText("Congrats! You created your first window!", 190, 200, 20, ::LIGHTGRAY);
 	}
 
 	void Window::EndDrawing()

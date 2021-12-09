@@ -56,7 +56,7 @@ workspace "Saz"
 	include "Code/Core/premake5.lua"
 	include "Code/Game/premake5.lua"
 	include "3rdParty/imgui/premake5.lua"
-	include "3rdParty/raylib/premake5.lua"
+	include "3rdParty/raylib-cpp/premake5.lua"
 	--include "3rdParty/GLFW/premake5.lua"
 	--include "3rdParty/ogre/premake5.lua"
 

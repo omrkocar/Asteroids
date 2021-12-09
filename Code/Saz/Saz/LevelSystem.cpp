@@ -77,19 +77,13 @@ namespace ecs
 					}
 					if (componentType == "RenderComponent")
 					{
-						//component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
+						component::RenderComponent& renderComp = m_World->AddComponent<component::RenderComponent>(entity);
 
-						Saz::ResourceManager* pResources = Saz::Application::Get().GetResourceManager();
-
-						/*if (component.HasMember("Mesh"))
+						if (component.HasMember("Texture"))
 						{
-							renderComp.m_Mesh = pResources->GetMesh(component["Mesh"].GetString());
+							renderComp.texture = new raylib::Texture2D(component["Texture"].GetString());
+							int bp = 1;
 						}
-
-						if (component.HasMember("Material"))
-						{
-							renderComp.m_Material = pResources->GetMaterial(component["Material"].GetString());
-						}*/
 					}
 					if (componentType == "CameraComponent")
 					{

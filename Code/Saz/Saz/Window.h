@@ -2,6 +2,10 @@
 
 #include <Saz/WindowBase.h>
 
+namespace raylib
+{
+	class Window;
+}
 
 namespace Input
 {
@@ -37,6 +41,8 @@ namespace Saz
 	private:
 		String m_Title = { };
 		ivec2 m_Size = { };
+
+		raylib::Window* m_Window;
 
 		vec2 m_MousePos = vec2(0.0f);
 		vec2 m_MouseDelta = vec2(0.0f);

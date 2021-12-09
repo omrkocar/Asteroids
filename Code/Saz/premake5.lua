@@ -38,12 +38,11 @@ project "Saz"
 	includedirs {
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/3rdParty/",
-		"%{wks.location}/3rdParty/glm/",
+		"%{wks.location}/3rdParty/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.spdlog}",
 		"%{wks.location}/3rdParty/raylib-cpp/include",
 		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
 	}
@@ -68,11 +67,6 @@ project "Saz"
 			"SAZ_PLATFORM_WINDOWS",
 			"SAZ_BUILD_DLL",
 		}
-
-	postbuildcommands
-	{
-		
-	}
 
 	filter "files:%{wks.location}/3rdParty/**.cpp"
 		flags { "NoPCH" }

@@ -8,8 +8,7 @@
 					"Scale": [ 1.0, 1.0, 1.0 ]
 				}, {
 					"ComponentType": "RenderComponent",
-					"Mesh": "Cube",
-					"Material":  "Lit"
+					"Texture":  "D:/Dev/Saz/Data/Textures/Ship.png"
 			}]
 		}, {
 			"Name": "Camera",

@@ -30,6 +30,13 @@ namespace ecs
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
-		
+		auto& registry = m_World->m_Registry;
+		const auto view = registry.view<component::RenderComponent>();
+		for (const ecs::Entity& entity : view)
+		{
+			component::RenderComponent& renderComp = view.get<component::RenderComponent>(entity);
+			
+			renderComp.texture->Draw(50, 50);
+		}
 	}
 }
