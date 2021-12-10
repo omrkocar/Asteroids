@@ -5,7 +5,7 @@
 int main(int agrc, char* argv[])
 {
 	auto app = Saz::CreateApplication();
-	app->Run(agrc, argv);
+	app->Run();
 
 	delete app;
 

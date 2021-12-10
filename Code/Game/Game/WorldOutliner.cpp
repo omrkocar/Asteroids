@@ -62,9 +62,46 @@ namespace ecs
 
 		if (ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar))
 		{
-			if (ImGui::BeginMenuBar())
+			bool objectHandledRightClick = false;
+			if (ImGui::BeginListBox("Objects", ImVec2(-1, -1)))
 			{
-				ImGui::EndMenuBar();
+				auto& registry = m_World->m_Registry;
+				const auto view = registry.view<component::LevelComponent, component::NameComponent>();
+
+				for (const ecs::Entity& entity : view)
+				{
+					auto& nameComp = view.get<component::NameComponent>(entity);
+
+					ImGui::PushID(&entity);
+					ImGui::Text(nameComp.m_Name.c_str());
+
+					if (ImGui::BeginPopupContextItem("Object Options"))
+					{
+						objectHandledRightClick = true;
+
+						ImGui::Text("Rename:");
+						String clipText = (ImGui::GetClipboardText() != nullptr) ? ImGui::GetClipboardText() : "";
+						size_t clipSize = clipText.length();
+						const size_t size = 32;
+						char newText[size];
+						strncpy_s(newText, size, nameComp.m_Name.c_str(), sizeof(newText));
+
+						ImGui::InputText("", newText, size);
+						nameComp.m_Name = newText;
+
+						ImGui::Separator();
+
+						if (ImGui::Button("Delete object"))
+						{
+							m_World->m_Registry.destroy(entity);
+						}
+
+						ImGui::EndPopup();
+					}
+					ImGui::PopID();
+				}
+				
+				ImGui::EndListBox();
 			}
 
 			ImGui::End();

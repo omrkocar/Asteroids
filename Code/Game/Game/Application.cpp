@@ -14,6 +14,7 @@
 #include <Saz/GameTime.h>
 
 #include <entt/entt.hpp>
+#include "Saz/LevelComponent.h"
 
 
 Application::Application()
@@ -106,28 +107,21 @@ void Application::DrawMenuBar()
 	if (ImGui::BeginMenu("Debug"))
 	{
 		auto& registry = m_EntityWorld.m_Registry;
-		if (ImGui::MenuItem("Create Entity with Sprite and Transform"))
+		if (ImGui::MenuItem("Create Entity"))
 		{
+			static int index = 0;
 			ecs::Entity entity = m_EntityWorld.CreateEntity();
 			raylib::Texture* pTexture = new raylib::Texture("D:/Dev/Saz/Data/Textures/Ship.png");
 
 			component::RenderComponent& renderComp = m_EntityWorld.AddComponent<component::RenderComponent>(entity);
 			renderComp.texture = pTexture;
+			m_EntityWorld.AddComponent<component::LevelComponent>(entity);
+			auto& nameComp = m_EntityWorld.AddComponent<component::NameComponent>(entity);
+			nameComp.m_Name = "Object(" + std::to_string(index) +  ")";
+			index++;
 			component::TransformComponent& transformComp = m_EntityWorld.AddComponent<component::TransformComponent>(entity);
-			transformComp.m_Position = vec2(600.0f, 360.0f);
-			IMGUI_LOG_INFO("A new entity is created");
-		}
-
-		if (ImGui::MenuItem("Add Input"))
-		{
-			const auto view = registry.view<component::TransformComponent, component::RenderComponent>();
-			for (const ecs::Entity& entity : view)
-			{
-				if (!m_EntityWorld.HasComponent<component::InputComponent>(entity))
-					m_EntityWorld.AddComponent<component::InputComponent>(entity);
-
-				IMGUI_LOG_INFO("Input is given to all entities");
-			}
+			transformComp.m_Position = vec2(Random::Range(0.0f, 1000.0f), Random::Range(0.0f, 500.0f));
+			IMGUI_LOG_INFO("A new entity is created at %f, %f", transformComp.m_Position.x, transformComp.m_Position.y);
 		}
 
 		ImGui::EndMenu();

@@ -100,14 +100,16 @@ namespace Saz
 		m_ImGuiLog->Update();
 	}
 
-	void Application::Run(int argc, char* argv[])
+	void Application::Run()
 	{
 		Register();
 		Init();
 		PostInit();
 
+		raylib::Texture bg("D:/Dev/Saz/Data/Textures/SazBackground.png");
+		
+
 		Saz::GameTime gameTime;
-		bool a = true;
 
 		while (true)
 		{
@@ -118,8 +120,9 @@ namespace Saz
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
-
+			bg.Draw();
 			Update(gameTime);
+			
 
 			m_Window->Update(gameTime);
 			if (m_Window->ShouldClose())

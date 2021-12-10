@@ -24,7 +24,7 @@ namespace Saz
 		Application();
 		virtual ~Application();
 
-		void Run(int argc, char* argv[]);
+		void Run();
 
 		inline static Application& Get() { return *s_Instance; }
 

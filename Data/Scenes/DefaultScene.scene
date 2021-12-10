@@ -28,11 +28,6 @@
 					"Speed": 10.0
 			}]
 		}, {
-			"Name": "InputEntity",
-			"Components": [{
-					"ComponentType": "InputComponent"
-			}]
-		}, {
 			"Name": "Object",
 			"Components": [{
 					"ComponentType": "TransformComponent",
