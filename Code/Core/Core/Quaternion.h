@@ -12,68 +12,71 @@
 #include "Math.h"
 #include "Vector.h"
 
-class Quaternion
+namespace Saz
 {
-public:
-	float x;
-	float y;
-	float z;
-	float w;
-
-public:
-	Quaternion() {}
-	Quaternion(vec3 nv, float nw) { x = nv.x; y = nv.y; z = nv.z; w = nw; }
-	Quaternion(vec4 nv) { x = nv.x; y = nv.y; z = nv.z; w = nv.w; }
-	Quaternion(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
-
-	inline void Set(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
-	inline float LengthSquared() const { return x * x + y * y + z * z + w * w; }
-	inline float Length() const { return sqrtf(x * x + y * y + z * z + w * w); }
-
-	inline Quaternion GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return Quaternion(x, y, z, w); len = 1.0f / len; return Quaternion(x * len, y * len, z * len, w * len); }
-	inline Quaternion Normalize() { float len = Length(); if (!Math::fequal(len, 0)) { x /= len; y /= len; z /= len; w /= len; } return *this; }
-	inline float Dot(const Quaternion& o) const { return x * o.x + y * o.y + z * o.z + w * o.w; }
-	inline Quaternion GetConjugate() { return Quaternion(-x, -y, -z, w); }
-	inline void Conjugate() { x *= -1; y *= -1; z *= -1; }
-	inline Quaternion GetInverse() { return GetConjugate() * 1.0f / LengthSquared(); }
-	inline void Inverse() { Conjugate(); *this *= 1.0f / LengthSquared(); }
-	static Quaternion FromRotator(const vec3& value) noexcept;
-	static Quaternion FromAxisAngle(const vec3& axis, const float degrees) noexcept;
-
-	inline bool operator ==(const Quaternion& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y) && Math::fequal(this->z, o.z) && Math::fequal(this->w, o.w); }
-	inline bool operator !=(const Quaternion& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y) || !Math::fequal(this->z, o.z) || !Math::fequal(this->w, o.w); }
-
-	inline Quaternion operator *(const float o) const { return Quaternion(this->x * o, this->y * o, this->z * o, this->w * o); }
-	inline Quaternion operator /(const float o) const { return Quaternion(this->x / o, this->y / o, this->z / o, this->w / o); }
-	inline Quaternion operator +(const float o) const { return Quaternion(this->x + o, this->y + o, this->z + o, this->w + o); }
-	inline Quaternion operator -(const float o) const { return Quaternion(this->x - o, this->y - o, this->z - o, this->w - o); }
-	inline Quaternion operator +(const Quaternion& o) const { return Quaternion(this->x + o.x, this->y + o.y, this->z + o.z, this->w + o.w); }
-	inline Quaternion operator -(const Quaternion& o) const { return Quaternion(this->x - o.x, this->y - o.y, this->z - o.z, this->w - o.w); }
-	inline Quaternion operator *(const Quaternion& o) const
+	class Quaternion
 	{
-		return Quaternion(
-			w * o.x + x * o.w + y * o.z - z * o.y,
-			w * o.y + y * o.w + z * o.x - x * o.z,
-			w * o.z + z * o.w + x * o.y - y * o.x,
-			w * o.w - x * o.x - y * o.y - z * o.z);
-	}
-	inline Quaternion operator /(const Quaternion& o) const { Quaternion temp = o; return *this * temp.GetInverse(); }
+	public:
+		float x;
+		float y;
+		float z;
+		float w;
 
-	inline Quaternion operator *=(const float o) { this->x *= o; this->y *= o; this->z *= o; this->w *= o; return *this; }
-	inline Quaternion operator /=(const float o) { this->x /= o; this->y /= o; this->z /= o; this->w /= o; return *this; }
-	inline Quaternion operator +=(const float o) { this->x += o; this->y += o; this->z += o; this->w += o; return *this; }
-	inline Quaternion operator -=(const float o) { this->x -= o; this->y -= o; this->z -= o; this->w -= o; return *this; }
-	inline Quaternion operator +=(const Quaternion& o) { this->x += o.x; this->y += o.y; this->z += o.z; this->w += o.w; return *this; }
-	inline Quaternion operator -=(const Quaternion& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; this->w -= o.w; return *this; }
-	
+	public:
+		Quaternion() {}
+		Quaternion(vec3 nv, float nw) { x = nv.x; y = nv.y; z = nv.z; w = nw; }
+		Quaternion(vec4 nv) { x = nv.x; y = nv.y; z = nv.z; w = nv.w; }
+		Quaternion(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
 
-	static Quaternion Lerp(Quaternion start, Quaternion end, float perc);
-	static Quaternion Slerp(Quaternion start, Quaternion end, float perc);
+		inline void Set(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
+		inline float LengthSquared() const { return x * x + y * y + z * z + w * w; }
+		inline float Length() const { return sqrtf(x * x + y * y + z * z + w * w); }
 
-	static const Quaternion Identity;
-	
-};
+		inline Quaternion GetNormalized() const { float len = Length(); if (Math::fequal(len, 0)) return Quaternion(x, y, z, w); len = 1.0f / len; return Quaternion(x * len, y * len, z * len, w * len); }
+		inline Quaternion Normalize() { float len = Length(); if (!Math::fequal(len, 0)) { x /= len; y /= len; z /= len; w /= len; } return *this; }
+		inline float Dot(const Quaternion& o) const { return x * o.x + y * o.y + z * o.z + w * o.w; }
+		inline Quaternion GetConjugate() { return Quaternion(-x, -y, -z, w); }
+		inline void Conjugate() { x *= -1; y *= -1; z *= -1; }
+		inline Quaternion GetInverse() { return GetConjugate() * 1.0f / LengthSquared(); }
+		inline void Inverse() { Conjugate(); *this *= 1.0f / LengthSquared(); }
+		static Quaternion FromRotator(const vec3& value) noexcept;
+		static Quaternion FromAxisAngle(const vec3& axis, const float degrees) noexcept;
 
-vec3 operator*(const vec3& vec, const Quaternion& quat) noexcept;
+		inline bool operator ==(const Quaternion& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y) && Math::fequal(this->z, o.z) && Math::fequal(this->w, o.w); }
+		inline bool operator !=(const Quaternion& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y) || !Math::fequal(this->z, o.z) || !Math::fequal(this->w, o.w); }
 
-#include <Core/Quaternion.inl>
+		inline Quaternion operator *(const float o) const { return Quaternion(this->x * o, this->y * o, this->z * o, this->w * o); }
+		inline Quaternion operator /(const float o) const { return Quaternion(this->x / o, this->y / o, this->z / o, this->w / o); }
+		inline Quaternion operator +(const float o) const { return Quaternion(this->x + o, this->y + o, this->z + o, this->w + o); }
+		inline Quaternion operator -(const float o) const { return Quaternion(this->x - o, this->y - o, this->z - o, this->w - o); }
+		inline Quaternion operator +(const Quaternion& o) const { return Quaternion(this->x + o.x, this->y + o.y, this->z + o.z, this->w + o.w); }
+		inline Quaternion operator -(const Quaternion& o) const { return Quaternion(this->x - o.x, this->y - o.y, this->z - o.z, this->w - o.w); }
+		inline Quaternion operator *(const Quaternion& o) const
+		{
+			return Quaternion(
+				w * o.x + x * o.w + y * o.z - z * o.y,
+				w * o.y + y * o.w + z * o.x - x * o.z,
+				w * o.z + z * o.w + x * o.y - y * o.x,
+				w * o.w - x * o.x - y * o.y - z * o.z);
+		}
+		inline Quaternion operator /(const Quaternion& o) const { Quaternion temp = o; return *this * temp.GetInverse(); }
+
+		inline Quaternion operator *=(const float o) { this->x *= o; this->y *= o; this->z *= o; this->w *= o; return *this; }
+		inline Quaternion operator /=(const float o) { this->x /= o; this->y /= o; this->z /= o; this->w /= o; return *this; }
+		inline Quaternion operator +=(const float o) { this->x += o; this->y += o; this->z += o; this->w += o; return *this; }
+		inline Quaternion operator -=(const float o) { this->x -= o; this->y -= o; this->z -= o; this->w -= o; return *this; }
+		inline Quaternion operator +=(const Quaternion& o) { this->x += o.x; this->y += o.y; this->z += o.z; this->w += o.w; return *this; }
+		inline Quaternion operator -=(const Quaternion& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; this->w -= o.w; return *this; }
+
+
+		static Quaternion Lerp(Quaternion start, Quaternion end, float perc);
+		static Quaternion Slerp(Quaternion start, Quaternion end, float perc);
+
+		static const Quaternion Identity;
+
+	};
+
+	vec3 operator*(const vec3& vec, const Quaternion& quat) noexcept;
+
+	#include <Core/Quaternion.inl>
+}

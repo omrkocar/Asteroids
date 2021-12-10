@@ -9,4 +9,4 @@
 
 #include "Quaternion.h"
 
-const Quaternion Quaternion::Identity(0.f, 0.f, 0.f, 1.f);
+const Saz::Quaternion Saz::Quaternion::Identity(0.f, 0.f, 0.f, 1.f);

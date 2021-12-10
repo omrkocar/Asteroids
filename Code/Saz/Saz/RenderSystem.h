@@ -2,16 +2,11 @@
 
 #include <Saz/System.h>
 
-#include "Shader.h"
-
 namespace Saz
 {
 	class GameTime;
 
-	namespace glfw
-	{
-		class Window;
-	}
+	class Window;
 }
 namespace ecs 
 {
@@ -19,15 +14,13 @@ namespace ecs
 	{
 	public:
 		
-		RenderSystem( Saz::glfw::Window& window);
+		RenderSystem(Saz::Window& window);
 		~RenderSystem();
 
 		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
-		Saz::glfw::Window& m_GLFWWindow;
-		unsigned int VBO, VAO, EBO, shaderProgram;
-		Shader shader;
+		Saz::Window& m_Window;
 	};
 }

@@ -17,6 +17,11 @@ project "Game"
 			"Game/**.inl" } },
 	}
 
+	defines 
+	{
+		"RAYLIB_CPP_NO_MATH" 
+	}
+
 	files
 	{
 		"%{wks.location}/Data/**",
@@ -25,13 +30,13 @@ project "Game"
 	includedirs {
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include/",
-		"%{wks.location}/3rdParty/glad/include/",
-		"%{wks.location}/3rdParty/glad/src/",
 		"%{wks.location}/3rdParty/imgui/",
-		"%{wks.location}/3rdParty/glad/include",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/3rdParty/glm/",
+		"%{wks.location}/Code/Game/",
+		"%{wks.location}/3rdParty/raylib-cpp",
+		"%{wks.location}/3rdParty/raylib-cpp/include",
+		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
 	}
 
 	libdirs{
@@ -42,6 +47,7 @@ project "Game"
 	links 
 	{
 		"Saz",
+		"ImGui",
 	}
 
 	filter "system:windows"

@@ -15,7 +15,11 @@ namespace ecs
 		
 		WorldOutliner();
 
-		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
+
+		void DrawWorldOutliner();
+		bool m_IsActive = true;
+		bool m_IsObjectInspectorOn = true;
+		ecs::Entity m_SelectedEntity = entt::null;
 	};
 }

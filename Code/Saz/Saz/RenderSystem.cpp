@@ -6,53 +6,17 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 
-
-#include "Saz/GLFW/Window.h"
+#include "Saz/Window.h"
 
 #include <entt/entt.hpp>
-#include "GameTime.h"
-
-#include <glad/glad.h>
-#include <glfw/glfw3.h>
-
-namespace
-{
-	float vertices[] = {
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
-
-	};
-
-
-	constexpr unsigned int indices[] =
-	{  // note that we start from 0!
-		0, 1, 3,   // first triangle
-		1, 2, 3    // second triangle
-	};
-}
+#include "InputComponent.h"
 
 namespace ecs
 {
-	RenderSystem::RenderSystem(Saz::glfw::Window& window)
-		: m_GLFWWindow(window)
-		, shader{ "D:/Dev/Saz/Data/Shaders/Basic.vert", "D:/Dev/Saz/Data/Shaders/Basic.frag" }
+	RenderSystem::RenderSystem(Saz::Window& window)
+		: m_Window(window)
 	{
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-		glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		// color attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
+		
 	}
 
 	RenderSystem::~RenderSystem()
@@ -67,13 +31,33 @@ namespace ecs
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		auto& registry = m_World->m_Registry;
 
-		shader.Use();
-		shader.SetFloat("color", 1.0f);
+		const auto cameraView = registry.view<component::CameraComponent>();
+		for (const ecs::Entity& cameraEntity : cameraView)
+		{
+			component::CameraComponent& cameraComponent = cameraView.get<component::CameraComponent>(cameraEntity);
+			//cameraComponent.camera2D->Update();
+			cameraComponent.camera2D->BeginMode();
 
-		glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+			const auto view = registry.view<component::RenderComponent, component::TransformComponent>();
+			for (const ecs::Entity& entity : view)
+			{
+				component::RenderComponent& renderComp = view.get<component::RenderComponent>(entity);
+				component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
+
+				renderComp.texture->Draw(::Vector2{ transformComp.m_Position.x, transformComp.m_Position.y });
+
+				const auto inputView = registry.view<component::InputComponent>();
+				for (const ecs::Entity& inputEntity : inputView)
+				{
+					cameraComponent.camera2D->SetTarget({ transformComp.m_Position.x, transformComp.m_Position.y });
+				}
+			}
+
+			cameraComponent.camera2D->EndMode();
+		}
+
+		
 	}
 }
