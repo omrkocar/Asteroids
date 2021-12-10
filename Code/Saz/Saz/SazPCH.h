@@ -43,6 +43,7 @@
 #include <Core/Vector.h>
 #include <Core/Color.h>
 #include <Core/Quaternion.h>
+#include <Core/TypeList.h>
 
 #include "Saz/Core.h"
 #include "Saz/Entity.h"

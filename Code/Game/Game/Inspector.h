@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/System.h>
+#include <Game/WorldOutliner.h>
 
 namespace Saz
 {
@@ -14,18 +15,18 @@ namespace Saz
 
 namespace ecs 
 {
-	class SceneEditor final : public System
+	class Inspector final : public System
 	{
 	public:
 		
-		SceneEditor();
+		Inspector(WorldOutliner& worldOutliner);
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
-	private:
-		void Render();
+		void DrawObjectInspector();
 
 	private:
+		WorldOutliner& m_WorldOutliner;
 	};
 }

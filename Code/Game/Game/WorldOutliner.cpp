@@ -7,6 +7,7 @@
 #include "Saz/NameComponent.h"
 #include "Saz/LevelComponent.h"
 #include "imgui.h"
+#include "Saz/CameraComponent.h"
 
 namespace ecs
 {	
@@ -17,49 +18,14 @@ namespace ecs
 
 	void WorldOutliner::Update(const Saz::GameTime& gameTime)
 	{
-		{
-			//ImGui::Begin("Object List", &m_IsActive);
-
-			//ImGui::Separator();
-
-			//ImGui::Text("Objects:");
-
-			//// Arranges Objects vector into a selectable list.
-			//bool objectHandledRightClick = false;
-			//static int item_current_idx = 0;
-			//if (ImGui::BeginListBox("Objects", ImVec2(-1, -1)))
-			//{
-			//	int n = 0;
-
-			//	auto& registry = m_World->m_Registry;
-
-			//	const auto view = registry.view<component::LevelComponent>();
-			//	for (const ecs::Entity& entity : view)
-			//	{
-			//		const auto nameView = registry.view<component::NameComponent>();
-			//		for (const ecs::Entity& nameEnt : nameView)
-			//		{
-			//			auto& nameComp = nameView.get<component::NameComponent>(nameEnt);
-			//			//ImGui::Text(nameComp.m_Name.c_str());
-			//			if (ImGui::BeginDragDropSource())
-			//			{
-			//				//ImGui::SetDragDropPayload("Object", &index, sizeof(int));
-
-			//				//ImGui::EndDragDropSource();
-			//			}
-			//		}
-
-
-			//	}
-
-			//	ImGui::EndListBox();
-			//}
-
-			//ImGui::End();
-		}
 		if (!m_IsActive)
 			return;
 
+		DrawWorldOutliner();
+	}
+
+	void WorldOutliner::DrawWorldOutliner()
+	{
 		if (ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar))
 		{
 			bool objectHandledRightClick = false;
@@ -74,6 +40,12 @@ namespace ecs
 
 					ImGui::PushID(&entity);
 					ImGui::Text(nameComp.m_Name.c_str());
+
+					if (ImGui::IsItemClicked())
+					{
+						m_SelectedEntity = entity;
+						m_IsObjectInspectorOn = true;
+					}
 
 					if (ImGui::BeginPopupContextItem("Object Options"))
 					{
@@ -100,8 +72,26 @@ namespace ecs
 					}
 					ImGui::PopID();
 				}
-				
+
 				ImGui::EndListBox();
+			}
+
+			if (!objectHandledRightClick)
+			{
+				if (ImGui::BeginPopupContextItem("Object Selection Menu"))
+				{
+					if (ImGui::Button("Camera"))
+					{
+						ecs::Entity entity = m_World->CreateEntity();
+						m_World->AddComponent<component::LevelComponent>(entity);
+						auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
+						cam.camera2D = new raylib::Camera2D({ 320, 240 }, { 0,0 }, 0.f, 1.f);
+						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
+						nameComp.m_Name = "Camera";
+					}
+
+					ImGui::EndPopup();
+				}
 			}
 
 			ImGui::End();

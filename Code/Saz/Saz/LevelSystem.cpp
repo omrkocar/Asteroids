@@ -90,8 +90,6 @@ namespace ecs
 					{
 						component::CameraComponent& cameraComp = m_World->AddComponent<component::CameraComponent>(entity);
 						cameraComp.camera2D = new raylib::Camera2D({ 320, 240 }, { 0,0 }, 0.f, 1.f);
-							
-						//cameraComp.camera2D->
 					}
 					if (componentType == "InputComponent")
 					{

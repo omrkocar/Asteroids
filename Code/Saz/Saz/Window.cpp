@@ -151,7 +151,7 @@ namespace Saz
 		: Saz::WindowBase(props)
 	{
 		m_Window = std::make_unique<raylib::Window>(props.m_Size.x, props.m_Size.y, props.m_Title);
-		raylib::Image icon = raylib::RayLoadImage("D:/Dev/Saz/Data/Textures/SazBackground.png");
+		raylib::Image icon = raylib::RayLoadImage("D:/Dev/Saz/Data/Textures/SazLogo.png");
 		m_Window->SetIcon(icon);
 	}
 

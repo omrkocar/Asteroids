@@ -3,7 +3,7 @@
 #include "Application.h"
 
 #include "Game/WorldOutliner.h"
-#include "Game/SceneEditor.h"
+#include "Game/Inspector.h"
 
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
@@ -31,8 +31,8 @@ void Application::Init()
 {
 	Saz::Application::Init();
 
-	m_EntityWorld.RegisterSystem<ecs::SceneEditor>();
 	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
+	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
 
 	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
 	levelSystem.LoadFromFile("DefaultScene.scene");
@@ -91,6 +91,7 @@ void Application::DrawMenuBar()
 		if (ImGui::MenuItem("Clear Level"))
 		{
 			m_EntityWorld.DestroyAllEntities();
+			m_EntityWorld.GetSystem<ecs::WorldOutliner>().m_IsObjectInspectorOn = false;
 			IMGUI_LOG_INFO("Registry Size: %d", m_EntityWorld.m_Registry.size());
 		}
 
