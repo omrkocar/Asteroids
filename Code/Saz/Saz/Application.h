@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/EntityWorld.h>
+#include <Saz/LayerStack.h>
 #include <Saz/WindowBase.h>
 
 namespace Saz
@@ -16,8 +17,6 @@ namespace imgui
 
 namespace Saz
 {
-	class Window;
-
 	class SAZ_API Application
 	{
 	public:
@@ -30,6 +29,8 @@ namespace Saz
 
 		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }
 
+		inline WindowBase& GetWindow() { return *m_Window; }
+
 	protected:
 		virtual void Init();
 		virtual void PostInit();
@@ -37,19 +38,29 @@ namespace Saz
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
 
-		const ecs::EntityWorld& GetWorld();
-		
+		void OnEvent(Event& e);
 
-		Saz::Window* m_Window = nullptr;
+		const ecs::EntityWorld& GetWorld();
+
+		bool OnWindowClose(WindowCloseEvent& e);
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
+		
+		std::unique_ptr<WindowBase> m_Window = nullptr;
+
 
 		Saz::ResourceManager* m_pResourceManager;
 
 		ecs::EntityWorld m_EntityWorld;
 
 		imgui::Log* m_ImGuiLog = nullptr;
+		LayerStack m_LayerStack;
 
 	private:
 		static Application* s_Instance;
+
+		bool m_Running = true;
 	};
 
 	// To be defined in CLIENT

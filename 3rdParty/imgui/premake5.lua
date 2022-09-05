@@ -15,6 +15,5 @@ project "ImGui"
 	{ 
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/imgui/",
-		"%{wks.location}/3rdParty/imgui-sfml/",
-		"%{wks.location}/3rdParty/SFML/Include/",
+		"%{wks.location}/3rdParty/imgui/",
 	}

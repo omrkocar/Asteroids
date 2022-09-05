@@ -16,10 +16,30 @@
 #include <entt/entt.hpp>
 #include "Saz/LevelComponent.h"
 
+class ExampleLayer : public Saz::Layer
+{
+public:
+	ExampleLayer()
+		: Layer("Placeholder")
+	{
+	}
+
+	void OnUpdate(const Saz::GameTime& ts)
+	{
+		
+	}
+
+	void OnEvent(Saz::Event& event)
+	{
+		
+	}
+};
+
 
 Application::Application()
 {
-	
+	PushLayer(new ExampleLayer());
+	PushOverlay(new Saz::ImGuiLayer());
 }
 
 Application::~Application()
@@ -54,7 +74,7 @@ void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
 
-	auto& registry = m_EntityWorld.m_Registry;
+	/*auto& registry = m_EntityWorld.m_Registry;
 	const auto view = registry.view<component::TransformComponent, component::InputComponent>();
 	for (const ecs::Entity& entity : view)
 	{
@@ -76,9 +96,9 @@ void Application::Update(const Saz::GameTime& gameTime)
 		{
 			transformComp.m_Position.y += 500.0f * gameTime.m_DeltaTime;
 		}
-	}
+	}*/
 
-	DrawMenuBar();
+	//DrawMenuBar();
 	//ImGui::ShowDemoWindow();
 }
 
@@ -112,10 +132,8 @@ void Application::DrawMenuBar()
 		{
 			static int index = 0;
 			ecs::Entity entity = m_EntityWorld.CreateEntity();
-			raylib::Texture* pTexture = new raylib::Texture("D:/Dev/Saz/Data/Textures/Ship.png");
 
 			component::RenderComponent& renderComp = m_EntityWorld.AddComponent<component::RenderComponent>(entity);
-			renderComp.texture = pTexture;
 			m_EntityWorld.AddComponent<component::LevelComponent>(entity);
 			auto& nameComp = m_EntityWorld.AddComponent<component::NameComponent>(entity);
 			nameComp.m_Name = "Object(" + std::to_string(index) +  ")";

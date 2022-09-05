@@ -29,7 +29,6 @@ namespace ecs
 		for (const auto& entity : cameraView)
 		{
 			const auto& cameraComp = cameraView.get<component::CameraComponent>(entity);
-			delete cameraComp.camera2D;
 		}
 	}
 

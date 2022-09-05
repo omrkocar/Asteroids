@@ -6,7 +6,7 @@ namespace Saz
 {
 	class GameTime;
 
-	class Window;
+	class WindowBase;
 	
 }
 
@@ -17,14 +17,14 @@ namespace ecs
 	{
 	public:
 		
-		InputSystem(Saz::Window& window);
+		InputSystem(Saz::WindowBase& window);
 		~InputSystem();
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
-		Saz::Window& m_Window;
+		Saz::WindowBase& m_Window;
 
 		Set<Input::EKeyboard> m_KeyboardPrevious;
 		Set<Input::EKeyboard> m_KeyboardCurrent;

@@ -16,16 +16,35 @@
 #include "Saz/NameComponent.h"
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
-#include "Saz/Window.h"
+#include "Saz/WindowsWindow.h"
 
 namespace Saz
 {
+#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
 	const ecs::EntityWorld& Application::GetWorld()
 	{
 		return m_EntityWorld;
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		m_Running = false;
+		return true;
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
 	Application::Application()
@@ -36,15 +55,15 @@ namespace Saz
 		Saz::Log::Init();
 
 		{
-
 			Saz::WindowProps windowProps;
-			windowProps.m_Title = "Saz Engine";
-			windowProps.m_Size = { static_cast<int>(Screen::width), static_cast<int>(Screen::height) };
-			m_Window = new Window(windowProps);
-			m_Window->Init();
+			windowProps.Title = "Saz Engine";
+			windowProps.Width = static_cast<int>(Screen::width);
+			windowProps.Height = static_cast<int>(Screen::height);
+			m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create());
+			m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		}
 		
-		m_ImGuiLog = new imgui::Log();
+		//m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();	
@@ -52,18 +71,13 @@ namespace Saz
 
 	Application::~Application()
 	{
-		delete m_Window;
-		delete m_ImGuiLog;
+		//delete m_ImGuiLog;
 		delete m_pResourceManager;
 	}
 
 	void Application::Init()
 	{
-		m_Window->Init();
 		m_EntityWorld.Init();
-
-		SetupRLImGui(true);
-		ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 	}
 
 	void Application::PostInit()
@@ -97,7 +111,30 @@ namespace Saz
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		m_EntityWorld.Update(gameTime);
-		m_ImGuiLog->Update();
+		glClearColor(1, 0, 1, 0.5f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (Layer* layer : m_LayerStack)
+		{
+			layer->OnUpdate(gameTime);
+		}
+
+		m_Window->Update(gameTime);
+	}
+
+	void Application::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+
+		//SAZ_CORE_TRACE("{0}", e);
+
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		{
+			(*--it)->OnEvent(e);
+			if (e.Handled)
+				break;
+		}
 	}
 
 	void Application::Run()
@@ -105,34 +142,18 @@ namespace Saz
 		Register();
 		Init();
 		PostInit();
-
-		raylib::Texture bg("D:/Dev/Saz/Data/Textures/SazBackground.png");
 		
 
 		Saz::GameTime gameTime;
 
-		while (true)
+		while (m_Running)
 		{
-			m_Window->BeginDrawing();
-			BeginRLImGui();
 
-			gameTime.m_DeltaTime = GetFrameTime();
+			gameTime.m_DeltaTime = 1 / 60.f;
 			gameTime.m_TotalTime += gameTime.m_DeltaTime;
 			gameTime.m_Frame++;
 
-			bg.Draw();
 			Update(gameTime);
-			
-
-			m_Window->Update(gameTime);
-			if (m_Window->ShouldClose())
-				break;
-
-
-			EndRLImGui();
-			m_Window->EndDrawing();
 		}
-
-		ShutdownRLImGui();
 	}
 }

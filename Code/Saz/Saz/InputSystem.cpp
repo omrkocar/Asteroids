@@ -3,8 +3,7 @@
 
 #include "Saz/InputComponent.h"
 #include "Saz/MovementComponent.h"
-#include "Saz/Window.h"
-
+#include "Saz/WindowBase.h"
 
 #include <entt/entt.hpp>
 #include "TransformComponent.h"
@@ -12,7 +11,7 @@
 
 namespace ecs
 {	
-	InputSystem::InputSystem(Saz::Window& window)
+	InputSystem::InputSystem(Saz::WindowBase& window)
 		: m_Window(window)
 	{
 
@@ -30,7 +29,7 @@ namespace ecs
 
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
-		auto& registry = m_World->m_Registry;
+		/*auto& registry = m_World->m_Registry;
 
 		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 		m_MousePrevious = std::move(m_MouseCurrent);
@@ -49,6 +48,6 @@ namespace ecs
 			inputComponent.m_MouseCurrent = m_MouseCurrent;
 			inputComponent.m_MouseDelta = mouseDelta;
 			inputComponent.m_MousePosition = mousePos;
-		}
+		}*/
 	}
 }

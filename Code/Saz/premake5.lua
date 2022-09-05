@@ -12,7 +12,7 @@ project "Saz"
 
 	defines 
 	{
-		"RAYLIB_CPP_NO_MATH" 
+		"GLFW_INCLUDE_NONE"
 	}
 
 	vpaths 
@@ -32,6 +32,8 @@ project "Saz"
 	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"
 	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
 	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
+	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/include"
+	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
@@ -40,10 +42,8 @@ project "Saz"
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.entt}",
-		"%{wks.location}/3rdParty/raylib-cpp",
-		"%{wks.location}/3rdParty/raylib-cpp/rlImGui",
-		"%{wks.location}/3rdParty/raylib-cpp/include",
-		"%{wks.location}/3rdParty/raylib-cpp/vendor/raylib/src/"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLAD}",
 	}
 
 	libdirs
@@ -55,7 +55,9 @@ project "Saz"
 	links {
 		"Core",
 		"ImGui",
-		"RayLib",
+		"GLFW",
+		"GLAD",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

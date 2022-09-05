@@ -16,6 +16,6 @@ namespace component
 {
 	struct CameraComponent
 	{
-		raylib::Camera2D* camera2D = nullptr;
+		int placeholder = 0;
 	};
 }

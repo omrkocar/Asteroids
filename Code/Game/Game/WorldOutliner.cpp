@@ -21,7 +21,7 @@ namespace ecs
 		if (!m_IsActive)
 			return;
 
-		DrawWorldOutliner();
+		//DrawWorldOutliner();
 	}
 
 	void WorldOutliner::DrawWorldOutliner()
@@ -85,7 +85,6 @@ namespace ecs
 						ecs::Entity entity = m_World->CreateEntity();
 						m_World->AddComponent<component::LevelComponent>(entity);
 						auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
-						cam.camera2D = new raylib::Camera2D({ 320, 240 }, { 0,0 }, 0.f, 1.f);
 						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
 						nameComp.m_Name = "Camera";
 					}

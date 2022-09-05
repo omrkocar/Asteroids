@@ -1,0 +1,3 @@
+[submodule "3rdParty/GLFW"]
+	path = 3rdParty/GLFW
+	url = https://github.com/TheCherno/GLFW

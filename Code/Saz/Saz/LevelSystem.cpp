@@ -27,7 +27,7 @@ namespace ecs
 	{
 		m_World->DestroyAllEntities();
 
-		FilePath relativePath = "D:/Dev/Saz/Data/Scenes/" + filename;
+		FilePath relativePath = "C:/Dev/SazEngine/Data/Scenes/" + filename;
 		const char* jsonSceneFile = Saz::file::LoadCompleteFile(relativePath.u8string().c_str(), nullptr);
 		if (!jsonSceneFile)
 		{
@@ -83,13 +83,11 @@ namespace ecs
 						if (component.HasMember("Texture"))
 						{
 							// temp hack. #todo: have ResourceManager handle this
-							renderComp.texture = new raylib::Texture2D(component["Texture"].GetString());
 						}
 					}
 					if (componentType == "CameraComponent")
 					{
 						component::CameraComponent& cameraComp = m_World->AddComponent<component::CameraComponent>(entity);
-						cameraComp.camera2D = new raylib::Camera2D({ 320, 240 }, { 0,0 }, 0.f, 1.f);
 					}
 					if (componentType == "InputComponent")
 					{

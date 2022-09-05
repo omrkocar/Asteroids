@@ -9,6 +9,7 @@ workspace "Saz"
 	startproject	"Game"
 	language "C++"
 	cppdialect	"C++17"
+	toolset "v143"
 
 	outputdir = "%{cfg.buildcfg}_%{cfg.platform}"
 
@@ -55,13 +56,17 @@ workspace "Saz"
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"
 	include "Code/Game/premake5.lua"
-	include "3rdParty/imgui/premake5.lua"
-	include "3rdParty/raylib-cpp/premake5.lua"
 
 	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"
 		include "Code/Saz_ut/premake5.lua"
 	group ""
+
+	group "3rdParty"
+		include "3rdParty/imgui/premake5.lua"
+		include "3rdParty/GLFW/premake5.lua"
+		include "3rdParty/GLAD/premake5.lua"
+		group ""
 	
 
 project "ZERO_CHECK"

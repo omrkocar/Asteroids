@@ -6,14 +6,14 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 
-#include "Saz/Window.h"
+#include "Saz/WindowBase.h"
 
 #include <entt/entt.hpp>
 #include "InputComponent.h"
 
 namespace ecs
 {
-	RenderSystem::RenderSystem(Saz::Window& window)
+	RenderSystem::RenderSystem(Saz::WindowBase& window)
 		: m_Window(window)
 	{
 		
@@ -38,24 +38,19 @@ namespace ecs
 		{
 			component::CameraComponent& cameraComponent = cameraView.get<component::CameraComponent>(cameraEntity);
 			//cameraComponent.camera2D->Update();
-			cameraComponent.camera2D->BeginMode();
-
 			const auto view = registry.view<component::RenderComponent, component::TransformComponent>();
 			for (const ecs::Entity& entity : view)
 			{
 				component::RenderComponent& renderComp = view.get<component::RenderComponent>(entity);
 				component::TransformComponent& transformComp = view.get<component::TransformComponent>(entity);
 
-				renderComp.texture->Draw(::Vector2{ transformComp.m_Position.x, transformComp.m_Position.y });
 
 				const auto inputView = registry.view<component::InputComponent>();
 				for (const ecs::Entity& inputEntity : inputView)
 				{
-					cameraComponent.camera2D->SetTarget({ transformComp.m_Position.x, transformComp.m_Position.y });
 				}
 			}
 
-			cameraComponent.camera2D->EndMode();
 		}
 
 		

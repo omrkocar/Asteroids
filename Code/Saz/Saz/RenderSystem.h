@@ -6,7 +6,7 @@ namespace Saz
 {
 	class GameTime;
 
-	class Window;
+	class WindowBase;
 }
 namespace ecs 
 {
@@ -14,13 +14,13 @@ namespace ecs
 	{
 	public:
 		
-		RenderSystem(Saz::Window& window);
+		RenderSystem(Saz::WindowBase& window);
 		~RenderSystem();
 
 		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
-		Saz::Window& m_Window;
+		Saz::WindowBase& m_Window;
 	};
 }
