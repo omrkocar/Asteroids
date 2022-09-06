@@ -17,7 +17,8 @@
 #include <Saz/Input.h>
 
 #include "Saz/Rendering/Buffer.h"
-#include "Saz/Rendering/OrtographicCamera.h"
+#include "Saz/Rendering/OrthographicCamera.h"
+#include "Saz/OrthographicCameraController.h"
 #include "Saz/Rendering/RenderCommand.h"
 #include "Saz/Rendering/Renderer.h"
 #include "Saz/Rendering/Shader.h"

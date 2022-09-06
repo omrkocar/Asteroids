@@ -17,9 +17,5 @@ public:
 	virtual void Destroy() override;
 	virtual void Register() override;
 	virtual void Update(const Saz::GameTime& gameTime) override;
-	
-private:
-
-	void DrawMenuBar();
 };
 

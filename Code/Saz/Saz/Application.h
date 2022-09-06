@@ -11,7 +11,7 @@ namespace Saz
 {
 	class ResourceManager;
 	class GameTime;
-	class OrtographicCamera;
+	class OrthographicCamera;
 }
 
 namespace imgui

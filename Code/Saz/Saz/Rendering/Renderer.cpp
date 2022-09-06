@@ -12,7 +12,7 @@ namespace Saz
 		RenderCommand::Init();
 	}
 
-	void Renderer::BeginScene(OrtographicCamera& camera)
+	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
 		m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}

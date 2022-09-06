@@ -19,18 +19,15 @@
 #include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
-#include "Saz/Rendering/Shader.h"
 #include "Saz/Platform/OpenGL/OpenGLShader.h"
 #include "glm/gtc/type_ptr.inl"
-#include "Saz/Rendering/Texture.h"
 
 class ExampleLayer : public Saz::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Placeholder"), 
-		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), 
-		m_CameraPosition(0.0f), 
+		: Layer("Placeholder"),
+		m_CameraController(1280.0f / 720.0f, true),
 		m_SquarePosition(0.0f)
 	{
 		m_VertexArray.reset(Saz::VertexArray::Create());
@@ -89,43 +86,14 @@ public:
 
 	void OnUpdate(const Saz::GameTime& gameTime)
 	{
-		if (Saz::Input::IsKeyPressed(Saz::Key::A))
-			m_CameraPosition.x -= m_CameraSpeed * gameTime.GetDeltaTime();
+		m_CameraController.OnUpdate(gameTime);
 
-		if (Saz::Input::IsKeyPressed(Saz::Key::D))
-			m_CameraPosition.x += m_CameraSpeed * gameTime.GetDeltaTime();
-
-		if (Saz::Input::IsKeyPressed(Saz::Key::W))
-			m_CameraPosition.y += m_CameraSpeed * gameTime.GetDeltaTime();
-
-		if (Saz::Input::IsKeyPressed(Saz::Key::S))
-			m_CameraPosition.y -= m_CameraSpeed * gameTime.GetDeltaTime();
-
-		if (Saz::Input::IsKeyPressed(Saz::Key::Right))
-			m_CameraRotation -= m_CameraRotationSpeed * gameTime.GetDeltaTime();
-		if (Saz::Input::IsKeyPressed(Saz::Key::Left))
-			m_CameraRotation += m_CameraRotationSpeed * gameTime.GetDeltaTime();
-
-		if (Saz::Input::IsKeyPressed(Saz::Key::J))
-			m_SquarePosition.x -= m_SquareMoveSpeed * gameTime.GetDeltaTime();
-
-		else if (Saz::Input::IsKeyPressed(Saz::Key::L))
-			m_SquarePosition.x += m_SquareMoveSpeed * gameTime.GetDeltaTime();
-
-		else if (Saz::Input::IsKeyPressed(Saz::Key::I))
-			m_SquarePosition.y += m_SquareMoveSpeed * gameTime.GetDeltaTime();
-
-		else if (Saz::Input::IsKeyPressed(Saz::Key::K))
-			m_SquarePosition.y -= m_SquareMoveSpeed * gameTime.GetDeltaTime();
-
+		// Render
 		Saz::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Saz::RenderCommand::Clear();
 
-		
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
 
-		Saz::Renderer::BeginScene(m_Camera);
+		Saz::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -148,9 +116,6 @@ public:
 		m_LogoTexture->Bind();
 		Saz::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		
-		// Triangle
-		//Saz::Renderer::Submit(m_Shader, m_VertexArray);
 		Saz::Renderer::EndScene();
 	}
 
@@ -165,13 +130,7 @@ public:
 
 	void OnEvent(Saz::Event& event)
 	{
-		Saz::EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<Saz::KeyPressedEvent>(SAZ_BIND_EVENT_FN(ExampleLayer::OnKeyPressedEvent));
-	}
-
-	bool OnKeyPressedEvent(Saz::KeyPressedEvent& event)
-	{
-		return false;
+		m_CameraController.OnEvent(event);
 	}
 
 private:
@@ -184,11 +143,7 @@ private:
 
 	Saz::Ref<Saz::Texture2D> m_Texture, m_LogoTexture;
 
-	Saz::OrtographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraSpeed = 5.0f;
-	float m_CameraRotationSpeed = 180.0f;
-	float m_CameraRotation = 0.0f;
+	Saz::OrthographicCameraController m_CameraController;
 
 	float m_SquareMoveSpeed = 2.0f;
 	glm::vec3 m_SquarePosition;
@@ -228,51 +183,6 @@ void Application::Register()
 void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
-}
-
-void Application::DrawMenuBar()
-{
-	ImGui::BeginMainMenuBar();
-
-	if (ImGui::BeginMenu("Level"))
-	{
-		if (ImGui::MenuItem("Clear Level"))
-		{
-			m_EntityWorld.DestroyAllEntities();
-			m_EntityWorld.GetSystem<ecs::WorldOutliner>().m_IsObjectInspectorOn = false;
-		}
-
-		if (ImGui::MenuItem("Load Default Level"))
-		{
-			ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
-			levelSystem.LoadFromFile("DefaultScene.scene");
-		}
-
-		ImGui::EndMenu();
-	}
-
-	if (ImGui::BeginMenu("Debug"))
-	{
-		auto& registry = m_EntityWorld.m_Registry;
-		if (ImGui::MenuItem("Create Entity"))
-		{
-			static int index = 0;
-			ecs::Entity entity = m_EntityWorld.CreateEntity();
-
-			component::RenderComponent& renderComp = m_EntityWorld.AddComponent<component::RenderComponent>(entity);
-			m_EntityWorld.AddComponent<component::LevelComponent>(entity);
-			auto& nameComp = m_EntityWorld.AddComponent<component::NameComponent>(entity);
-			nameComp.m_Name = "Object(" + std::to_string(index) +  ")";
-			index++;
-			component::TransformComponent& transformComp = m_EntityWorld.AddComponent<component::TransformComponent>(entity);
-			transformComp.m_Position = vec2(Random::Range(0.0f, 1000.0f), Random::Range(0.0f, 500.0f));
-			//IMGUI_LOG_INFO("A new entity is created at %f, %f", transformComp.m_Position.x, transformComp.m_Position.y);
-		}
-
-		ImGui::EndMenu();
-	}
-
-	ImGui::EndMainMenuBar();
 }
 
 Saz::Application* Saz::CreateApplication()
