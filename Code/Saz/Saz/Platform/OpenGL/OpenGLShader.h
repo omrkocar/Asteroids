@@ -8,7 +8,7 @@ namespace Saz
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const String& vertexSource, const String& fragmentSource);
+		OpenGLShader(const char* vertexSource, const char* fragmentSource);
 		~OpenGLShader();
 
 		virtual void Bind() const override;
@@ -23,6 +23,9 @@ namespace Saz
 
 		void UploadUniformMat3(const String& name, const glm::mat3& matrix);
 		void UploadUniformMat4(const String& name, const glm::mat4& matrix);
+
+	private:
+		void Compile(const char* vertexSource, const char* fragmentSource);
 
 	private:
 		uint32_t m_RendererID;

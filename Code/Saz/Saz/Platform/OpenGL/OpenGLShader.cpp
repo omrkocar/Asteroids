@@ -6,14 +6,24 @@
 
 namespace Saz
 {
-	OpenGLShader::OpenGLShader(const String& vertexSource, const String& fragmentSource)
+	OpenGLShader::OpenGLShader(const char* vertexSource, const char* fragmentSource)
+	{
+		const char* vertexShader = file::LoadCompleteFile(vertexSource);
+		const char* fragmentShader = file::LoadCompleteFile(fragmentSource);
+
+		SAZ_CORE_ASSERT(vertexShader && fragmentShader, "Shader is not found!");
+		
+		Compile(vertexShader, fragmentShader);
+	}
+
+	void OpenGLShader::Compile(const char* vertexSource, const char* fragmentSource)
 	{
 		// Create an empty vertex shader handle
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
 		// Send the vertex shader source code to GL
 		// Note that std::string's .c_str is NULL character terminated.
-		const GLchar* source = vertexSource.c_str();
+		const GLchar* source = vertexSource;
 		glShaderSource(vertexShader, 1, &source, 0);
 
 		// Compile the vertex shader
@@ -43,7 +53,7 @@ namespace Saz
 
 		// Send the fragment shader source code to GL
 		// Note that std::string's .c_str is NULL character terminated.
-		source = (const GLchar*)fragmentSource.c_str();
+		source = (const GLchar*)fragmentSource;
 		glShaderSource(fragmentShader, 1, &source, 0);
 
 		// Compile the fragment shader
@@ -167,5 +177,4 @@ namespace Saz
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
-
 }

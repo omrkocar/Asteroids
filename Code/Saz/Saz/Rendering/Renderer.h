@@ -12,6 +12,8 @@ namespace Saz
 	class Renderer
 	{
 	public:
+		static void Init();
+
 		static void BeginScene(OrtographicCamera& camera);
 		static void EndScene();
 

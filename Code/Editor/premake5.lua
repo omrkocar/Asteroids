@@ -20,7 +20,8 @@ project "Editor"
 
 	files
 	{
-		"%{wks.location}/Data/**",
+		"%{wks.location}/Data/Shaders/*.vert",
+		"%{wks.location}/Data/Shaders/*.frag",
 	}
 
 	includedirs {

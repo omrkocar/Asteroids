@@ -8,6 +8,7 @@ namespace Saz
 	{
 
 	public:
+		void Init() override;
 		void Clear() override;
 		void SetClearColor(const glm::vec4& color) override;
 		void DrawIndexed(const Ref<VertexArray>& vertexArray) override;

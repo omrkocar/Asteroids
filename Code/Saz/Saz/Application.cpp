@@ -20,6 +20,7 @@
 #include "ImGui/ImGuiLog.h"
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
+#include "Saz/Rendering/Renderer.h"
 
 namespace Saz
 {
@@ -36,9 +37,6 @@ namespace Saz
 
 		m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
-
-		m_ImGuiLayer = new ImGuiLayer();
-		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -49,6 +47,11 @@ namespace Saz
 	void Application::Init()
 	{
 		m_EntityWorld.Init();
+
+		Renderer::Init();
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	void Application::PostInit()

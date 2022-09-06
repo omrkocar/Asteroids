@@ -7,7 +7,7 @@
 namespace Saz
 {
 
-	Ref<Shader> Shader::Create(const String& vertexSource, const String& fragmentSource)
+	Ref<Shader> Shader::Create(const char* vertexSource, const char* fragmentSource)
 	{
 		switch (Renderer::GetAPI())
 		{
