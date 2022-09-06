@@ -5,7 +5,7 @@ workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }
 	platforms		{ "x64" }
-	startproject	"Game"
+	startproject	"Engine"
 	language "C++"
 	cppdialect	"C++17"
 	toolset "v143"
@@ -54,7 +54,7 @@ workspace "Saz"
 
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"
-	include "Code/Game/premake5.lua"
+	include "Code/Engine/premake5.lua"
 
 	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"

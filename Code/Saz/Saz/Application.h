@@ -5,10 +5,6 @@
 #include <Saz/WindowBase.h>
 #include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
-#include "Saz/Rendering/Shader.h"
-#include "Saz/Rendering/Buffer.h"
-#include "Saz/Rendering/VertexArray.h"
-#include "Saz/Rendering/OrtographicCamera.h"
 
 
 namespace Saz
@@ -60,14 +56,6 @@ namespace Saz
 		std::unique_ptr<WindowBase> m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
-
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVA;
-
-		OrtographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 
