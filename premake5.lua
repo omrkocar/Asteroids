@@ -5,7 +5,7 @@ workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }
 	platforms		{ "x64" }
-	startproject	"Engine"
+	startproject	"Editor"
 	language "C++"
 	cppdialect	"C++17"
 	toolset "v143"
@@ -54,7 +54,7 @@ workspace "Saz"
 
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"
-	include "Code/Engine/premake5.lua"
+	include "Code/Editor/premake5.lua"
 
 	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"
@@ -66,6 +66,7 @@ workspace "Saz"
 		include "3rdParty/GLFW/premake5.lua"
 		include "3rdParty/GLAD/premake5.lua"
 		include "3rdParty/glm/premake5.lua"
+		include "3rdParty/stb_image/premake5.lua"
 		group ""
 	
 

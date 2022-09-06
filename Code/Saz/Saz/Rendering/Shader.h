@@ -2,22 +2,16 @@
 
 #include "Core/String.h"
 
-#include <glm/glm.hpp>
-
 namespace Saz
 {
 	class Shader
 	{
 	public:
-		Shader(const String& vertexSource, const String& fragmentSource);
-		~Shader();
+		virtual ~Shader() = default;
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		void UploadUniformMat4(const String& name, const glm::mat4& matrix);
-
-	private:
-		uint32_t m_RendererID;
+		static Ref<Shader> Create(const String& vertexSource, const String& fragmentSource);
 	};
 }

@@ -19,6 +19,7 @@
 #include "Saz/WindowsWindow.h"
 #include "ImGui/ImGuiLog.h"
 #include "imgui/imgui.h"
+#include "GLFW/glfw3.h"
 
 namespace Saz
 {
@@ -95,17 +96,15 @@ namespace Saz
 		Register();
 		Init();
 		PostInit();
-		
 
 		Saz::GameTime gameTime;
-		IMGUI_LOG_INFO("ImGui text");
 
 		while (m_Running)
 		{
-
-			gameTime.m_DeltaTime = 1 / 60.f;
-			gameTime.m_TotalTime += gameTime.m_DeltaTime;
+			gameTime.m_TotalTime = (float)glfwGetTime();
+			gameTime.m_DeltaTime = gameTime.m_TotalTime - m_LastFrameTime;
 			gameTime.m_Frame++;
+			m_LastFrameTime = gameTime.m_TotalTime;
 
 			Update(gameTime);
 		}
@@ -124,6 +123,8 @@ namespace Saz
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
+
+		IMGUI_LOG_INFO("Registered Engine Systems and Components");
 	}
 
 	const ecs::EntityWorld& Application::GetWorld()

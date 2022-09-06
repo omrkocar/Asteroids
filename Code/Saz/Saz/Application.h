@@ -29,6 +29,7 @@ namespace Saz
 
 	class SAZ_API Application
 	{
+
 	public:
 		Application();
 		virtual ~Application();
@@ -50,6 +51,7 @@ namespace Saz
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
+		float m_LastFrameTime = 0.0f;
 
 	protected:
 		ecs::EntityWorld m_EntityWorld;

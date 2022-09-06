@@ -1,13 +1,12 @@
 #include "SazPCH.h"
-#include "Shader.h"
-
+#include "Texture.h"
+#include "Saz/Rendering/RendererAPI.h"
+#include "Saz/Platform/OpenGL/OpenGLTexture.h"
 #include "Saz/Rendering/Renderer.h"
-#include "Saz/Platform/OpenGL/OpenGLShader.h"
 
 namespace Saz
 {
-
-	Ref<Shader> Shader::Create(const String& vertexSource, const String& fragmentSource)
+	Ref<Saz::Texture2D> Texture2D::Create(const String& path)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -15,7 +14,7 @@ namespace Saz
 			SAZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!")
 				return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(vertexSource, fragmentSource);
+			return std::make_shared<OpenGLTexture2D>(path);
 		}
 
 		SAZ_CORE_ASSERT(false, "Unknown RendererAPI!");

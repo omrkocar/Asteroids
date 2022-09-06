@@ -6,6 +6,7 @@
 
 #include <Saz/Application.h>
 #include <Saz/Core.h>
+#include <Saz/GameTime.h>
 #include <Saz/Entity.h>
 
 #include <Saz/ImGui/ImGuiLayer.h>
@@ -20,6 +21,7 @@
 #include "Saz/Rendering/RenderCommand.h"
 #include "Saz/Rendering/Renderer.h"
 #include "Saz/Rendering/Shader.h"
+#include "Saz/Rendering/Texture.h"
 #include "Saz/Rendering/VertexArray.h"
 
 #include <Core/DynamicArray.h>

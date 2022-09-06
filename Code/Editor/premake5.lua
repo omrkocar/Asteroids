@@ -1,21 +1,21 @@
 
 -----------------------------------------------------
--- Engine
+-- Editor
 -----------------------------------------------------
-project "Engine"
+project "Editor"
 	kind		"ConsoleApp"
 	dependson { "Saz" }
-	location	"%{wks.location}/Projects/Engine"
-	pchheader "EnginePCH.h"
-	pchsource "Engine/EnginePCH.cpp"
+	location	"%{wks.location}/Projects/Editor"
+	pchheader "EditorPCH.h"
+	pchsource "Editor/EditorPCH.cpp"
 	staticruntime "on"
 
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Engine/**.h", 
-			"Engine/**.cpp", 
-			"Engine/**.inl" } },
+			"Editor/**.h", 
+			"Editor/**.cpp", 
+			"Editor/**.inl" } },
 	}
 
 	files
@@ -29,10 +29,11 @@ project "Engine"
 		"%{wks.location}/3rdParty/imgui/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/Code/Engine/",
+		"%{wks.location}/Code/Editor/",
 		"%{wks.location}/3rdParty/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/glm",
+		"%{wks.location}/3rdParty/stb_image",
 	}
 
 	libdirs{
@@ -43,7 +44,6 @@ project "Engine"
 	links 
 	{
 		"Saz",
-		"ImGui",
 	}
 
 	filter "system:windows"

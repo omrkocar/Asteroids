@@ -13,7 +13,8 @@ project "Saz"
 
 	defines 
 	{
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+		"_CRT_SECURE_NO_WARNINGS",
 	}
 
 	vpaths 
@@ -36,6 +37,7 @@ project "Saz"
 	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/include"
 	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
 	IncludeDir["glm"] = "%{wks.location}/3rdParty/glm"
+	IncludeDir["stb_image"] = "%{wks.location}/3rdParty/stb_image"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
@@ -48,6 +50,7 @@ project "Saz"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	libdirs

@@ -48,6 +48,9 @@ namespace ecs
 		template<class TComponent, typename... TArgs>
 		auto GetComponent(const ecs::Entity& entity) -> TComponent&;
 
+		template<class TComponent, typename... TArgs>
+		auto TryGetComponent(const ecs::Entity& entity)->TComponent*;
+
 		template<class TComponent>
 		void RegisterComponent();
 

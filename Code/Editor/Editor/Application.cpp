@@ -1,9 +1,9 @@
-#include "EnginePCH.h"
+#include "EditorPCH.h"
 
 #include "Application.h"
 
-#include "Engine/WorldOutliner.h"
-#include "Engine/Inspector.h"
+#include "Editor/WorldOutliner.h"
+#include "Editor/Inspector.h"
 
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
@@ -18,16 +18,20 @@
 
 #include <imgui/imgui.h>
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Saz/Rendering/Shader.h"
+#include "Saz/Platform/OpenGL/OpenGLShader.h"
+#include "glm/gtc/type_ptr.inl"
+#include "Saz/Rendering/Texture.h"
 
 class ExampleLayer : public Saz::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Placeholder"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
+		: Layer("Placeholder"), 
+		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), 
+		m_CameraPosition(0.0f), 
+		m_SquarePosition(0.0f)
 	{
 		m_VertexArray.reset(Saz::VertexArray::Create());
 
@@ -37,7 +41,7 @@ public:
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<Saz::VertexBuffer> vertexBuffer;
+		Saz::Ref<Saz::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Saz::VertexBuffer::Create(vertices, sizeof(vertices)));
 		Saz::BufferLayout layout = {
 			{ Saz::ShaderDataType::Float3, "a_Position" },
@@ -47,28 +51,29 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Saz::IndexBuffer> indexBuffer;
+		Saz::Ref<Saz::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Saz::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA.reset(Saz::VertexArray::Create());
 
-		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Saz::VertexBuffer> squareVB;
+		Saz::Ref<Saz::VertexBuffer> squareVB;
 		squareVB.reset(Saz::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->SetLayout({
-			{ Saz::ShaderDataType::Float3, "a_Position" }
+			{ Saz::ShaderDataType::Float3, "a_Position" },
+			{ Saz::ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Saz::IndexBuffer> squareIB;
+		Saz::Ref<Saz::IndexBuffer> squareIB;
 		squareIB.reset(Saz::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -79,6 +84,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -86,7 +92,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -103,9 +109,9 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Saz::Shader(vertexSrc, fragmentSrc));
+		m_Shader = Saz::Shader::Create(vertexSrc, fragmentSrc);
 
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
@@ -113,59 +119,141 @@ public:
 			out vec3 v_Position;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 			
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 			in vec3 v_Position;
+
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
+			}
+		)";
+		m_FlatColorShader = Saz::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+			
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
 
-		m_BlueShader.reset(new Saz::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+			in vec2 v_TexCoord;
+
+
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}
+		)";
+
+		m_TextureShader = Saz::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc);
+		m_Texture = Saz::Texture2D::Create("C:/Dev/SazEngine/Code/Editor/Data/Textures/Island.png");
+
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+
 	}
 
-	void OnUpdate(const Saz::GameTime& ts)
+	void OnUpdate(const Saz::GameTime& gameTime)
 	{
 		if (Saz::Input::IsKeyPressed(Saz::Key::A))
-			m_CameraPosition.x -= m_CameraSpeed;
+			m_CameraPosition.x -= m_CameraSpeed * gameTime.GetDeltaTime();
 
 		else if (Saz::Input::IsKeyPressed(Saz::Key::D))
-			m_CameraPosition.x += m_CameraSpeed;
+			m_CameraPosition.x += m_CameraSpeed * gameTime.GetDeltaTime();
 
 		else if (Saz::Input::IsKeyPressed(Saz::Key::W))
-			m_CameraPosition.y += m_CameraSpeed;
+			m_CameraPosition.y += m_CameraSpeed * gameTime.GetDeltaTime();
 
 		else if (Saz::Input::IsKeyPressed(Saz::Key::S))
-			m_CameraPosition.y -= m_CameraSpeed;
+			m_CameraPosition.y -= m_CameraSpeed * gameTime.GetDeltaTime();
 
 		if (Saz::Input::IsKeyPressed(Saz::Key::Right))
-			m_CameraRotation -= m_CameraRotationSpeed;
+			m_CameraRotation -= m_CameraRotationSpeed * gameTime.GetDeltaTime();
 		if (Saz::Input::IsKeyPressed(Saz::Key::Left))
-			m_CameraRotation += m_CameraRotationSpeed;
+			m_CameraRotation += m_CameraRotationSpeed * gameTime.GetDeltaTime();
+
+		if (Saz::Input::IsKeyPressed(Saz::Key::J))
+			m_SquarePosition.x -= m_SquareMoveSpeed * gameTime.GetDeltaTime();
+
+		else if (Saz::Input::IsKeyPressed(Saz::Key::L))
+			m_SquarePosition.x += m_SquareMoveSpeed * gameTime.GetDeltaTime();
+
+		else if (Saz::Input::IsKeyPressed(Saz::Key::I))
+			m_SquarePosition.y += m_SquareMoveSpeed * gameTime.GetDeltaTime();
+
+		else if (Saz::Input::IsKeyPressed(Saz::Key::K))
+			m_SquarePosition.y -= m_SquareMoveSpeed * gameTime.GetDeltaTime();
 
 		Saz::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Saz::RenderCommand::Clear();
 
 		
-		//ImGui::DragFloat("CameraPosition", m_CameraPosition, 0.1f, 0.0f, 5.0f);
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 
 		Saz::Renderer::BeginScene(m_Camera);
-		Saz::Renderer::Submit(m_BlueShader, m_SquareVA);
-		Saz::Renderer::Submit(m_Shader, m_VertexArray);
+
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for (int y = 0; y < 5; y++)
+		{
+			for (int x = 0; x < 5; x++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				//Saz::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+			}
+		}
+
+		m_Texture->Bind();
+		Saz::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		
+		// Triangle
+		//Saz::Renderer::Submit(m_Shader, m_VertexArray);
 		Saz::Renderer::EndScene();
+	}
+
+	void OnImGuiRender()
+	{
+		ImGui::Begin("Settings");
+
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+
+		ImGui::End();
 	}
 
 	void OnEvent(Saz::Event& event)
@@ -180,17 +268,24 @@ public:
 	}
 
 private:
-	std::shared_ptr<Saz::Shader> m_Shader;
-	std::shared_ptr<Saz::VertexArray> m_VertexArray;
+	Saz::Ref<Saz::Shader> m_Shader;
+	Saz::Ref<Saz::VertexArray> m_VertexArray;
 
-	std::shared_ptr<Saz::Shader> m_BlueShader;
-	std::shared_ptr<Saz::VertexArray> m_SquareVA;
+	Saz::Ref<Saz::Shader> m_FlatColorShader, m_TextureShader;
+	Saz::Ref<Saz::VertexArray> m_SquareVA;
+
+	Saz::Ref<Saz::Texture2D> m_Texture;
 
 	Saz::OrtographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
-	float m_CameraSpeed = 0.05f;
-	float m_CameraRotationSpeed = 1.0f;
+	float m_CameraSpeed = 5.0f;
+	float m_CameraRotationSpeed = 180.0f;
 	float m_CameraRotation = 0.0f;
+
+	float m_SquareMoveSpeed = 2.0f;
+	glm::vec3 m_SquarePosition;
+
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 
