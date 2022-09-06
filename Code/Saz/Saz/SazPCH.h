@@ -49,6 +49,8 @@
 #include "Saz/Entity.h"
 #include "Saz/TypeId.h"
 #include "Saz/Log.h"
+#include "Saz/KeyCodes.h"
+#include "Saz/MouseCodes.h"
 #include "Saz/Input.h"
 #include <GLFW/glfw3.h>
 

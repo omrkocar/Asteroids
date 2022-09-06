@@ -2,6 +2,8 @@
 
 #include "Core/String.h"
 
+#include <glm/glm.hpp>
+
 namespace Saz
 {
 	class Shader
@@ -12,6 +14,8 @@ namespace Saz
 
 		void Bind() const;
 		void Unbind() const;
+
+		void UploadUniformMat4(const String& name, const glm::mat4& matrix);
 
 	private:
 		uint32_t m_RendererID;
