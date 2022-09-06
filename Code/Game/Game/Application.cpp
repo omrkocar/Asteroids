@@ -67,9 +67,6 @@ void Application::Init()
 
 	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
-
-	ecs::LevelSystem& levelSystem = m_EntityWorld.GetSystem<ecs::LevelSystem>();
-	levelSystem.LoadFromFile("DefaultScene.scene");
 }
 
 void Application::Destroy()

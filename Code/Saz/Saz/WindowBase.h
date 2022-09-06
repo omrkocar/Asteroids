@@ -36,10 +36,9 @@ namespace Saz
 		virtual void PostInit() {}
 		virtual void Destroy() {}
 
-		virtual void Update(const Saz::GameTime& gameTime) = 0;
+		virtual void OnUpdate(const Saz::GameTime& gameTime) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
-		virtual void SetResizable(bool resizable) const = 0;
 
 		virtual const std::string& GetTitle() const = 0;
 		virtual void SetTitle(const std::string& title) = 0;
@@ -48,8 +47,6 @@ namespace Saz
 		virtual unsigned int GetHeight() const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
-
-		virtual bool ShouldClose() const { return false; }
 
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 

@@ -5,10 +5,11 @@
 
 project "Saz"
 	kind		"StaticLib"
-	dependson { "Core", "Imgui", "GLFW", "Glad" }
+	dependson { "Core", "Imgui", "GLFW", "GLAD", "glm" }
 	location	"%{wks.location}/Projects/Saz"
 	pchheader "SazPCH.h"
 	pchsource "Saz/SazPCH.cpp"
+	staticruntime "on"
 
 	defines 
 	{
@@ -39,6 +40,7 @@ project "Saz"
 	includedirs {
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
+		"%{wks.location}/Code/Saz/Saz/",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{IncludeDir.ImGui}",

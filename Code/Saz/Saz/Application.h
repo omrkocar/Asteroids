@@ -5,6 +5,7 @@
 #include <Saz/WindowBase.h>
 #include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
+#include "Saz/Rendering/Shader.h"
 
 
 namespace Saz
@@ -35,10 +36,8 @@ namespace Saz
 		void Run();
 
 		inline static Application& Get() { return *s_Instance; }
-
-		Saz::ResourceManager* GetResourceManager() { return m_pResourceManager; }
-
 		inline WindowBase& GetWindow() { return *m_Window; }
+		const ecs::EntityWorld& GetWorld();
 
 	protected:
 		virtual void Init();
@@ -46,24 +45,20 @@ namespace Saz
 		virtual void Register();
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
-
 		void OnEvent(Event& e);
-
-		const ecs::EntityWorld& GetWorld();
-
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-		
+
+	protected:
+		ecs::EntityWorld m_EntityWorld;
 		std::unique_ptr<WindowBase> m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
-
-		Saz::ResourceManager* m_pResourceManager;
-
-		ecs::EntityWorld m_EntityWorld;
-
 		LayerStack m_LayerStack;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 
 	private:
 		static Application* s_Instance;

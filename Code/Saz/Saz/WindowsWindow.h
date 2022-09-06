@@ -6,31 +6,24 @@ struct GLFWwindow;
 
 namespace Saz
 {
+	class GraphicsContext;
+
 	class SAZ_API WindowsWindow final : public Saz::WindowBase
 	{
 	public:
 		explicit WindowsWindow(const Saz::WindowProps& props);
 		virtual ~WindowsWindow() override;
 
-		void Update(const Saz::GameTime& gameTime);
+		void OnUpdate(const Saz::GameTime& gameTime) override;
 
 		virtual void SetVSync(bool enabled);
 		virtual bool IsVSync() const;
-		virtual void SetResizable(bool resizable) const;
 
 		virtual const std::string& GetTitle() const;
 		virtual void SetTitle(const std::string& title);
 
 		inline virtual unsigned int GetWidth() const;
 		inline virtual unsigned int GetHeight() const;
-
-		bool ShouldClose() const override;
-
-		//void GatherKeyboard(Set<Input::EKeyboard>& out_Keys) const;
-		//void GatherMouse(Set<Input::EMouse>& out_Keys, vec2& out_Delta, vec2& out_Position) const;
-
-		bool HasResized() const { return m_HasResized; }
-		void SetResized(bool value) { m_HasResized = value; }
 
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
@@ -41,10 +34,8 @@ namespace Saz
 		virtual void Shutdown();
 
 	private:
-		String m_Title = { };
-		ivec2 m_Size = { };
-
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
@@ -56,10 +47,5 @@ namespace Saz
 		};
 
 		WindowData m_Data;
-
-		vec2 m_MousePos = vec2(0.0f);
-		vec2 m_MouseDelta = vec2(0.0f);
-
-		bool m_HasResized = false;
 	};
 }

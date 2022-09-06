@@ -5,7 +5,6 @@ workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }
 	platforms		{ "x64" }
-	dependson { "ZERO_CHECK" }
 	startproject	"Game"
 	language "C++"
 	cppdialect	"C++17"
@@ -31,7 +30,7 @@ workspace "Saz"
 		optimize "Speed"
 		runtime "Release"
 		buildoptions "/MD"
-		symbols "Off"
+		symbols "off"
 	filter {}
 
 	defines

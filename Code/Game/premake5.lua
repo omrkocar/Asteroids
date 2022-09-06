@@ -8,6 +8,7 @@ project "Game"
 	location	"%{wks.location}/Projects/Game"
 	pchheader "GamePCH.h"
 	pchsource "Game/GamePCH.cpp"
+	staticruntime "on"
 
 	vpaths 
 	{ 
