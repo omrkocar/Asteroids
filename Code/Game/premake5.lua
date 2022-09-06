@@ -30,7 +30,8 @@ project "Game"
 		"%{wks.location}/Code/Saz/",
 		"%{wks.location}/Code/Game/",
 		"%{wks.location}/3rdParty/GLFW/include",
-		"%{wks.location}/3rdParty/GLAD/include"
+		"%{wks.location}/3rdParty/GLAD/include",
+		"%{wks.location}/3rdParty/glm",
 	}
 
 	libdirs{

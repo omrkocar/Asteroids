@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Core/Input.h>
-
 namespace component
 {
 	struct InputComponent
 	{
-		bool IsKeyHeld(Input::EKeyboard key) const;
+		bool a = false;
+		/*bool IsKeyHeld(Input::EKeyboard key) const;
 		bool IsKeyPressed(Input::EKeyboard key) const;
 		bool IsKeyReleased(Input::EKeyboard key) const;
 
@@ -20,6 +19,6 @@ namespace component
 		Set<Input::EMouse> m_MouseCurrent;
 
 		vec2 m_MouseDelta;
-		vec2 m_MousePosition;
+		vec2 m_MousePosition;*/
 	};
 }

@@ -15,9 +15,7 @@ namespace component
 
 	inline void TransformComponent::AddInspector()
 	{
-		ImGui::DragFloat3("Position", &m_Position.x, 0.5f);
-		ImGui::DragFloat3("Rotation", &m_Rotation.x, 0.5f);
-		ImGui::DragFloat3("Scale", &m_Scale.x, 0.5f);
+		
 	}
 
 }

@@ -34,7 +34,6 @@
 
 #include <Core/DynamicArray.h>
 #include <Core/Map.h>
-#include <Core/Input.h>
 #include <Core/Math.h>
 #include <Core/FilePath.h>
 #include <Core/Random.h>
@@ -50,16 +49,7 @@
 #include "Saz/Entity.h"
 #include "Saz/TypeId.h"
 #include "Saz/Log.h"
-#include "Saz/Events/ApplicationEvent.h"
-#include "Saz/Layer.h"
-#include "Saz/Events/Event.h"
-#include "Saz/Events/KeyEvent.h"
-#include "Saz/Events/MouseEvent.h"
-#include "Saz/KeyCodes.h"
-#include "Saz/MouseCodes.h"
-#include "Saz/ImGui/ImGuiLog.h"
-#include <Saz/ImGui/ImGuiLayer.h>
-
+#include "Saz/Input.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

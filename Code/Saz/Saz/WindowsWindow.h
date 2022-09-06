@@ -4,12 +4,6 @@
 
 struct GLFWwindow;
 
-namespace Input
-{
-	enum class EKeyboard;
-	enum class EMouse;
-}
-
 namespace Saz
 {
 	class SAZ_API WindowsWindow final : public Saz::WindowBase
@@ -32,11 +26,13 @@ namespace Saz
 
 		bool ShouldClose() const override;
 
-		void GatherKeyboard(Set<Input::EKeyboard>& out_Keys) const;
-		void GatherMouse(Set<Input::EMouse>& out_Keys, vec2& out_Delta, vec2& out_Position) const;
+		//void GatherKeyboard(Set<Input::EKeyboard>& out_Keys) const;
+		//void GatherMouse(Set<Input::EMouse>& out_Keys, vec2& out_Delta, vec2& out_Position) const;
 
 		bool HasResized() const { return m_HasResized; }
 		void SetResized(bool value) { m_HasResized = value; }
+
+		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
 

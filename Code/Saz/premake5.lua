@@ -34,6 +34,7 @@ project "Saz"
 	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
 	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/include"
 	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
+	IncludeDir["glm"] = "%{wks.location}/3rdParty/glm"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
@@ -44,6 +45,7 @@ project "Saz"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
+		"%{IncludeDir.glm}",
 	}
 
 	libdirs

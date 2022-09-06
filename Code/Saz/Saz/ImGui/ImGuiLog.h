@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imgui/imgui.h>
+#include <fstream>
 
 /* Debug Logging into the Log window.
 *  Formatting Specifiers:
@@ -9,7 +10,7 @@
 *  Also see the Macros at the bottom
 */
 
-namespace imgui
+namespace Saz::imgui
 {
 
 	struct DebugLog
@@ -137,7 +138,7 @@ namespace imgui
 	class SAZ_API Log
 	{
 	public:
-		Log(const char* fileName = "D:/Dev/MyFramework/Build/Log.txt");
+		Log(const char* fileName = "C:/Dev/SazEngine/ImGuiLog.txt");
 		~Log();
 
 		inline static void NextLine()

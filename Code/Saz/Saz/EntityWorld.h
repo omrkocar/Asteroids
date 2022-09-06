@@ -6,6 +6,7 @@
 #include <Core/DynamicArray.h>
 
 #include <entt/entt.hpp>
+#include <Saz/Entity.h>
 
 namespace Saz
 {

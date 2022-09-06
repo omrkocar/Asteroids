@@ -8,6 +8,11 @@
 
 namespace Saz
 {
+	namespace imgui
+	{
+		class Log;
+	}
+
 	class SAZ_API ImGuiLayer : public Layer
 	{
 	public:
@@ -30,5 +35,7 @@ namespace Saz
 		bool OnWindowResizeEvent(WindowResizeEvent& e);
 	private:
 		float m_Time = 0.0f;
+
+		std::unique_ptr<imgui::Log> m_ImguiLog;
 	};
 }

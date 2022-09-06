@@ -2,6 +2,7 @@
 #include "ImGuiLayer.h"
 #include "Saz/Platform/OpenGL/ImGuiOpenGLRenderer.h"
 #include "Saz/Application.h"
+#include <Saz/ImGui/ImGuiLog.h>
 
 namespace Saz
 {
@@ -20,6 +21,8 @@ namespace Saz
 	{
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
+
+		m_ImguiLog = std::unique_ptr<imgui::Log>();
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -66,16 +69,16 @@ namespace Saz
 		io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
 		m_Time = time;
 
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui::NewFrame();
 
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
 
+		m_ImguiLog->Update(&show);
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		
 	}
 
 	void ImGuiLayer::OnEvent(Event& event)
@@ -126,16 +129,32 @@ namespace Saz
 
 	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = true;
+
+		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
 		return false;
 	}
 
 	bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& e)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = false;
+
 		return false;
 	}
 
 	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		int keycode = e.GetKeyCode();
+		if (keycode > 0 && keycode < 0x10000)
+			io.AddInputCharacter((unsigned short)keycode);
+
 		return false;
 	}
 

@@ -17,6 +17,7 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 #include "Saz/WindowsWindow.h"
+#include "ImGui/ImGuiLog.h"
 
 namespace Saz
 {
@@ -62,8 +63,6 @@ namespace Saz
 			m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create());
 			m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 		}
-		
-		//m_ImGuiLog = new imgui::Log();
 
 		// #todo Create all textures with a single call here.
 		m_pResourceManager = new Saz::ResourceManager();	
@@ -111,7 +110,7 @@ namespace Saz
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		m_EntityWorld.Update(gameTime);
-		glClearColor(1, 0, 1, 0.5f);
+		glClearColor(0, 1, 0, 0.5f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		for (Layer* layer : m_LayerStack)
@@ -126,8 +125,6 @@ namespace Saz
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-
-		//SAZ_CORE_TRACE("{0}", e);
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
@@ -145,6 +142,7 @@ namespace Saz
 		
 
 		Saz::GameTime gameTime;
+		IMGUI_LOG_INFO("ImGui text");
 
 		while (m_Running)
 		{

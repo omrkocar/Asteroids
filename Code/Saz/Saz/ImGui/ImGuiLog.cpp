@@ -1,7 +1,7 @@
 #include "SazPCH.h"
 #include "ImGuiLog.h"
 
-namespace imgui
+namespace Saz::imgui
 {
 	DebugLog log;
 

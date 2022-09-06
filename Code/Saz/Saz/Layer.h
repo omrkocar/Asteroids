@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Saz/Events/Event.h"
+#include <Core/String.h>
 
 namespace Saz {
 	class GameTime;

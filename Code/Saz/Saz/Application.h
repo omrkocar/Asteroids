@@ -3,6 +3,8 @@
 #include <Saz/EntityWorld.h>
 #include <Saz/LayerStack.h>
 #include <Saz/WindowBase.h>
+#include "Saz/Events/ApplicationEvent.h"
+
 
 namespace Saz
 {
@@ -15,8 +17,14 @@ namespace imgui
 	class Log;
 }
 
+namespace Saz::imgui
+{
+	class Log;
+}
+
 namespace Saz
 {
+
 	class SAZ_API Application
 	{
 	public:
@@ -54,7 +62,6 @@ namespace Saz
 
 		ecs::EntityWorld m_EntityWorld;
 
-		imgui::Log* m_ImGuiLog = nullptr;
 		LayerStack m_LayerStack;
 
 	private:

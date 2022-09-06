@@ -91,7 +91,7 @@ namespace ecs
 					}
 					if (componentType == "InputComponent")
 					{
-						m_World->AddComponent<component::InputComponent>(entity);
+						//m_World->AddComponent<component::InputComponent>(entity);
 					}
 				}
 			}		

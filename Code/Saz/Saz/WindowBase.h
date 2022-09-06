@@ -1,6 +1,7 @@
 #pragma once
 
-#include <Saz/Core.h>
+#include <Core/String.h>
+#include <Saz/Events/Event.h>
 
 namespace Saz
 {
@@ -45,6 +46,8 @@ namespace Saz
 
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
+
+		virtual void* GetNativeWindow() const = 0;
 
 		virtual bool ShouldClose() const { return false; }
 
