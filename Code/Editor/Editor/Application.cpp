@@ -77,15 +77,14 @@ public:
 		squareIB.reset(Saz::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
-		m_FlatColorShader = Saz::Shader::Create("C:/Dev/SazEngine/Data/Shaders/Basic.vert", "C:/Dev/SazEngine/Data/Shaders/Basic.frag");
+		auto textureShader = m_ShaderLibrary.Load("C:/Dev/SazEngine/Data/Shaders/Texture.glsl");
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Saz::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 
-		m_TextureShader = Saz::Shader::Create("C:/Dev/SazEngine/Data/Shaders/Texture.vert", "C:/Dev/SazEngine/Data/Shaders/Texture.frag");
+		m_FlatColorShader = Saz::Shader::Create("C:/Dev/SazEngine/Data/Shaders/Basic.glsl");
+
 		m_Texture = Saz::Texture2D::Create("C:/Dev/SazEngine/Data/Textures/Island.png");
 		m_LogoTexture = Saz::Texture2D::Create("C:/Dev/SazEngine/Data/Textures/ChernoLogo.png");
-
-		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Saz::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
-
 	}
 
 	void OnUpdate(const Saz::GameTime& gameTime)
@@ -93,13 +92,13 @@ public:
 		if (Saz::Input::IsKeyPressed(Saz::Key::A))
 			m_CameraPosition.x -= m_CameraSpeed * gameTime.GetDeltaTime();
 
-		else if (Saz::Input::IsKeyPressed(Saz::Key::D))
+		if (Saz::Input::IsKeyPressed(Saz::Key::D))
 			m_CameraPosition.x += m_CameraSpeed * gameTime.GetDeltaTime();
 
-		else if (Saz::Input::IsKeyPressed(Saz::Key::W))
+		if (Saz::Input::IsKeyPressed(Saz::Key::W))
 			m_CameraPosition.y += m_CameraSpeed * gameTime.GetDeltaTime();
 
-		else if (Saz::Input::IsKeyPressed(Saz::Key::S))
+		if (Saz::Input::IsKeyPressed(Saz::Key::S))
 			m_CameraPosition.y -= m_CameraSpeed * gameTime.GetDeltaTime();
 
 		if (Saz::Input::IsKeyPressed(Saz::Key::Right))
@@ -143,10 +142,11 @@ public:
 			}
 		}
 
+		auto textureShader = m_ShaderLibrary.Get("Texture");
 		m_Texture->Bind();
-		Saz::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Saz::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_LogoTexture->Bind();
-		Saz::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Saz::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		
 		// Triangle
@@ -175,10 +175,11 @@ public:
 	}
 
 private:
+	Saz::ShaderLibrary m_ShaderLibrary;
 	Saz::Ref<Saz::Shader> m_Shader;
 	Saz::Ref<Saz::VertexArray> m_VertexArray;
 
-	Saz::Ref<Saz::Shader> m_FlatColorShader, m_TextureShader;
+	Saz::Ref<Saz::Shader> m_FlatColorShader;
 	Saz::Ref<Saz::VertexArray> m_SquareVA;
 
 	Saz::Ref<Saz::Texture2D> m_Texture, m_LogoTexture;

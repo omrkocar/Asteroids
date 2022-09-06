@@ -3,15 +3,15 @@
 
 namespace Saz::file
 {
-	const char* LoadCompleteFile(const char* filename)
+	String LoadCompleteFile(const char* filename)
 	{
-		char* filecontents = 0;
+		char* filecontents;
 
 		FILE* filehandle;
 		errno_t error = fopen_s(&filehandle, filename, "rb");
 
 		if (error != 0)
-			return 0;
+			return String();
 
 		if (filehandle)
 		{

@@ -4,6 +4,6 @@
 
 namespace Saz::file
 {
-	const char* LoadCompleteFile(const char* filename);
+	String LoadCompleteFile(const char* filename);
 	bool LoadFileAsChar(const FilePath& filepath, DynamicArray<char>& out_DynamicArray);
 }

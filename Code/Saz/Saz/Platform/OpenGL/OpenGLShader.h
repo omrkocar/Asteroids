@@ -2,17 +2,23 @@
 
 #include "Saz/Rendering/Shader.h"
 #include "glm/glm.hpp"
+#include <unordered_map>
+#include <fstream>
+#include <glad/glad.h>
 
 namespace Saz
 {
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const char* vertexSource, const char* fragmentSource);
+		OpenGLShader(const String& filepath);
+		OpenGLShader(const String& name, const String& vertexSrc, const String& fragmentSrc);
 		~OpenGLShader();
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual const String& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const String& name, int value);
 
@@ -25,9 +31,12 @@ namespace Saz
 		void UploadUniformMat4(const String& name, const glm::mat4& matrix);
 
 	private:
-		void Compile(const char* vertexSource, const char* fragmentSource);
+		String ReadFile(const String& filepath);
+		std::unordered_map<GLenum, String> PreProcess(const String& source);
+		void Compile(const std::unordered_map<GLenum, String>& shaderSources);
 
 	private:
 		uint32_t m_RendererID;
+		String m_Name;
 	};
 }

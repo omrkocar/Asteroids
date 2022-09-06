@@ -21,6 +21,7 @@ project "Editor"
 	files
 	{
 		"%{wks.location}/Data/Shaders/*.vert",
+		"%{wks.location}/Data/Shaders/*.gLsl",
 		"%{wks.location}/Data/Shaders/*.frag",
 	}
 
