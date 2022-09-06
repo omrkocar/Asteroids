@@ -4,6 +4,7 @@
 #include <Saz/LayerStack.h>
 #include <Saz/WindowBase.h>
 #include "Saz/Events/ApplicationEvent.h"
+#include "Saz/ImGui/ImGuiLayer.h"
 
 
 namespace Saz
@@ -56,7 +57,7 @@ namespace Saz
 		void PushOverlay(Layer* layer);
 		
 		std::unique_ptr<WindowBase> m_Window = nullptr;
-
+		ImGuiLayer* m_ImGuiLayer;
 
 		Saz::ResourceManager* m_pResourceManager;
 
