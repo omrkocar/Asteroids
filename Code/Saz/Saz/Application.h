@@ -6,6 +6,8 @@
 #include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
 #include "Saz/Rendering/Shader.h"
+#include "Saz/Rendering/Buffer.h"
+#include "Saz/Rendering/VertexArray.h"
 
 
 namespace Saz
@@ -57,9 +59,11 @@ namespace Saz
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
-		std::unique_ptr<Shader> m_Shader;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray> m_VertexArray;
 
+		std::shared_ptr<Shader> m_BlueShader;
+		std::shared_ptr<VertexArray> m_SquareVA;
 	private:
 		static Application* s_Instance;
 

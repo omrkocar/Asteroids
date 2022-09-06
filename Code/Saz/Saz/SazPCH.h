@@ -50,7 +50,6 @@
 #include "Saz/TypeId.h"
 #include "Saz/Log.h"
 #include "Saz/Input.h"
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <rapidjson/document.h>
