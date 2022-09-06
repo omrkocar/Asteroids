@@ -1,9 +1,9 @@
-#include "GamePCH.h"
+#include "EnginePCH.h"
 
 #include "Application.h"
 
-#include "Game/WorldOutliner.h"
-#include "Game/Inspector.h"
+#include "Engine/WorldOutliner.h"
+#include "Engine/Inspector.h"
 
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
