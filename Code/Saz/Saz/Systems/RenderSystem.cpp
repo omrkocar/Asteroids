@@ -1,12 +1,12 @@
 #include "SazPCH.h"
 
 #include "Saz/CameraComponent.h"
-#include "Saz/RenderSystem.h"
+#include "Saz/Systems/RenderSystem.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 
-#include "Saz/WindowBase.h"
+#include "Saz/Core/WindowBase.h"
 
 #include <entt/entt.hpp>
 #include "InputComponent.h"

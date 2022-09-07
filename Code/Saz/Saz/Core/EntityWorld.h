@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Saz/Core.h>
+#include <Saz/Core/Core.h>
 #include <Saz/TypeId.h>
 
 #include <Core/DynamicArray.h>
 
 #include <entt/entt.hpp>
-#include <Saz/Entity.h>
+#include <Saz/Core/Entity.h>
 
 namespace Saz
 {

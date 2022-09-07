@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Saz/System.h>
+#include <Saz/Systems/System.h>
 #include <Editor/WorldOutliner.h>
 
 namespace Saz

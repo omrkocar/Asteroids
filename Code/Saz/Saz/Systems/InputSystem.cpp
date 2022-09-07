@@ -3,11 +3,11 @@
 
 #include "Saz/InputComponent.h"
 #include "Saz/MovementComponent.h"
-#include "Saz/WindowBase.h"
+#include "Saz/Core/WindowBase.h"
 
 #include <entt/entt.hpp>
 #include "TransformComponent.h"
-#include "GameTime.h"
+#include "Saz/Core/GameTime.h"
 
 namespace ecs
 {	

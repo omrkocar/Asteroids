@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Saz/Events/Event.h"
-#include "Saz/MouseCodes.h"
+#include "Saz/Core/MouseCodes.h"
 
 namespace Saz {
 

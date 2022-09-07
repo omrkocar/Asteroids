@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Saz/TypeId.h>
-#include <Saz/Log.h>
+#include <Saz/Core/Log.h>
 
 inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 {

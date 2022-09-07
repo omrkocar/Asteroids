@@ -12,8 +12,6 @@ workspace "Saz"
 
 	outputdir = "%{cfg.buildcfg}_%{cfg.platform}"
 
-	
-	
 	targetdir ("%{wks.location}/Build/%{prj.name}/" .. outputdir )
 	objdir ("%{wks.location}/Intermediate/%{prj.name}/" .. outputdir)
 	
@@ -76,5 +74,5 @@ project "ZERO_CHECK"
 	location "%{wks.location}/Projects/ZERO_CHECK"
 	files { "%{wks.location}/premake5.lua" }
 
-	buildcommands { "cd %{wks.location} & call GenerateProjectFiles.bat" }
+	buildcommands { "cd %{wks.location}/Scripts & call Win-GenProjects.bat" }
 	buildoutputs { "unused.txt" }

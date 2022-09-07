@@ -1,7 +1,7 @@
 #include "SazPCH.h"
 #include "OrthographicCameraController.h"
-#include "Saz/Input.h"
-#include "Saz/KeyCodes.h"
+#include "Saz/Core/Input.h"
+#include "Saz/Core/KeyCodes.h"
 
 namespace Saz
 {

@@ -1,7 +1,7 @@
 #include "EditorPCH.h"
 #include "WorldOutliner.h"
 
-#include "Saz/GameTime.h"
+#include "Saz/Core/GameTime.h"
 
 #include <entt/entt.hpp>
 #include "Saz/NameComponent.h"

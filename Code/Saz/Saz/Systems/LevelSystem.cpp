@@ -1,19 +1,17 @@
 #include "SazPCH.h"
 #include "LevelSystem.h"
 
-#include "Saz/FileHelpers.h"
+#include "Saz/Utils/FileHelpers.h"
 #include "Saz/InputComponent.h"
 #include "Saz/CameraComponent.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/MovementComponent.h"
 #include "Saz/NameComponent.h"
 #include "Saz/RenderComponents.h"
-#include "Saz/ResourceManager.h"
 #include "Saz/TransformComponent.h"
 
 #include <entt/entt.hpp>
-#include "Saz/Application.h"
-#include "Saz/ResourceManager.h"
+#include "Saz/Core/Application.h"
 
 namespace ecs
 {	

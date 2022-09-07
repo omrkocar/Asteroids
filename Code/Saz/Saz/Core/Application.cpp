@@ -2,21 +2,20 @@
 #include "Application.h"
 
 #include "Saz/CameraComponent.h"
-#include "Saz/EntityWorld.h"
-#include "Saz/GameTime.h"
-#include "Saz/CameraSystem.h"
+#include "Saz/Core/EntityWorld.h"
+#include "Saz/Core/GameTime.h"
+#include "Saz/Systems/CameraSystem.h"
 #include "Saz/InputComponent.h"
-#include "Saz/InputSystem.h"
-#include "Saz/RenderSystem.h"
-#include "Saz/ResourceManager.h"
+#include "Saz/Systems/InputSystem.h"
+#include "Saz/Systems/RenderSystem.h"
 #include "Saz/LevelComponent.h"
-#include "Saz/LevelSystem.h"
+#include "Saz/Systems/LevelSystem.h"
 #include "Saz/MovementComponent.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/NameComponent.h"
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
-#include "Saz/WindowsWindow.h"
+#include "Saz/Platform/Windows/WindowsWindow.h"
 #include "ImGui/ImGuiLog.h"
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
@@ -70,8 +69,11 @@ namespace Saz
 	{
 		m_EntityWorld.Update(gameTime);
 
-		for (Layer* layer : m_LayerStack)
-			layer->OnUpdate(gameTime);
+		if (!m_Minimized)
+		{
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(gameTime);
+		}
 
 		m_ImGuiLayer->Begin();
 		for (Layer* layer : m_LayerStack)
@@ -85,6 +87,7 @@ namespace Saz
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
@@ -139,6 +142,21 @@ namespace Saz
 	{
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 
 	void Application::PushLayer(Layer* layer)

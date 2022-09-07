@@ -45,14 +45,13 @@
 #include <Core/Quaternion.h>
 #include <Core/TypeList.h>
 
-#include "Saz/Core.h"
-#include "Saz/Entity.h"
-#include "Saz/TypeId.h"
-#include "Saz/Log.h"
-#include "Saz/FileHelpers.h"
-#include "Saz/KeyCodes.h"
-#include "Saz/MouseCodes.h"
-#include "Saz/Input.h"
+#include "Saz/Core/Core.h"
+#include "Saz/Core/Entity.h"
+#include "Saz/Core/Log.h"
+#include "Saz/Utils/FileHelpers.h"
+#include "Saz/Core/KeyCodes.h"
+#include "Saz/Core/MouseCodes.h"
+#include "Saz/Core/Input.h"
 #include <GLFW/glfw3.h>
 
 #include <rapidjson/document.h>

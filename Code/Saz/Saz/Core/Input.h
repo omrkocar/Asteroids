@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Saz/KeyCodes.h"
-#include "Saz/MouseCodes.h"
+#include "Saz/Core/KeyCodes.h"
+#include "Saz/Core/MouseCodes.h"
 #include <Core/Vector.h>
 
 namespace Saz {

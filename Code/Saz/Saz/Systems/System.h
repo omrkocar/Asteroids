@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Saz/EntityWorld.h>
+#include <Saz/Core/EntityWorld.h>
 
 namespace ecs
 {

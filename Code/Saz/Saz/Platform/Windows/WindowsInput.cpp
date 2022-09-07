@@ -1,7 +1,7 @@
 #include "SazPCH.h"
-#include "Saz/Input.h"
+#include "Saz/Core/Input.h"
 
-#include "Saz/Application.h"
+#include "Saz/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Saz {

@@ -4,14 +4,13 @@
 
 #include "Editor/WorldOutliner.h"
 #include "Editor/Inspector.h"
+#include "Editor/Layer2D.h"
 
 #include <Saz/TransformComponent.h>
 #include <Saz/InputComponent.h>
 #include <Saz/RenderComponents.h>
-#include <Saz/ResourceManager.h>
 #include <Saz/NameComponent.h>
-#include <Saz/LevelSystem.h>
-#include <Saz/GameTime.h>
+#include <Saz/Systems/LevelSystem.h>
 
 #include <entt/entt.hpp>
 #include "Saz/LevelComponent.h"
@@ -30,7 +29,7 @@ public:
 		m_CameraController(1280.0f / 720.0f, true),
 		m_SquarePosition(0.0f)
 	{
-		m_VertexArray.reset(Saz::VertexArray::Create());
+		m_VertexArray = Saz::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -52,7 +51,7 @@ public:
 		indexBuffer.reset(Saz::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(Saz::VertexArray::Create());
+		m_SquareVA = Saz::VertexArray::Create();
 
 		float squareVertices[5 * 4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -154,7 +153,8 @@ private:
 
 Application::Application()
 {
-	PushLayer(new ExampleLayer());
+	//PushLayer(new ExampleLayer());
+	PushLayer(new Layer2D());
 }
 
 Application::~Application()

@@ -1,7 +1,7 @@
 #include "EditorPCH.h"
 #include "Inspector.h"
 
-#include "Saz/GameTime.h"
+#include "Saz/Core/GameTime.h"
 #include <Saz/Screen.h>
 #include "Saz/MovementComponent.h"
 #include "Saz/TransformComponent.h"

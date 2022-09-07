@@ -18,6 +18,11 @@ namespace Saz
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+		virtual void SetMat4(const String& name, const glm::mat4& value) override;
+		virtual void SetFloat3(const String& name, const glm::vec3& value) override;
+		virtual void SetFloat4(const String& name, const glm::vec4& value) override;
+		virtual void SetInt(const String& name, const int value) override;
+
 		virtual const String& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const String& name, int value);

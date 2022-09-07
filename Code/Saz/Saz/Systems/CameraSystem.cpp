@@ -1,7 +1,7 @@
 #include "SazPCH.h"
 #include "CameraSystem.h"
 
-#include "Saz/GameTime.h"
+#include "Saz/Core/GameTime.h"
 #include "Saz/CameraComponent.h"
 #include "Saz/InputComponent.h"
 #include "Saz/MovementComponent.h"

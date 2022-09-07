@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Saz/EntityWorld.h>
-#include <Saz/LayerStack.h>
-#include <Saz/WindowBase.h>
+#include <Saz/Core/EntityWorld.h>
+#include <Saz/Core/LayerStack.h>
+#include <Saz/Core/WindowBase.h>
 #include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
 
@@ -48,6 +48,7 @@ namespace Saz
 		virtual void Update(const Saz::GameTime& gameTime);
 		void OnEvent(Event& e);
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
@@ -62,6 +63,7 @@ namespace Saz
 		static Application* s_Instance;
 
 		bool m_Running = true;
+		bool m_Minimized = false;
 	};
 
 	// To be defined in CLIENT

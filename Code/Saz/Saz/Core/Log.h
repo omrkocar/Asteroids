@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Saz/Core.h>
+#include <Saz/Core/Core.h>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>

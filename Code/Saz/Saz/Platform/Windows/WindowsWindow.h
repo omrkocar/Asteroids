@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Saz/WindowBase.h>
+#include <Saz/Core/WindowBase.h>
 
 struct GLFWwindow;
 

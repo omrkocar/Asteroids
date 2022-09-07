@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Saz/Events/Event.h"
-#include "Saz/KeyCodes.h"
+#include "Saz/Core/KeyCodes.h"
 
 #include <sstream>
 
