@@ -79,9 +79,9 @@ void Layer2D::OnUpdate(const Saz::GameTime& gameTime)
 	{
 		SAZ_PROFILE_SCOPE("Renderer Draw");
 		Saz::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Saz::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.75f, 0.75f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Saz::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.75f, 0.75f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
 		Saz::Renderer2D::DrawQuad({ 0.5f, -0.05f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Saz::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture);
+		Saz::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, glm::radians(45.0f), m_Texture, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 		Saz::Renderer2D::EndScene();
 	}
 }
