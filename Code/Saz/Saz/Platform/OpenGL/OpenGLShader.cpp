@@ -1,7 +1,6 @@
 #include "SazPCH.h"
 #include "OpenGLShader.h"
 
-#include <glad/glad.h>
 #include "glm/gtc/type_ptr.inl"
 
 namespace Saz
@@ -19,6 +18,8 @@ namespace Saz
 
 	OpenGLShader::OpenGLShader(const String& filepath)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		String source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
@@ -31,6 +32,8 @@ namespace Saz
 	OpenGLShader::OpenGLShader(const String& name, const String& vertexSrc, const String& fragmentSrc)
 		: m_Name(name)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, String> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -44,6 +47,8 @@ namespace Saz
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
@@ -65,6 +70,8 @@ namespace Saz
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -88,6 +95,8 @@ namespace Saz
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		SAZ_CORE_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now");
 		std::array<GLenum, 2> glShaderIDs;
@@ -172,6 +181,11 @@ namespace Saz
 		UploadUniformMat4(name, value);
 	}
 
+	void OpenGLShader::SetFloat(const String& name, float value)
+	{
+		UploadUniformFloat(name, value);
+	}
+
 	void OpenGLShader::SetFloat3(const String& name, const glm::vec3& value)
 	{
 		UploadUniformFloat3(name, value);
@@ -223,9 +237,10 @@ namespace Saz
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
-	void OpenGLShader::UploadUniformMat4(const String& name, const glm::mat4& matrix)
+	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = 0;
+		location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

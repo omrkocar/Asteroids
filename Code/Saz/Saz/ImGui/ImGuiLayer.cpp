@@ -20,6 +20,8 @@ namespace Saz
 
 	void ImGuiLayer::OnAttach()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
@@ -44,6 +46,8 @@ namespace Saz
 
 	void ImGuiLayer::OnDetach()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -51,12 +55,13 @@ namespace Saz
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		
 	}
 
 	void ImGuiLayer::Begin()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -64,6 +69,8 @@ namespace Saz
 
 	void ImGuiLayer::End()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());

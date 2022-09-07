@@ -10,6 +10,7 @@ namespace Saz
 
 	void Renderer::Init()
 	{
+		SAZ_PROFILE_FUNCTION();
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

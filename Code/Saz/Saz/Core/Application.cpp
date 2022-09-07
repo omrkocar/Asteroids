@@ -55,18 +55,24 @@ namespace Saz
 
 	void Application::PostInit()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		m_Window->PostInit();
 		m_EntityWorld.PostInit();
 	}
 
 	void Application::Destroy()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		m_Window->Destroy();
 		m_EntityWorld.Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		m_EntityWorld.Update(gameTime);
 
 		if (!m_Minimized)
@@ -118,6 +124,8 @@ namespace Saz
 
 	void Application::Register()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();

@@ -35,6 +35,8 @@ namespace Saz
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -148,6 +150,7 @@ namespace Saz
 
 	void WindowsWindow::Shutdown()
 	{
+		SAZ_PROFILE_FUNCTION();
 		glfwDestroyWindow(m_Window);
 	}
 

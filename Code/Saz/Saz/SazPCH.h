@@ -54,6 +54,8 @@
 #include "Saz/Core/Input.h"
 #include <GLFW/glfw3.h>
 
+#include "Saz/Debug/Instrumentor.h"
+
 #include <rapidjson/document.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/writer.h>

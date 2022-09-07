@@ -26,6 +26,8 @@
 #include "Saz/Rendering/Texture.h"
 #include "Saz/Rendering/VertexArray.h"
 
+#include "Saz/Debug/Instrumentor.h"
+
 #include <Core/DynamicArray.h>
 #include <Core/Map.h>
 #include <Core/Math.h>

@@ -20,6 +20,8 @@ namespace Saz
 
 	void Renderer2D::Init()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		s_RenderData = new Renderer2DStorage();
 		s_RenderData->VertexArray = VertexArray::Create();
 
@@ -50,6 +52,7 @@ namespace Saz
 		s_RenderData->TextureShader = Shader::Create("C:/Dev/SazEngine/Data/Shaders/Texture.glsl");
 		s_RenderData->TextureShader->Bind();
 		s_RenderData->TextureShader->SetInt("u_Texture", 0);
+		s_RenderData->TextureShader->SetFloat("u_TilingFactor", 1.0f);
 	}
 
 	void Renderer2D::Shutdown()
@@ -59,8 +62,11 @@ namespace Saz
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		s_RenderData->TextureShader->Bind();
 		s_RenderData->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		
 	}
 
 	void Renderer2D::EndScene()
@@ -76,7 +82,10 @@ namespace Saz
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		s_RenderData->TextureShader->SetFloat4("u_Color", color);
+		s_RenderData->TextureShader->SetFloat("u_TilingFactor", 1.0f);
 		s_RenderData->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
@@ -93,7 +102,10 @@ namespace Saz
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		s_RenderData->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_RenderData->TextureShader->SetFloat("u_TilingFactor", 10.0f);
 		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });

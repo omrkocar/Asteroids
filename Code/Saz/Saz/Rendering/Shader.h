@@ -16,6 +16,7 @@ namespace Saz
 
 		virtual void SetMat4(const String& name, const glm::mat4& value) = 0;
 		virtual void SetFloat3(const String& name, const glm::vec3& value) = 0;
+		virtual void SetFloat(const String& name, float value) = 0;
 		virtual void SetFloat4(const String& name, const glm::vec4& value) = 0;
 		virtual void SetInt(const String& name, const int value) = 0;
 
