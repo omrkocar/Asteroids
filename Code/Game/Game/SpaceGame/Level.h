@@ -1,12 +1,17 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "Player.h"
 #include "Background.h"
 #include "Saz/Events/MouseEvent.h"
 #include "Saz/Events/Event.h"
+#include "Game/SpaceGame/Player.h"
+#include "Saz/Rendering/OrthographicCamera.h"
 
-namespace Game { class Meteor; }
+namespace Game 
+{ 
+	class Meteor; 
+	class Player;
+}
 
 namespace Saz
 {
@@ -32,10 +37,10 @@ namespace Game
 		void Init();
 
 		void OnUpdate(const Saz::GameTime& gameTime);
-		void OnRender();
+		void OnRender(Saz::OrthographicCamera& camera);
 
 		void OnImGuiRender();
-
+		EGameState& GetGameState() { return m_GameState; }
 		Player& GetPlayer() { return m_Player; }
 		void OnCollision(const Meteor& meteor);
 

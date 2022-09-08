@@ -34,7 +34,10 @@ namespace Saz
 
 		Saz::Log::Init();
 
-		m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create());
+		WindowProps windowProps;
+		windowProps.Width = 2560;
+		windowProps.Height = 1440;
+		m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create(windowProps));
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 	}
 

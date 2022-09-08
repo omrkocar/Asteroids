@@ -34,12 +34,14 @@ namespace Game
 		const auto& playerPos = m_Level.GetPlayer().GetPosition();
 		m_Level.OnUpdate(gameTime);
 
+		Saz::Renderer2D::ResetStats();
+
 		// Render
 		Saz::RenderCommand::SetClearColor({ 0.f, 0.f, 0.f, 1.0f });
 		Saz::RenderCommand::Clear();
 
 		Saz::Renderer2D::BeginScene(*m_Camera);
-		m_Level.OnRender();
+		m_Level.OnRender(*m_Camera);
 		Saz::Renderer2D::EndScene();
 	}
 

@@ -7,6 +7,7 @@
 #include "Saz/Rendering/Shader.h"
 #include "Saz/Rendering/VertexArray.h"
 #include "Saz/Rendering/Texture.h"
+#include "Saz/ParticleSystem.h"
 
 class Layer2D : public Saz::Layer
 {
@@ -27,4 +28,7 @@ private:
 	Saz::Ref<Saz::Texture2D> m_Texture;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+	Saz::ParticleProps m_Particle;
+	Saz::ParticleSystem m_ParticleSystem;
 };

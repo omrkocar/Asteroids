@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AABB.h"
+#include "Game/AABB.h"
 
 namespace Saz 
 { 
@@ -27,6 +27,7 @@ namespace Game
 	protected:
 		glm::vec2 m_Position{ 0.0f, 0.0f };
 		glm::vec2 m_Size{ 1.0f, 1.0f };
+		glm::vec2 m_Velocity{ 0.0f, 0.0f };
 		float m_Rotation = 0.0f;
 		float m_Speed = 10.0f;
 		float m_RotationSpeed = 90.0f;

@@ -3,11 +3,13 @@
 #include "Saz/Rendering/Renderer2D.h"
 #include "glm/gtc/type_ptr.inl"
 #include "Meteor.h"
+#include "Player.h"
 
 namespace Game
 {
 	
 	Level::Level()
+		: m_Player(this)
 	{
 
 	}
@@ -25,7 +27,7 @@ namespace Game
 		m_Background.Init();
 		m_Player.Init();
 
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < 30; i++)
 		{
 			m_meteors.push_back(new Meteor(*this));
 		}
@@ -46,15 +48,16 @@ namespace Game
 		m_Player.OnUpdate(gameTime);
 	}
 
-	void Level::OnRender()
+	void Level::OnRender(Saz::OrthographicCamera& camera)
 	{
 		m_Background.OnRender();
 
 		for (auto meteor : m_meteors)
 		{
-			meteor->OnRender();
+			meteor->OnRender(camera);
 		}
-		m_Player.OnRender();
+
+		m_Player.OnRender(camera);
 	}
 
 	void Level::OnImGuiRender()

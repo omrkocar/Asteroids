@@ -1,5 +1,6 @@
 #pragma once
 #include "Saz/Rendering/Texture.h"
+#include "Saz/Rendering/OrthographicCamera.h"
 
 namespace Saz
 {

@@ -19,7 +19,7 @@ namespace Game
 		~Meteor();
 
 		virtual void OnUpdate(const Saz::GameTime& gameTime);
-		virtual void OnRender();
+		virtual void OnRender(Saz::OrthographicCamera& camera);
 		virtual void OnImGuiRender();
 
 		void Reset();

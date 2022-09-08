@@ -4,6 +4,7 @@
 #include "Saz/Events/MouseEvent.h"
 #include "Saz/Events/ApplicationEvent.h"
 #include "Level.h"
+#include "Saz/ParticleSystem.h"
 
 namespace Saz { class OrthographicCamera; }
 
