@@ -9,11 +9,11 @@ namespace Saz { class OrthographicCamera; }
 
 namespace Game
 {
-	class GameLayer : public Saz::Layer
+	class SpaceGameLayer : public Saz::Layer
 	{
 	public:
-		GameLayer();
-		virtual ~GameLayer() = default;
+		SpaceGameLayer();
+		virtual ~SpaceGameLayer() = default;
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 

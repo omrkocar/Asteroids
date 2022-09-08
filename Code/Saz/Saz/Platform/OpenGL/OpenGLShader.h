@@ -23,10 +23,12 @@ namespace Saz
 		virtual void SetFloat3(const String& name, const glm::vec3& value) override;
 		virtual void SetFloat4(const String& name, const glm::vec4& value) override;
 		virtual void SetInt(const String& name, const int value) override;
+		virtual void SetIntArray(const String& name, int* values, uint32_t count) override;
 
 		virtual const String& GetName() const override { return m_Name; }
 
 		void UploadUniformInt(const String& name, int value);
+		void UploadUniformIntArray(const String& name, int* values, uint32_t count);
 
 		void UploadUniformFloat(const String& name, float value);
 		void UploadUniformFloat2(const String& name, const glm::vec2& values);
@@ -43,6 +45,7 @@ namespace Saz
 
 	private:
 		uint32_t m_RendererID;
+		GLint location = -1;
 		String m_Name;
 	};
 }

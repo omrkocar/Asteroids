@@ -1,33 +1,33 @@
 #include "GamePCH.h"
-#include "GameLayer.h"
+#include "SpaceGameLayer.h"
+#include "Game/Application.h"
 
 #include <Saz/Rendering/Renderer2D.h>
 #include "Saz/Rendering/OrthographicCamera.h"
-#include "Application.h"
 #include "imgui/imgui.h"
 #include "Saz/Rendering/RenderCommand.h"
 
 namespace Game
 {
-	GameLayer::GameLayer()
-		: Saz::Layer("GameLayer")
+	SpaceGameLayer::SpaceGameLayer()
+		: Saz::Layer("SpaceGameLayer")
 	{
 		auto& window = Game::Application::Get().GetWindow();
 		CreateCamera(window.GetWidth(), window.GetHeight());
 		m_Camera->SetPosition({0.0f, 0.0f, 0.0f });
 	}
 
-	void GameLayer::OnAttach()
+	void SpaceGameLayer::OnAttach()
 	{
 		m_Level.Init();
 	}
 
-	void GameLayer::OnDetach()
+	void SpaceGameLayer::OnDetach()
 	{
 
 	}
 
-	void GameLayer::OnUpdate(const Saz::GameTime& gameTime)
+	void SpaceGameLayer::OnUpdate(const Saz::GameTime& gameTime)
 	{
 		SAZ_PROFILE_FUNCTION();
 
@@ -43,31 +43,31 @@ namespace Game
 		Saz::Renderer2D::EndScene();
 	}
 
-	void GameLayer::OnImGuiRender()
+	void SpaceGameLayer::OnImGuiRender()
 	{
 		m_Level.OnImGuiRender();
 	}
 
-	void GameLayer::OnEvent(Saz::Event& event)
+	void SpaceGameLayer::OnEvent(Saz::Event& event)
 	{
 		Saz::EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<Saz::WindowResizeEvent>(SAZ_BIND_EVENT_FN(GameLayer::OnWindowResize));
+		dispatcher.Dispatch<Saz::WindowResizeEvent>(SAZ_BIND_EVENT_FN(SpaceGameLayer::OnWindowResize));
 
 		m_Level.OnEvent(event);
 	}
 
-	bool GameLayer::OnMouseButtonPressed(Saz::MouseButtonPressedEvent& e)
+	bool SpaceGameLayer::OnMouseButtonPressed(Saz::MouseButtonPressedEvent& e)
 	{
 		return false;
 	}
 
-	bool GameLayer::OnWindowResize(Saz::WindowResizeEvent& e)
+	bool SpaceGameLayer::OnWindowResize(Saz::WindowResizeEvent& e)
 	{
 		CreateCamera(e.GetWidth(), e.GetHeight());
 		return false;
 	}
 
-	void GameLayer::CreateCamera(uint32_t width, uint32_t height)
+	void SpaceGameLayer::CreateCamera(uint32_t width, uint32_t height)
 	{
 		float aspectRatio = (float)width / (float)height;
 		float camWidth = 5.0f;

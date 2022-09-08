@@ -201,10 +201,21 @@ namespace Saz
 		UploadUniformInt(name, value);
 	}
 
+	void OpenGLShader::SetIntArray(const String& name, int* values, uint32_t count)
+	{
+		UploadUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::UploadUniformInt(const String& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::UploadUniformIntArray(const String& name, int* values, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::UploadUniformFloat(const String& name, float value)
@@ -239,8 +250,11 @@ namespace Saz
 
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		GLint location = 0;
-		location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			location = glGetUniformLocation(m_RendererID, name.c_str());
+		}
+
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

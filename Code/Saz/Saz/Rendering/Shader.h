@@ -19,6 +19,7 @@ namespace Saz
 		virtual void SetFloat(const String& name, float value) = 0;
 		virtual void SetFloat4(const String& name, const glm::vec4& value) = 0;
 		virtual void SetInt(const String& name, const int value) = 0;
+		virtual void SetIntArray(const String& name, int* values, uint32_t count) = 0;
 
 		virtual const String& GetName() const = 0;
 
