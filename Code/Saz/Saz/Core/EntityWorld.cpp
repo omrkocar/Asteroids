@@ -19,13 +19,14 @@ namespace ecs
 
 	void EntityWorld::Destroy()
 	{
-		m_ComponentEntries.clear();
 		for (ecs::SystemEntry& entry : m_SystemEntries)
 		{
 			entry.m_System->Destroy();
 			delete entry.m_System;
 		}
+
 		m_SystemEntries.clear();
+		m_ComponentEntries.clear();
 	}
 
 	void EntityWorld::Update(const Saz::GameTime& gameTime)

@@ -8,6 +8,7 @@
 #include <Saz/Events/KeyEvent.h>
 #include <Saz/Events/MouseEvent.h>
 #include "Saz/Platform/OpenGL/OpenGLContext.h"
+#include <GLFW/glfw3.h>
 
 namespace Saz
 {

@@ -16,16 +16,16 @@ namespace Saz
 
 	void OrthographicCameraController::OnUpdate(const GameTime& gameTime)
 	{
-		if (Input::IsKeyPressed(Key::A))
+		if (Input::IsKeyPressed(Key::Left))
 			m_CameraPosition.x -= m_CameraSpeed * gameTime.GetDeltaTime();
 
-		if (Input::IsKeyPressed(Key::D))
+		if (Input::IsKeyPressed(Key::Right))
 			m_CameraPosition.x += m_CameraSpeed * gameTime.GetDeltaTime();
 
-		if (Input::IsKeyPressed(Key::W))
+		if (Input::IsKeyPressed(Key::Up))
 			m_CameraPosition.y += m_CameraSpeed * gameTime.GetDeltaTime();
 
-		if (Input::IsKeyPressed(Key::S))
+		if (Input::IsKeyPressed(Key::Down))
 			m_CameraPosition.y -= m_CameraSpeed * gameTime.GetDeltaTime();
 
 		if (m_Rotation)
@@ -48,6 +48,13 @@ namespace Saz
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(SAZ_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(SAZ_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
+	}
+
+	void OrthographicCameraController::SetZoomLevel(float level)
+	{
+		m_ZoomLevel = level;
+		m_ZoomLevel = Math::Max(m_ZoomLevel, 0.25f);
+		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 	}
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)

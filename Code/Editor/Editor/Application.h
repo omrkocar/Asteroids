@@ -2,11 +2,6 @@
 
 #include <Saz/Core/Application.h>
 
-namespace imgui
-{
-	class Log;
-}
-
 class Application final : public Saz::Application
 {
 public:

@@ -57,7 +57,7 @@ Layer2D::Layer2D()
 
 void Layer2D::OnAttach()
 {
-	m_Texture = Saz::Texture2D::Create("C:/Dev/SazEngine/Data/Textures/Checkerboard.png");
+	m_Texture = Saz::Texture2D::Create("C:/Dev/SazEngine/Data/Textures/Ship.png");
 }
 
 void Layer2D::OnUpdate(const Saz::GameTime& gameTime)
@@ -80,8 +80,8 @@ void Layer2D::OnUpdate(const Saz::GameTime& gameTime)
 		SAZ_PROFILE_SCOPE("Renderer Draw");
 		Saz::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Saz::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.75f, 0.75f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-		Saz::Renderer2D::DrawQuad({ 0.5f, -0.05f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Saz::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, glm::radians(45.0f), m_Texture, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+		Saz::Renderer2D::DrawQuad({ 0.5f, 0.0f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		Saz::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.1 }, { 1.0f, 1.0f }, glm::radians(45.0f), m_Texture, 11.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 		Saz::Renderer2D::EndScene();
 	}
 }
@@ -98,5 +98,7 @@ void Layer2D::OnEvent(Saz::Event& event)
 
 void Layer2D::OnImGuiRender()
 {
-	
+	ImGui::Begin("Settings");
+
+	ImGui::End();
 }

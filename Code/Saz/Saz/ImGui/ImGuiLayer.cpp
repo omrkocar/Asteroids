@@ -4,6 +4,7 @@
 #include "imgui/examples/imgui_impl_opengl3.h"
 #include "Saz/Core/Application.h"
 #include <Saz/ImGui/ImGuiLog.h>
+#include <GLFW/glfw3.h>
 
 namespace Saz
 {

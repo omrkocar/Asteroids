@@ -27,13 +27,13 @@ project "Editor"
 
 	includedirs {
 		"%{wks.location}/3rdParty/",
-		"%{wks.location}/3rdParty/spdlog/include/",
 		"%{wks.location}/3rdParty/imgui/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
 		"%{wks.location}/Code/Editor/",
 		"%{wks.location}/3rdParty/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
+		"%{wks.location}/3rdParty/spdlog/include",
 		"%{wks.location}/3rdParty/glm",
 		"%{wks.location}/3rdParty/stb_image",
 	}

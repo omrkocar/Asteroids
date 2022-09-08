@@ -21,7 +21,6 @@
 #include <cstring>
 #include <sstream>
 
-
 #include <map>
 #include <queue>
 #include <array>
@@ -48,17 +47,8 @@
 #include "Saz/Core/Core.h"
 #include "Saz/Core/Entity.h"
 #include "Saz/Core/Log.h"
-#include "Saz/Utils/FileHelpers.h"
 #include "Saz/Core/KeyCodes.h"
 #include "Saz/Core/MouseCodes.h"
 #include "Saz/Core/Input.h"
-#include <GLFW/glfw3.h>
-
 #include "Saz/Debug/Instrumentor.h"
-
-#include <rapidjson/document.h>
-#include <rapidjson/filewritestream.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/prettywriter.h>
-
-#include <imgui/imgui.h>
+#include "Saz/Utils/FileHelpers.h"

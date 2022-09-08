@@ -54,6 +54,7 @@ workspace "Saz"
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"
 	include "Code/Editor/premake5.lua"
+	include "Code/Game/premake5.lua"
 
 	group "UnitTest"
 		include "Code/Core_ut/premake5.lua"
