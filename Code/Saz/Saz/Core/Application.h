@@ -5,6 +5,7 @@
 #include <Saz/Core/WindowBase.h>
 #include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
+#include "Core/String.h"
 
 
 namespace Saz
@@ -31,7 +32,7 @@ namespace Saz
 	{
 
 	public:
-		Application();
+		Application(const String& name = "Saz Engine");
 		virtual ~Application();
 
 		void Run();

@@ -19,11 +19,6 @@ namespace Saz
 		SAZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	WindowBase* WindowBase::Create(const WindowProps& props)
-	{
-		return new WindowsWindow(props);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowProps& props) : WindowBase(props)
 	{
 		Init(props);
@@ -186,12 +181,12 @@ namespace Saz
 		m_Data.Title = title;
 	}
 
-	unsigned int WindowsWindow::GetWidth() const
+	uint32_t WindowsWindow::GetWidth() const
 	{
 		return m_Data.Width;
 	}
 
-	unsigned int WindowsWindow::GetHeight() const
+	uint32_t WindowsWindow::GetHeight() const
 	{
 		return m_Data.Height;
 	}

@@ -1,11 +1,12 @@
 #include "SazPCH.h"
-#include "VertexArray.h"
+#include "Framebuffer.h"
+#include "Platform/OpenGL/OpenGLFrameBuffer.h"
 #include "Renderer.h"
-#include "Saz/Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Saz
 {
-	Ref<VertexArray> VertexArray::Create()
+	
+	Saz::Ref<Saz::FrameBuffer> FrameBuffer::Create(const FrameBufferSpecification& spec)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -13,10 +14,11 @@ namespace Saz
 			SAZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!")
 				return nullptr;
 		case RendererAPI::API::OpenGL:
-			return CreateRef<OpenGLVertexArray>();
+			return CreateRef<OpenGLFrameBuffer>(spec);
 		}
 
 		SAZ_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
+
 }

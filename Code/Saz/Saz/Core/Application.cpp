@@ -16,6 +16,7 @@
 #include "Saz/Screen.h"
 #include "Saz/TransformComponent.h"
 #include "Saz/Platform/Windows/WindowsWindow.h"
+
 #include "ImGui/ImGuiLog.h"
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
@@ -27,23 +28,20 @@ namespace Saz
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const String& name)
 	{
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
 		Saz::Log::Init();
 
-		WindowProps windowProps;
-		windowProps.Width = 2560;
-		windowProps.Height = 1440;
-		m_Window = std::unique_ptr<WindowBase>(WindowsWindow::Create(windowProps));
+		m_Window = WindowBase::Create(WindowProps(name));
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 	}
 
 	Application::~Application()
 	{
-		
+		Destroy();
 	}
 
 	void Application::Init()

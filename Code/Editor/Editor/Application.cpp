@@ -4,38 +4,12 @@
 
 #include "Editor/WorldOutliner.h"
 #include "Editor/Inspector.h"
-#include "Editor/Layer2D.h"
-
-#include <Saz/TransformComponent.h>
-#include <Saz/InputComponent.h>
-#include <Saz/RenderComponents.h>
-#include <Saz/NameComponent.h>
-#include <Saz/Systems/LevelSystem.h>
-
-#include <entt/entt.hpp>
-#include "Saz/LevelComponent.h"
-
-#include <imgui/imgui.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include "Saz/Platform/OpenGL/OpenGLShader.h"
-#include "glm/gtc/type_ptr.inl"
-
-
-class ExampleLayer : public Saz::Layer
-{
-public:
-	ExampleLayer()
-		: Layer("Placeholder")
-	{
-	}
-};
-
+#include "Editor/EditorLayer.h"
 
 Application::Application()
+	: Saz::Application("Saz Editor")
 {
-	//PushLayer(new ExampleLayer());
-	PushLayer(new Layer2D());
+	PushLayer(new EditorLayer());
 }
 
 Application::~Application()

@@ -9,13 +9,15 @@
 #include "Saz/Rendering/Texture.h"
 #include "Saz/ParticleSystem.h"
 
+namespace Saz { class FrameBuffer; }
+
 namespace Saz { class SubTexture2D; }
 
-class Layer2D : public Saz::Layer
+class EditorLayer : public Saz::Layer
 {
 public:
-	Layer2D();
-	virtual ~Layer2D() = default;
+	EditorLayer();
+	virtual ~EditorLayer() = default;
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 
@@ -25,17 +27,10 @@ public:
 private:
 	Saz::OrthographicCameraController m_CameraController;
 
-	Saz::Ref<Saz::VertexArray> m_SquareVA;
-	Saz::Ref<Saz::Shader> m_Shader;
 	Saz::Ref<Saz::Texture2D> m_Texture;
-	Saz::Ref<Saz::Texture2D> m_SpriteSheet;
-	Saz::Ref<Saz::SubTexture2D> m_TextureStairs;
+	Saz::Ref<Saz::FrameBuffer> m_FrameBuffer;
+
+	glm::vec2 m_SceneSize = { 0.0f, 0.0f };
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
-
-	Saz::ParticleSystem m_ParticleSystem;
-	Saz::ParticleProps m_Particle;
-
-	uint32_t m_MapWidth, m_MapHeight;
-	std::unordered_map<char, Saz::Ref<Saz::SubTexture2D>> m_TextureMap;
 };

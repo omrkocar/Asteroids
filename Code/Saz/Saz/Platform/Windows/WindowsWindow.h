@@ -8,22 +8,22 @@ namespace Saz
 {
 	class GraphicsContext;
 
-	class SAZ_API WindowsWindow final : public Saz::WindowBase
+	class SAZ_API WindowsWindow final : public WindowBase
 	{
 	public:
-		explicit WindowsWindow(const Saz::WindowProps& props);
+		explicit WindowsWindow(const WindowProps& props);
 		virtual ~WindowsWindow() override;
 
-		void OnUpdate(const Saz::GameTime& gameTime) override;
+		void OnUpdate(const GameTime& gameTime) override;
 
 		virtual void SetVSync(bool enabled);
 		virtual bool IsVSync() const;
 
-		virtual const std::string& GetTitle() const;
-		virtual void SetTitle(const std::string& title);
+		virtual const std::string& GetTitle() const override;
+		virtual void SetTitle(const std::string& title) override;
 
-		inline virtual unsigned int GetWidth() const;
-		inline virtual unsigned int GetHeight() const;
+		virtual uint32_t GetWidth() const override;
+		virtual uint32_t GetHeight() const override;
 
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 

@@ -9,15 +9,13 @@ namespace Saz
 
 	struct WindowProps
 	{
-		String Title = "Saz Engine";
-		uint32_t Width = 1600;
-		uint32_t Height = 900;
-		bool Fullscreen = false;
-		bool Vsync = true;
+		String Title;
+		uint32_t Width;
+		uint32_t Height;
 
 		WindowProps(const String& title = "Saz Engine",
-					unsigned int width = 1280,
-					unsigned int height = 720)
+					uint32_t width = 1280,
+					uint32_t height = 720)
 			: Title(title), Width(width), Height(height)
 		{}
 	};
@@ -43,14 +41,14 @@ namespace Saz
 		virtual const std::string& GetTitle() const = 0;
 		virtual void SetTitle(const std::string& title) = 0;
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
 
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
-		static WindowBase* Create(const WindowProps& props = WindowProps());
+		static Scope<WindowBase> Create(const WindowProps& props = WindowProps());
 
 	private:
 		WindowBase(const WindowBase&) = delete;

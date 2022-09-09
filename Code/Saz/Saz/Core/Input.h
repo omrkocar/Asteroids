@@ -9,6 +9,9 @@ namespace Saz {
 	class Input
 	{
 	public:
+		Input() = default;
+		virtual ~Input() = default;
+
 		static bool IsKeyPressed(KeyCode key);
 
 		static bool IsMouseButtonPressed(MouseCode button);

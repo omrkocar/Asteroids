@@ -21,7 +21,7 @@ namespace Saz
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnImGuiRender();
+		virtual void OnEvent(Event& e) override;
 
 		void Begin();
 		void End();

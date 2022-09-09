@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
+#include "Core/WindowBase.h"
 
 namespace Saz
 {
