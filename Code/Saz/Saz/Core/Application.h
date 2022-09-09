@@ -40,6 +40,8 @@ namespace Saz
 		inline WindowBase& GetWindow() { return *m_Window; }
 		const ecs::EntityWorld& GetWorld();
 
+		void Close();
+
 	protected:
 		virtual void Init();
 		virtual void PostInit();

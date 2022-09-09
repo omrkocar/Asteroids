@@ -9,6 +9,8 @@
 #include "Saz/Rendering/Texture.h"
 #include "Saz/ParticleSystem.h"
 
+namespace Saz { class SubTexture2D; }
+
 class Layer2D : public Saz::Layer
 {
 public:
@@ -26,9 +28,14 @@ private:
 	Saz::Ref<Saz::VertexArray> m_SquareVA;
 	Saz::Ref<Saz::Shader> m_Shader;
 	Saz::Ref<Saz::Texture2D> m_Texture;
+	Saz::Ref<Saz::Texture2D> m_SpriteSheet;
+	Saz::Ref<Saz::SubTexture2D> m_TextureStairs;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
-	Saz::ParticleProps m_Particle;
 	Saz::ParticleSystem m_ParticleSystem;
+	Saz::ParticleProps m_Particle;
+
+	uint32_t m_MapWidth, m_MapHeight;
+	std::unordered_map<char, Saz::Ref<Saz::SubTexture2D>> m_TextureMap;
 };

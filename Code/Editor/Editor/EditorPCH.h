@@ -25,6 +25,7 @@
 #include "Saz/Rendering/Shader.h"
 #include "Saz/Rendering/Texture.h"
 #include "Saz/Rendering/VertexArray.h"
+#include "Saz/Rendering/SubTexture2D.h"
 
 #include "Saz/Debug/Instrumentor.h"
 

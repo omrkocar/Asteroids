@@ -1,15 +1,11 @@
 #pragma once
 
-#include "Saz/Core/Log.h"
-
 #include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <string>
 #include <thread>
-#include <mutex>
-#include <sstream>
 
 namespace Saz {
 
@@ -31,9 +27,15 @@ namespace Saz {
 
 	class Instrumentor
 	{
+	private:
+		std::mutex m_Mutex;
+		InstrumentationSession* m_CurrentSession;
+		std::ofstream m_OutputStream;
 	public:
-		Instrumentor(const Instrumentor&) = delete;
-		Instrumentor(Instrumentor&&) = delete;
+		Instrumentor()
+			: m_CurrentSession(nullptr)
+		{
+		}
 
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
@@ -100,16 +102,8 @@ namespace Saz {
 			static Instrumentor instance;
 			return instance;
 		}
-	private:
-		Instrumentor()
-			: m_CurrentSession(nullptr)
-		{
-		}
 
-		~Instrumentor()
-		{
-			EndSession();
-		}
+	private:
 
 		void WriteHeader()
 		{
@@ -135,10 +129,7 @@ namespace Saz {
 				m_CurrentSession = nullptr;
 			}
 		}
-	private:
-		std::mutex m_Mutex;
-		InstrumentationSession* m_CurrentSession;
-		std::ofstream m_OutputStream;
+
 	};
 
 	class InstrumentationTimer
@@ -202,7 +193,6 @@ namespace Saz {
 	}
 }
 
-#define SAZ_PROFILE 1
 #if SAZ_PROFILE
 // Resolve which function signature macro will be used. Note that this only
 // is resolved when the (pre)compiler starts, so the syntax highlighting
@@ -227,10 +217,8 @@ namespace Saz {
 
 #define SAZ_PROFILE_BEGIN_SESSION(name, filepath) ::Saz::Instrumentor::Get().BeginSession(name, filepath)
 #define SAZ_PROFILE_END_SESSION() ::Saz::Instrumentor::Get().EndSession()
-#define SAZ_PROFILE_SCOPE_LINE2(name, line) constexpr auto fixedName##line = ::Saz::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-											   ::Saz::InstrumentationTimer timer##line(fixedName##line.Data)
-#define SAZ_PROFILE_SCOPE_LINE(name, line) SAZ_PROFILE_SCOPE_LINE2(name, line)
-#define SAZ_PROFILE_SCOPE(name) SAZ_PROFILE_SCOPE_LINE(name, __LINE__)
+#define SAZ_PROFILE_SCOPE(name) constexpr auto fixedName = ::Saz::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+									::Saz::InstrumentationTimer timer##__LINE__(fixedName.Data)
 #define SAZ_PROFILE_FUNCTION() SAZ_PROFILE_SCOPE(SAZ_FUNC_SIG)
 #else
 #define SAZ_PROFILE_BEGIN_SESSION(name, filepath)

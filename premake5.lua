@@ -35,7 +35,7 @@ workspace "Saz"
 	{
 		"_CRT_SECURE_NO_WARNINGS",
 		"_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS",
-		"SAZ_PROFILE=1"
+		"SAZ_PROFILE=0"
 	}
 
 	files 
