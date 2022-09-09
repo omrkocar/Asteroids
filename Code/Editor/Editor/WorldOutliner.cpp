@@ -84,7 +84,7 @@ namespace ecs
 					{
 						ecs::Entity entity = m_World->CreateEntity();
 						m_World->AddComponent<component::LevelComponent>(entity);
-						auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
+						//auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
 						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
 						nameComp.m_Name = "Camera";
 					}

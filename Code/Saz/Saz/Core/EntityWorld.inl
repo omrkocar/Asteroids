@@ -27,7 +27,7 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity) const
 template<class TComponent, typename... TArgs>
 auto ecs::EntityWorld::GetComponent(const ecs::Entity& entity)->TComponent&
 {
-	SAZ_ASSERT(HasComponent<TComponent>(entity));
+	SAZ_ASSERT(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
 	return m_Registry.get<TComponent>(entity);
 }
 

@@ -1,21 +1,20 @@
 #pragma once
 
-#include <Core/Vector.h>
+#include "glm/glm.hpp"
 
 namespace component
 {
 	struct TransformComponent
 	{
-		vec3 m_Position = vec3::Zero();
-		vec3 m_Rotation = vec3::Zero();
-		vec3 m_Scale = vec3::One();
+		glm::mat4 Transform{ 1.0f };
 
-		void AddInspector();
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent&) = default;
+		TransformComponent(const glm::mat4& transform)
+			: Transform(transform) {}
+
+
+		operator glm::mat4& () { return Transform; }
+		operator const glm::mat4& () const { return Transform; }
 	};
-
-	inline void TransformComponent::AddInspector()
-	{
-		
-	}
-
 }

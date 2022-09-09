@@ -36,6 +36,7 @@ namespace ecs
 		void Destroy();
 
 		void Update(const Saz::GameTime& gameTime);
+		void ImGuiRender();
 
 		bool IsAlive(const ecs::Entity& entity) const;
 

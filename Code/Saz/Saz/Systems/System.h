@@ -15,7 +15,8 @@ namespace ecs
 		virtual void PostInit() {}
 		virtual void Destroy() {}
 
-		virtual void Update(const Saz::GameTime& gameTime) {};
+		virtual void Update(const Saz::GameTime& gameTime) {}
+		virtual void ImGuiRender() {}
 
 	protected:
 		ecs::EntityWorld* m_World = nullptr;

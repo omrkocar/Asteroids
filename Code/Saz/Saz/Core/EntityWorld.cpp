@@ -35,6 +35,12 @@ namespace ecs
 			entry.m_System->Update(gameTime);
 	}
 
+	void EntityWorld::ImGuiRender()
+	{
+		for (ecs::SystemEntry& entry : m_SystemEntries)
+			entry.m_System->ImGuiRender();
+	}
+
 	void EntityWorld::DestroyAllEntities()
 	{
 		m_Registry.each([this](auto entity) {

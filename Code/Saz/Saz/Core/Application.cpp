@@ -9,7 +9,7 @@
 #include "Saz/Systems/InputSystem.h"
 #include "Saz/Systems/RenderSystem.h"
 #include "Saz/LevelComponent.h"
-#include "Saz/Systems/LevelSystem.h"
+#include "Saz/Systems/SceneSystem.h"
 #include "Saz/MovementComponent.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/NameComponent.h"
@@ -21,6 +21,7 @@
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
 #include "Saz/Rendering/Renderer.h"
+#include "SceneComponent.h"
 
 namespace Saz
 {
@@ -74,17 +75,13 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_EntityWorld.Update(gameTime);
-
 		if (!m_Minimized)
 		{
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(gameTime);
+			m_EntityWorld.Update(gameTime);
 		}
 
 		m_ImGuiLayer->Begin();
-		for (Layer* layer : m_LayerStack)
-			layer->OnImGuiRender();
+		m_EntityWorld.ImGuiRender();
 		m_ImGuiLayer->End();
 
 		m_Window->OnUpdate(gameTime);
@@ -127,17 +124,19 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_EntityWorld.RegisterComponent<component::CameraComponent>();
+		//m_EntityWorld.RegisterComponent<component::CameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();
+		m_EntityWorld.RegisterComponent<component::SceneComponent>();
 		m_EntityWorld.RegisterComponent<component::MovementComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
-		m_EntityWorld.RegisterComponent<component::RenderComponent>();
+		m_EntityWorld.RegisterComponent<component::SpriteRendererComponent>();
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
+		m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
 
 		IMGUI_LOG_INFO("Registered Engine Systems and Components");
 	}

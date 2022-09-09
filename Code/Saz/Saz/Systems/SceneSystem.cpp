@@ -1,5 +1,5 @@
 #include "SazPCH.h"
-#include "LevelSystem.h"
+#include "SceneSystem.h"
 
 #include "Saz/Utils/FileHelpers.h"
 #include "Saz/InputComponent.h"
@@ -12,20 +12,33 @@
 
 #include <entt/entt.hpp>
 #include "Saz/Core/Application.h"
+#include "SceneComponent.h"
 
 namespace ecs
 {	
-	LevelSystem::LevelSystem(Saz::ResourceManager& resourceManager)
-		: m_ResourceManager(resourceManager)
+	SceneSystem::SceneSystem()
 	{
 
 	}
 
-	bool LevelSystem::LoadFromFile(const String& filename)
+	void SceneSystem::Init()
 	{
-		m_World->DestroyAllEntities();
-
-		return true;
+		Entity sceneEntity = m_World->CreateEntity();
+		auto& sceneComp = m_World->AddComponent<component::SceneComponent>(sceneEntity);
 	}
 
+	void SceneSystem::PostInit()
+	{
+
+	}
+
+	void SceneSystem::Destroy()
+	{
+
+	}
+
+	void SceneSystem::Update(const Saz::GameTime& gameTime)
+	{
+
+	}
 }
