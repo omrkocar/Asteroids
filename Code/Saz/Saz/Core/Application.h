@@ -28,7 +28,7 @@ namespace Saz::imgui
 namespace Saz
 {
 
-	class SAZ_API Application
+	class Application
 	{
 
 	public:
@@ -42,6 +42,8 @@ namespace Saz
 		const ecs::EntityWorld& GetWorld();
 
 		void Close();
+
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 	protected:
 		virtual void Init();

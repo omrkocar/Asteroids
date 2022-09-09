@@ -21,7 +21,7 @@ namespace Saz
 	};
 
 	// Interface representing a desktop system based Window
-	class SAZ_API WindowBase
+	class WindowBase
 	{
 	public:
 		WindowBase() = delete;

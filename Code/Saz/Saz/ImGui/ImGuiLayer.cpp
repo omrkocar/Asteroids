@@ -56,9 +56,12 @@ namespace Saz
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
-		/*ImGuiIO& io = ImGui::GetIO();
+		if (m_BlockEvents == false)
+			return;
+
+		ImGuiIO& io = ImGui::GetIO();
 		e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse; 
-		e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;*/
+		e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 	}
 
 	void ImGuiLayer::Begin()

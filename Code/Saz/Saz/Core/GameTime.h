@@ -2,7 +2,7 @@
 
 namespace Saz
 {
-	class SAZ_API GameTime
+	class GameTime
 	{
 		friend class Application;
 	public:

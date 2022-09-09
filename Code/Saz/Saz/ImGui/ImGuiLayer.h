@@ -13,7 +13,7 @@ namespace Saz
 		class Log;
 	}
 
-	class SAZ_API ImGuiLayer : public Layer
+	class ImGuiLayer : public Layer
 	{
 	public:
 		ImGuiLayer();
@@ -26,7 +26,10 @@ namespace Saz
 		void Begin();
 		void End();
 
+		void SetBlockEvents(bool block) { m_BlockEvents = block; }
+
 	private:
+		bool m_BlockEvents = true;
 		float m_Time = 0.0f;
 	};
 }

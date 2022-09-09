@@ -135,7 +135,7 @@ namespace Saz::imgui
 		Warning,
 	};
 
-	class SAZ_API Log
+	class Log
 	{
 	public:
 		Log(const char* fileName = "C:/Dev/SazEngine/ImGuiLog.txt");

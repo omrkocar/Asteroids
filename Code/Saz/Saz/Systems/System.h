@@ -4,7 +4,7 @@
 
 namespace ecs
 {
-	class SAZ_API System
+	class System
 	{
 		friend class ecs::EntityWorld;
 

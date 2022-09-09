@@ -10,7 +10,7 @@ namespace Saz
 
 namespace ecs 
 {
-	class SAZ_API LevelSystem final : public System
+	class LevelSystem final : public System
 	{
 	public:
 		

@@ -13,7 +13,7 @@ namespace Saz
 namespace ecs 
 {
 
-	class SAZ_API InputSystem final : public System
+	class InputSystem final : public System
 	{
 	public:
 		

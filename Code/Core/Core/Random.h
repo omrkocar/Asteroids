@@ -1,26 +1,13 @@
 #pragma once
 
-#include <random>
-
-class Random
+namespace Random
 {
-public:
-	static void Init()
-	{
-		s_RandomEngine.seed(std::random_device()());
-	}
+	template<typename Type>
+	Type Range(const Type& min, const Type& max);
 
-	static float Float()
-	{
-		return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
-	}
+	template<>
+	inline float Range<float>(const float& min, const float& max);
+	inline float Float();
+}
 
-	static float Range(float min, float max)
-	{
-		std::uniform_int_distribution<> dist(min, max);
-		return dist(s_RandomEngine);
-	}
-private:
-	static std::mt19937 s_RandomEngine;
-	static std::uniform_int_distribution<std::mt19937::result_type> s_Distribution;
-};
+#include "Random.inl"

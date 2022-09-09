@@ -6,7 +6,7 @@
 namespace Saz {
 	class GameTime;
 
-	class SAZ_API Layer
+	class Layer
 	{
 	public:
 		Layer(const String& name = "Layer");

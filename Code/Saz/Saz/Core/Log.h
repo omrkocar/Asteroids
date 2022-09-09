@@ -7,7 +7,7 @@
 
 namespace Saz {
 
-	class SAZ_API Log
+	class Log
 	{
 	public:
 		static void Init();

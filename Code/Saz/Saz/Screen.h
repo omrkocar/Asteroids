@@ -1,6 +1,6 @@
 #pragma once
 
-class SAZ_API Screen
+class Screen
 {
 public:
 	static float width;

@@ -5,6 +5,7 @@
 
 namespace Saz
 {
+	static const uint32_t s_MaxFrameBufferSize = 8192;
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
 		: m_Specification(spec)
@@ -66,5 +67,4 @@ namespace Saz
 		m_Specification.Height = height;
 		Invalidate();
 	}
-
 }

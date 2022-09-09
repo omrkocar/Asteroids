@@ -8,7 +8,7 @@ namespace Saz
 {
 	class GraphicsContext;
 
-	class SAZ_API WindowsWindow final : public WindowBase
+	class WindowsWindow final : public WindowBase
 	{
 	public:
 		explicit WindowsWindow(const WindowProps& props);
@@ -35,7 +35,7 @@ namespace Saz
 
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Ref<GraphicsContext> m_Context;
 
 		struct WindowData
 		{

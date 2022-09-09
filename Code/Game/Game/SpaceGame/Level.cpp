@@ -50,12 +50,15 @@ namespace Game
 
 	void Level::OnRender(Saz::OrthographicCamera& camera)
 	{
+		Saz::Renderer2D::BeginScene(camera);
 		m_Background.OnRender();
 
 		for (auto meteor : m_meteors)
 		{
 			meteor->OnRender(camera);
 		}
+
+		Saz::Renderer2D::EndScene();
 
 		m_Player.OnRender(camera);
 	}

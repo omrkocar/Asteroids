@@ -6,7 +6,7 @@
 
 namespace Saz {
 
-	class SAZ_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack() = default;

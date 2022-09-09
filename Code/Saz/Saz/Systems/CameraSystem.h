@@ -9,7 +9,7 @@ namespace Saz
 
 namespace ecs 
 {
-	class SAZ_API CameraSystem final : public System
+	class CameraSystem final : public System
 	{
 	public:
 		

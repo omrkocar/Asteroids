@@ -41,7 +41,8 @@ void EditorLayer::OnUpdate(const Saz::GameTime& gameTime)
 	}
 
 	// Update
-	m_CameraController.OnUpdate(gameTime);
+	if (m_ViewportFocused)
+		m_CameraController.OnUpdate(gameTime);
 
 	Saz::Renderer2D::ResetStats();
 	// Render
@@ -156,11 +157,20 @@ void EditorLayer::OnImGuiRender()
 	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
+	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	static char str0[128] = "Hello, world!";
+	ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
+
 	ImGui::End();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 
 	ImGui::Begin("Scene");
+	m_ViewportFocused = ImGui::IsWindowFocused();
+	m_ViewPortHovered = ImGui::IsWindowHovered();
+	// if viewport is not hovered and is not focused, block events, otherwise don't block events
+	// if viewport is 
+	Saz::Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewPortHovered);
 
 	ImVec2 scenePanelSize = ImGui::GetContentRegionAvail();
 	if (m_SceneSize != *((glm::vec2*)&scenePanelSize))

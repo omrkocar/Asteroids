@@ -28,7 +28,7 @@ namespace ecs
 		ecs::System* m_System = nullptr;
 	};
 
-	class SAZ_API EntityWorld
+	class EntityWorld
 	{
 	public:
 		void Init();

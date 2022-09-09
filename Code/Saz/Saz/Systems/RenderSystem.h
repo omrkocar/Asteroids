@@ -11,7 +11,7 @@ namespace Saz
 }
 namespace ecs 
 {
-	class SAZ_API RenderSystem final : public System
+	class RenderSystem final : public System
 	{
 	public:
 		

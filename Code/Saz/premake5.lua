@@ -71,7 +71,6 @@ project "Saz"
 
 		defines{
 			"SAZ_PLATFORM_WINDOWS",
-			"SAZ_BUILD_DLL",
 		}
 
 	filter "files:%{wks.location}/3rdParty/**.cpp"
