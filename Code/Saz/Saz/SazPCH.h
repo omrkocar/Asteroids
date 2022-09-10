@@ -47,6 +47,7 @@
 #include "Saz/Core/Core.h"
 #include "Saz/Core/Entity.h"
 #include "Saz/Core/Log.h"
+#include "Saz/Screen.h"
 #include "Saz/Core/KeyCodes.h"
 #include "Saz/Core/MouseCodes.h"
 #include "Saz/Core/GameTime.h"

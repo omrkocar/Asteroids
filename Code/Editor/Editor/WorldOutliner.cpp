@@ -8,6 +8,7 @@
 #include "Saz/LevelComponent.h"
 #include "imgui.h"
 #include "Saz/CameraComponent.h"
+#include "Saz/TransformComponent.h"
 
 namespace ecs
 {	
@@ -33,7 +34,7 @@ namespace ecs
 	{
 		if (ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar))
 		{
-			static bool objectHandledRightClick = false;
+			bool objectHandledRightClick = false;
 			if (ImGui::BeginListBox("Objects", ImVec2(-1, -1)))
 			{
 				auto& registry = m_World->m_Registry;
@@ -70,7 +71,15 @@ namespace ecs
 
 						if (ImGui::Button("Delete object"))
 						{
-							m_World->m_Registry.destroy(entity);
+							m_World->DestroyEntity(entity);
+
+							auto& view = m_World->GetAllEntitiesWith<component::CameraComponent>();
+							for (auto& cameraEntity : view)
+							{
+								auto& cameraComp = view.get<component::CameraComponent>(cameraEntity);
+								cameraComp.Primary = true;
+								break;
+							}
 						}
 
 						ImGui::EndPopup();
@@ -81,22 +90,21 @@ namespace ecs
 				ImGui::EndListBox();
 			}
 
-			if (!objectHandledRightClick)
+			
+			if (ImGui::BeginPopupContextItem("Object Selection Menu"))
 			{
-				if (ImGui::BeginPopupContextItem("Object Selection Menu"))
+				if (ImGui::Button("Camera"))
 				{
-					if (ImGui::Button("Camera"))
-					{
-						ecs::Entity entity = m_World->CreateEntity();
-						m_World->AddComponent<component::LevelComponent>(entity);
-						//auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
-						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
-						nameComp.Name = "Camera";
-					}
-
-					ImGui::EndPopup();
+					auto entity = m_World->CreateEntity();
+					auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
+					cam.Camera.SetViewportSize(Screen::width, Screen::height);
+					m_World->AddComponent<component::NameComponent>(entity).Name = "Main Camera";
+					m_World->AddComponent<component::TransformComponent>(entity);
 				}
+
+				ImGui::EndPopup();
 			}
+			
 
 			ImGui::End();
 		}

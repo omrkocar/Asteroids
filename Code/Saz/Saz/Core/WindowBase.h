@@ -9,7 +9,6 @@ namespace Input
 	enum class KeyCode : uint16_t;
 	enum class MouseCode : uint16_t;
 }
-
 namespace Saz
 {
 	class GameTime;

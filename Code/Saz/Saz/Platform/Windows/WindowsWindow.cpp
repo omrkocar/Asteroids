@@ -21,7 +21,8 @@ namespace Saz
 		SAZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props) : WindowBase(props)
+	WindowsWindow::WindowsWindow(const WindowProps& props)
+		: WindowBase(props)
 	{
 		Init(props);
 	}
@@ -66,8 +67,6 @@ namespace Saz
 
 	void WindowsWindow::OnUpdate(const GameTime& gameTime)
 	{
-
-
 		glfwPollEvents();
 
 		double posX, posY;

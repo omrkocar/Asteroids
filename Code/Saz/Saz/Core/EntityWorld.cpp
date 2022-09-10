@@ -2,6 +2,8 @@
 #include "EntityWorld.h"
 
 #include "Saz/Systems/System.h"
+#include "Saz/NameComponent.h"
+#include "CameraComponent.h"
 
 namespace ecs
 {
@@ -41,11 +43,38 @@ namespace ecs
 			entry.m_System->ImGuiRender();
 	}
 
+	ecs::Entity EntityWorld::TryGetEntityWithTag(const String& tag)
+	{
+		auto entities = GetAllEntitiesWith<component::NameComponent>();
+		for (auto e : entities)
+		{
+			if (entities.get<component::NameComponent>(e).Name == tag)
+				return e;
+		}
+
+		return entt::null;
+	}
+
 	void EntityWorld::DestroyAllEntities()
 	{
 		m_Registry.each([this](auto entity) {
 			m_Registry.destroy(entity);
 		});
 	}
+
+	ecs::Entity EntityWorld::GetMainCameraEntity()
+	{
+		auto view = GetAllEntitiesWith<component::CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& comp = view.get<component::CameraComponent>(entity);
+			if (comp.Primary)
+				return entity;
+		}
+
+		return entt::null;
+		
+	}
+
 }
 

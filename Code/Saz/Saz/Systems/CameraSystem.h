@@ -5,6 +5,7 @@
 namespace Saz
 {
 	class GameTime;
+	class Camera;
 }
 
 namespace ecs 
@@ -21,10 +22,11 @@ namespace ecs
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender();
 
+		Entity m_CameraEntity;
+		Entity m_SecondCamera;
+
 	private:
 		void OnWindowResized(entt::registry& registry, entt::entity entity);
 
-		Entity m_CameraEntity;
-		Entity m_SecondCamera;
 	};
 }

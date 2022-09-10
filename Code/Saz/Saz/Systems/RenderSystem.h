@@ -3,12 +3,17 @@
 #include <Saz/Systems/System.h>
 #include "Core/WindowBase.h"
 #include "glm/glm.hpp"
+#include "CameraSystem.h"
 
-namespace Saz { class FrameBuffer; }
+namespace ecs
+{
+
+}
 
 namespace Saz
 {
 	class GameTime;
+	class FrameBuffer;
 
 	class WindowBase;
 }
@@ -18,7 +23,7 @@ namespace ecs
 	{
 	public:
 		
-		RenderSystem(Saz::WindowBase& window);
+		RenderSystem(Saz::WindowBase& window, CameraSystem& cameraSystem);
 		~RenderSystem();
 
 		virtual void Init() override;
@@ -27,12 +32,12 @@ namespace ecs
 
 	private:
 		Saz::WindowBase& m_Window;
-
+		CameraSystem& m_CameraSystem;
 
 		glm::vec2 m_SceneSize = { 0.0f, 0.0f };
 		bool m_ViewportFocused = false;
 		bool m_ViewPortHovered = false;
-		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer;
-		Entity m_SquareEntity;
+		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
+		Entity m_SquareEntity = entt::null;
 	};
 }

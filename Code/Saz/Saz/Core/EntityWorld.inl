@@ -31,6 +31,12 @@ auto ecs::EntityWorld::GetComponent(const ecs::Entity& entity)->TComponent&
 	return m_Registry.get<TComponent>(entity);
 }
 
+template<typename... Components>
+auto ecs::EntityWorld::GetAllEntitiesWith()
+{
+	return m_Registry.view<Components...>();
+}
+
 template<class TComponent, typename... TArgs>
 auto ecs::EntityWorld::TryGetComponent(const ecs::Entity& entity)->TComponent*
 {

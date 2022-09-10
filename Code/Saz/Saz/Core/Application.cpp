@@ -133,8 +133,8 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
+		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window, m_EntityWorld.GetSystem<ecs::CameraSystem>());
 		m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
 
 		IMGUI_LOG_INFO("Registered Engine Systems and Components");

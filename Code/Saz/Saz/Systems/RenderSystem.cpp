@@ -22,8 +22,9 @@
 
 namespace ecs
 {
-	RenderSystem::RenderSystem(Saz::WindowBase& window)
+	RenderSystem::RenderSystem(Saz::WindowBase& window, CameraSystem& cameraSystem)
 		: m_Window(window)
+		, m_CameraSystem(cameraSystem)
 	{
 		
 	}
@@ -58,8 +59,15 @@ namespace ecs
 	{
 		auto& registry = m_World->m_Registry;
 
-		const auto frameBufferView = registry.view<component::FrameBufferComponent>();
-		const auto cameraView = registry.view<component::CameraComponent, component::TransformComponent>();
+		const auto windowResizeView = m_World->GetAllEntitiesWith<const component::WindowResizedOneFrameComponent>();
+		for (auto& ent : windowResizeView)
+		{
+			m_World->DestroyEntity(ent);
+		}
+
+
+		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
+		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
 			const auto& frameBufferComp = registry.get<component::FrameBufferComponent>(frameBufferEntity);
@@ -77,40 +85,36 @@ namespace ecs
 				world.AddComponent<component::WindowResizedOneFrameComponent>(entity, width, height);
 			}
 
-			Saz::Renderer2D::ResetStats();
 			// Render
 			{
 				frameBufferComp.FrameBuffer->Bind();
-				SAZ_PROFILE_SCOPE("Renderer Prep");
 				Saz::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 				Saz::RenderCommand::Clear();
 			}
 
+			ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
+			if (m_World->IsAlive(mainCameraEntity))
 			{
-				static float rotation = 0.0f;
-				rotation += gameTime.GetDeltaTime() * 50.0f;
+				Saz::Renderer2D::ResetStats();
+
+				auto& cameraComponent = m_World->GetComponent<component::CameraComponent>(mainCameraEntity);
+				auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
 
 				SAZ_PROFILE_SCOPE("Renderer Draw");
-				for (const auto& cameraEntity : cameraView)
+
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraTransformComp.Position)
+					* glm::rotate(glm::mat4(1.0f), cameraTransformComp.Rotation, glm::vec3(0, 1, 0))
+					* glm::scale(glm::mat4(1.0f), { cameraTransformComp.Scale.x, cameraTransformComp.Scale.y, 1.0f });
+				Saz::Renderer2D::BeginScene(cameraComponent.Camera, transform);
+
+				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteRendererComponent>();
+				for (auto entity : view)
 				{
-					const auto& [cameraComp, transformComp] = registry.get<component::CameraComponent, component::TransformComponent>(cameraEntity);
-					if (!cameraComp.Primary)
-						continue;
+					auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
+					Saz::Renderer2D::DrawQuad(transform.Position, transform.Scale, sprite.Color);
+				}
 
-
-					glm::mat4 transform = glm::translate(glm::mat4(1.0f), transformComp.Position)
-						* glm::scale(glm::mat4(1.0f), { transformComp.Scale.x, transformComp.Scale.y, 1.0f });
-					Saz::Renderer2D::BeginScene(cameraComp.Camera, transform);
-
-					auto view = registry.view<component::TransformComponent, component::SpriteRendererComponent>();
-					for (auto entity : view)
-					{
-						auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
-						Saz::Renderer2D::DrawQuad(transform.Position, transform.Scale, sprite.Color);
-					}
-
-					Saz::Renderer2D::EndScene();
-				}				
+				Saz::Renderer2D::EndScene();
 			}
 
 			frameBufferComp.FrameBuffer->Unbind();
@@ -181,6 +185,14 @@ namespace ecs
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
+		auto& cam = m_World->GetComponent<component::CameraComponent>(m_World->GetMainCameraEntity());
+		static bool m_PrimaryCamera = true;
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
+		{
+			m_World->GetComponent<component::CameraComponent>(m_CameraSystem.m_CameraEntity).Primary = m_PrimaryCamera;
+			m_World->GetComponent<component::CameraComponent>(m_CameraSystem.m_SecondCamera).Primary = !m_PrimaryCamera;
+		}
 		
 		static char str0[128] = "Hello, world!";
 		ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
