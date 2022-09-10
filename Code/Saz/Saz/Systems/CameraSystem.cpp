@@ -14,6 +14,8 @@
 #include "Screen.h"
 #include "imgui.h"
 #include "glm/gtc/type_ptr.inl"
+#include "RenderSystem.h"
+#include "Core/Application.h"
 
 namespace
 {
@@ -39,14 +41,14 @@ namespace ecs
 		auto& cam = m_World->AddComponent<component::CameraComponent>(m_CameraEntity);
 		cam.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Perspective);
 		m_World->AddComponent<component::NameComponent>(m_CameraEntity).Name = "Main Camera";
-		m_World->AddComponent<component::TransformComponent>(m_CameraEntity);
+		m_World->AddComponent<component::TransformComponent>(m_CameraEntity, glm::vec3(0, 0, 10.0f));
 
 		m_SecondCamera = m_World->CreateEntity();
-		auto& camera2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
-		camera2.Primary = false;
-		camera2.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Orthographic);
-		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Clip Space Camera";
-		m_World->AddComponent<component::TransformComponent>(m_SecondCamera);
+		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
+		cam2.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Orthographic);
+		cam2.Primary = false;
+		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "ClipSpace Camera";
+		m_World->AddComponent<component::TransformComponent>(m_SecondCamera, glm::vec3(0, 0, 10.0f));
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
@@ -55,6 +57,9 @@ namespace ecs
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
 	{		
 		auto& registry = m_World->m_Registry;
+
+		if (Saz::Application::Get().IsViewportFocused() == false)
+			return;
 		
 		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();
 		for (auto& cameraEntity : cameraView)
@@ -91,13 +96,11 @@ namespace ecs
 
 	void CameraSystem::ImGuiRender()
 	{
-		ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
-		if (m_World->IsAlive(mainCameraEntity))
+		static bool primaryCamera;
+		if (ImGui::Checkbox("Camera A", &primaryCamera))
 		{
-			auto& transform = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
-			ImGui::DragFloat3("Camera Transform", glm::value_ptr(transform.Position));
-			ImGui::DragFloat("Camera speed", &s_TranslateSpeed, 0.1f);
-			ImGui::DragFloat("Camera rotation", &transform.Rotation, 0.1f);
+			m_World->GetComponent<component::CameraComponent>(m_CameraEntity).Primary = primaryCamera;
+			m_World->GetComponent<component::CameraComponent>(m_SecondCamera).Primary = !primaryCamera;
 		}
 	}
 
@@ -108,7 +111,8 @@ namespace ecs
 		for (auto& cameraEntity : cameraView)
 		{
 			auto& cameraComp = cameraView.get<component::CameraComponent>(cameraEntity);
-			cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
+			if (!cameraComp.FixedAspectRatio)
+				cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
 		}
 	}
 }

@@ -10,6 +10,8 @@ namespace Saz
 
 namespace ecs 
 {
+	class RenderSystem;
+
 	class CameraSystem final : public System
 	{
 	public:

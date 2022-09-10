@@ -42,6 +42,7 @@ namespace Saz
 		void Close();
 
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+		bool IsViewportFocused();
 
 	protected:
 		virtual void Init();

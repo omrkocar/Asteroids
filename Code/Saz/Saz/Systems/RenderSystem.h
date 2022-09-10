@@ -30,6 +30,8 @@ namespace ecs
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
+		bool IsViewportFocused() { return m_ViewportFocused; }
+
 	private:
 		Saz::WindowBase& m_Window;
 		CameraSystem& m_CameraSystem;

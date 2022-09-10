@@ -88,7 +88,7 @@ namespace ecs
 			// Render
 			{
 				frameBufferComp.FrameBuffer->Bind();
-				Saz::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+				Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 				Saz::RenderCommand::Clear();
 			}
 
@@ -103,7 +103,7 @@ namespace ecs
 				SAZ_PROFILE_SCOPE("Renderer Draw");
 
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraTransformComp.Position)
-					* glm::rotate(glm::mat4(1.0f), cameraTransformComp.Rotation, glm::vec3(0, 1, 0))
+					* glm::rotate(glm::mat4(1.0f), cameraTransformComp.Rotation, glm::vec3(0.0f, 0.f, 1.f))
 					* glm::scale(glm::mat4(1.0f), { cameraTransformComp.Scale.x, cameraTransformComp.Scale.y, 1.0f });
 				Saz::Renderer2D::BeginScene(cameraComponent.Camera, transform);
 
@@ -111,7 +111,7 @@ namespace ecs
 				for (auto entity : view)
 				{
 					auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
-					Saz::Renderer2D::DrawQuad(transform.Position, transform.Scale, sprite.Color);
+					Saz::Renderer2D::DrawRotatedQuad(transform.Position, transform.Scale, transform.Rotation, sprite.Color);
 				}
 
 				Saz::Renderer2D::EndScene();
@@ -186,17 +186,6 @@ namespace ecs
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-		auto& cam = m_World->GetComponent<component::CameraComponent>(m_World->GetMainCameraEntity());
-		static bool m_PrimaryCamera = true;
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_World->GetComponent<component::CameraComponent>(m_CameraSystem.m_CameraEntity).Primary = m_PrimaryCamera;
-			m_World->GetComponent<component::CameraComponent>(m_CameraSystem.m_SecondCamera).Primary = !m_PrimaryCamera;
-		}
-		
-		static char str0[128] = "Hello, world!";
-		ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
-
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -204,9 +193,6 @@ namespace ecs
 		ImGui::Begin("Scene");
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
-		// if viewport is not hovered and is not focused, block events, otherwise don't block events
-		// if viewport is 
-		Saz::Application::Get().GetImGuiLayer()->SetBlockEvents(!m_ViewPortHovered);
 
 		ImVec2 scenePanelSize = ImGui::GetContentRegionAvail();
 		if (m_SceneSize != *((glm::vec2*)&scenePanelSize))

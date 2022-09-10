@@ -25,7 +25,7 @@ namespace ecs
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
-		void DrawObjectInspector();
+		void DrawComponents(Entity entity);
 
 	private:
 		WorldOutliner& m_WorldOutliner;

@@ -66,8 +66,8 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_Window->Destroy();
 		m_EntityWorld.Destroy();
+		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
@@ -145,30 +145,14 @@ namespace Saz
 		return m_EntityWorld;
 	}
 
-	/*bool Application::OnWindowClose(WindowCloseEvent& e)
-	{
-		m_Running = false;
-		return true;
-	}
-
-	bool Application::OnWindowResize(WindowResizeEvent& e)
-	{
-		if (e.GetWidth() == 0 || e.GetHeight() == 0)
-		{
-			m_Minimized = true;
-
-			return false;
-		}
-
-		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
-
-		return false;
-	}*/
-
 	void Application::Close()
 	{
 		m_Running = false;
+	}
+
+	bool Application::IsViewportFocused()
+	{
+		return m_EntityWorld.GetSystem<ecs::RenderSystem>().IsViewportFocused();
 	}
 
 	void Application::PushLayer(Layer* layer)
