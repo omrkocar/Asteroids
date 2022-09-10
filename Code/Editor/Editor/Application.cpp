@@ -9,7 +9,7 @@
 Application::Application()
 	: Saz::Application("Saz Editor")
 {
-	PushLayer(new EditorLayer());
+	//PushLayer(new EditorLayer());
 }
 
 Application::~Application()

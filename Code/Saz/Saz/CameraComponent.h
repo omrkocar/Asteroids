@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Core/Matrix.h>
-#include <Core/Vector.h>
+#include "Saz/Rendering/SceneCamera.h"
 
 
 enum class ViewType
@@ -16,6 +15,13 @@ namespace component
 {
 	struct CameraComponent
 	{
-		int placeholder = 0;
+		Saz::SceneCamera Camera;
+		bool FixedAspectRatio = false;
+
+		// Perhaps separate SceneCamera from other cameras
+		bool Primary = true;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
 	};
 }

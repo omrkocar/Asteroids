@@ -8,6 +8,7 @@
 #include "Saz/LevelComponent.h"
 #include "imgui.h"
 #include "Saz/CameraComponent.h"
+#include "Saz/TransformComponent.h"
 
 namespace ecs
 {	
@@ -18,82 +19,68 @@ namespace ecs
 
 	void WorldOutliner::Update(const Saz::GameTime& gameTime)
 	{
-		if (!m_IsActive)
-			return;
+
 
 		//DrawWorldOutliner();
 	}
 
 	void WorldOutliner::DrawWorldOutliner()
 	{
-		if (ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar))
-		{
-			bool objectHandledRightClick = false;
-			if (ImGui::BeginListBox("Objects", ImVec2(-1, -1)))
-			{
-				auto& registry = m_World->m_Registry;
-				const auto view = registry.view<component::LevelComponent, component::NameComponent>();
-
-				for (const ecs::Entity& entity : view)
-				{
-					auto& nameComp = view.get<component::NameComponent>(entity);
-
-					ImGui::PushID(&entity);
-					ImGui::Text(nameComp.m_Name.c_str());
-
-					if (ImGui::IsItemClicked())
-					{
-						m_SelectedEntity = entity;
-						m_IsObjectInspectorOn = true;
-					}
-
-					if (ImGui::BeginPopupContextItem("Object Options"))
-					{
-						objectHandledRightClick = true;
-
-						ImGui::Text("Rename:");
-						String clipText = (ImGui::GetClipboardText() != nullptr) ? ImGui::GetClipboardText() : "";
-						size_t clipSize = clipText.length();
-						const size_t size = 32;
-						char newText[size];
-						strncpy_s(newText, size, nameComp.m_Name.c_str(), sizeof(newText));
-
-						ImGui::InputText("", newText, size);
-						nameComp.m_Name = newText;
-
-						ImGui::Separator();
-
-						if (ImGui::Button("Delete object"))
-						{
-							m_World->m_Registry.destroy(entity);
-						}
-
-						ImGui::EndPopup();
-					}
-					ImGui::PopID();
-				}
-
-				ImGui::EndListBox();
-			}
-
-			if (!objectHandledRightClick)
-			{
-				if (ImGui::BeginPopupContextItem("Object Selection Menu"))
-				{
-					if (ImGui::Button("Camera"))
-					{
-						ecs::Entity entity = m_World->CreateEntity();
-						m_World->AddComponent<component::LevelComponent>(entity);
-						auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
-						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
-						nameComp.m_Name = "Camera";
-					}
-
-					ImGui::EndPopup();
-				}
-			}
-
-			ImGui::End();
-		}
+		
 	}
+
+	void WorldOutliner::ImGuiRender()
+	{
+		if (!m_IsActive)
+			return;
+
+		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
+
+		auto& registry = m_World->m_Registry;
+		const auto view = m_World->GetAllEntitiesWith<component::NameComponent>();
+		for (const ecs::Entity& entity : view)
+		{
+			auto& nameComp = view.get<component::NameComponent>(entity);
+
+			DrawEntityNode(entity);
+		}
+
+		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+			m_SelectedEntity = entt::null;
+
+		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		{
+			if (ImGui::MenuItem("Create Empty Object"))
+			{
+				CreateBaseEntity();
+			}
+			
+			ImGui::EndPopup();
+		}
+
+		ImGui::End();
+	}
+
+	void WorldOutliner::DrawEntityNode(Entity entity)
+	{
+		auto& nameComp = m_World->GetComponent<component::NameComponent>(entity);
+		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		bool opened = ImGui::TreeNodeEx((void*)entity, flags, nameComp.Name.c_str());
+		if (ImGui::IsItemClicked())
+		{
+			m_SelectedEntity = entity;
+		}
+
+		if (opened)
+			ImGui::TreePop();
+	}
+
+	ecs::Entity WorldOutliner::CreateBaseEntity()
+	{
+		auto entity = m_World->CreateEntity();
+		m_World->AddComponent<component::NameComponent>(entity, "Empty Object");
+		m_World->AddComponent<component::TransformComponent>(entity);
+		return entity;
+	}
+
 }

@@ -4,11 +4,13 @@
 #include "Saz/Core/GameTime.h"
 #include "Saz/Screen.h"
 
-#include <Saz/Events/ApplicationEvent.h>
-#include <Saz/Events/KeyEvent.h>
-#include <Saz/Events/MouseEvent.h>
 #include "Saz/Platform/OpenGL/OpenGLContext.h"
 #include <GLFW/glfw3.h>
+#include "Core/KeyCodes.h"
+#include "Rendering/Renderer.h"
+#include "Core/Application.h"
+#include "Core/EntityWorld.h"
+#include "Saz/WindowResizedOneFrameComponent.h"
 
 namespace Saz
 {
@@ -19,7 +21,8 @@ namespace Saz
 		SAZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props) : WindowBase(props)
+	WindowsWindow::WindowsWindow(const WindowProps& props)
+		: WindowBase(props)
 	{
 		Init(props);
 	}
@@ -53,95 +56,7 @@ namespace Saz
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
-
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
-		{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				data.Width = width;
-				data.Height = height;
-
-				WindowResizeEvent event(width, height);
-				data.EventCallback(event);
-		});
-
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				WindowCloseEvent event;
-				data.EventCallback(event);
-			});
-
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
-				{
-					case GLFW_PRESS:
-					{
-						KeyPressedEvent event(key, 0);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						KeyReleasedEvent event(key);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_REPEAT:
-					{
-						KeyPressedEvent event(key, true);
-						data.EventCallback(event);
-						break;
-					}
-				}
-			});
-
-		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				KeyTypedEvent event(keycode);
-				data.EventCallback(event);
-			});
-
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
-				{
-					case GLFW_PRESS:
-					{
-						MouseButtonPressedEvent event(button);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						MouseButtonReleasedEvent event(button);
-						data.EventCallback(event);
-						break;
-					}
-				}
-			});
-
-		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				MouseScrolledEvent event((float)xOffset, (float)yOffset);
-				data.EventCallback(event);
-			});
-
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				MouseMovedEvent event((float)xPos, (float)yPos);
-				data.EventCallback(event);
-			});
+		glfwSetFramebufferSizeCallback(m_Window, OnWindowResized);
 	}
 
 	void WindowsWindow::Shutdown()
@@ -153,6 +68,16 @@ namespace Saz
 	void WindowsWindow::OnUpdate(const GameTime& gameTime)
 	{
 		glfwPollEvents();
+
+		double posX, posY;
+		glfwGetCursorPos(m_Window, &posX, &posY);
+
+		vec2 mousePos;
+		mousePos.x = static_cast<float>(posX);
+		mousePos.y = static_cast<float>(posY);
+		m_MouseDelta = m_MousePos - mousePos;
+		m_MousePos = mousePos;
+
 		m_Context->SwapBuffers();
 	}
 
@@ -190,5 +115,42 @@ namespace Saz
 	{
 		return m_Data.Height;
 	}
+
+	bool WindowsWindow::ShouldClose() const
+	{
+		return glfwWindowShouldClose(m_Window);
+	}
+
+	void WindowsWindow::OnWindowResized(GLFWwindow* glfwWindow, int width, int height)
+	{
+		auto* windowsWindow = reinterpret_cast<WindowsWindow*>(glfwGetWindowUserPointer((GLFWwindow*)glfwWindow));
+		windowsWindow->m_Data.Width = static_cast<uint32_t>(width);
+		windowsWindow->m_Data.Height = static_cast<uint32_t>(height);
+		Screen::width = static_cast<float>(windowsWindow->m_Data.Width);
+		Screen::height = static_cast<float>(windowsWindow->m_Data.Height);
+		Renderer::OnWindowResize(width, height);
+	}
+
+	void WindowsWindow::GatherKeyboard(Set<Input::KeyCode>& out_Keys) const
+	{
+		for (uint16_t i = static_cast<uint16_t>(Input::KeyCode::A); i < static_cast<uint16_t>(Input::KeyCode::Max); ++i)
+		{
+			if (glfwGetKey(m_Window, i) == GLFW_PRESS)
+				out_Keys.insert((Input::KeyCode)i);
+		}
+	}
+
+	void WindowsWindow::GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const
+	{
+		for (int32_t i = static_cast<uint16_t>(Input::MouseCode::ButtonFirst); i <= static_cast<uint16_t>(Input::MouseCode::ButtonLast); ++i)
+		{
+			if (glfwGetMouseButton(m_Window, i) == GLFW_PRESS)
+				out_Keys.insert((Input::MouseCode)i);
+		}
+
+		out_Delta = m_MouseDelta;
+		out_Position = m_MousePos;
+	}
+
 }
 

@@ -1,15 +1,11 @@
 #pragma once
 
 #include "Saz/Core/GameTime.h"
-#include "Saz/Rendering/OrthographicCamera.h"
 
-#include "Saz/Events/Event.h"
-#include "Saz/Events/ApplicationEvent.h"
-#include "Saz/Events/MouseEvent.h"
 
 namespace Saz
 {
-	struct OrthographicCameraBounds
+	/*struct OrthographicCameraBounds
 	{
 		float Left, Right;
 		float Bottom, Top;
@@ -24,7 +20,6 @@ namespace Saz
 		OrthographicCameraController(float aspectRatio, bool rotation = false);
 
 		void OnUpdate(const GameTime& gameTime);
-		void OnEvent(Event& e);
 
 		void ResizeBounds(float width, float height);
 
@@ -35,9 +30,6 @@ namespace Saz
 
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 
-	private:
-		bool OnMouseScrolled(MouseScrolledEvent& e);
-		bool OnWindowResized(WindowResizeEvent& e);
 
 	private:
 		float m_AspectRatio;
@@ -51,5 +43,5 @@ namespace Saz
 		float m_CameraSpeed = 5.0f;
 		float m_CameraRotationSpeed = 180.0f;
 		float m_CameraRotation = 0.0f;
-	};
+	};*/
 }

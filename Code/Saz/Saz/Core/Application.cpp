@@ -9,7 +9,7 @@
 #include "Saz/Systems/InputSystem.h"
 #include "Saz/Systems/RenderSystem.h"
 #include "Saz/LevelComponent.h"
-#include "Saz/Systems/LevelSystem.h"
+#include "Saz/Systems/SceneSystem.h"
 #include "Saz/MovementComponent.h"
 #include "Saz/RenderComponents.h"
 #include "Saz/NameComponent.h"
@@ -21,6 +21,7 @@
 #include "imgui/imgui.h"
 #include "GLFW/glfw3.h"
 #include "Saz/Rendering/Renderer.h"
+#include "SceneComponent.h"
 
 namespace Saz
 {
@@ -36,7 +37,6 @@ namespace Saz
 		Saz::Log::Init();
 
 		m_Window = WindowBase::Create(WindowProps(name));
-		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 	}
 
 	Application::~Application()
@@ -66,7 +66,6 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_Window->Destroy();
 		m_EntityWorld.Destroy();
 	}
 
@@ -74,23 +73,19 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_EntityWorld.Update(gameTime);
-
 		if (!m_Minimized)
 		{
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(gameTime);
+			m_EntityWorld.Update(gameTime);
 		}
 
 		m_ImGuiLayer->Begin();
-		for (Layer* layer : m_LayerStack)
-			layer->OnImGuiRender();
+		m_EntityWorld.ImGuiRender();
 		m_ImGuiLayer->End();
 
 		m_Window->OnUpdate(gameTime);
 	}
 
-	void Application::OnEvent(Event& e)
+	/*void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
@@ -102,7 +97,7 @@ namespace Saz
 			if (e.Handled)
 				break;
 		}
-	}
+	}*/
 
 	void Application::Run()
 	{
@@ -112,7 +107,7 @@ namespace Saz
 
 		Saz::GameTime gameTime;
 
-		while (m_Running)
+		while (!m_Window->ShouldClose())
 		{
 			gameTime.m_TotalTime = (float)glfwGetTime();
 			gameTime.m_DeltaTime = gameTime.m_TotalTime - m_LastFrameTime;
@@ -130,47 +125,33 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();
+		m_EntityWorld.RegisterComponent<component::SceneComponent>();
 		m_EntityWorld.RegisterComponent<component::MovementComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
-		m_EntityWorld.RegisterComponent<component::RenderComponent>();
+		m_EntityWorld.RegisterComponent<component::SpriteComponent>();
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
+		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window, m_EntityWorld.GetSystem<ecs::CameraSystem>());
+		m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
 
 		IMGUI_LOG_INFO("Registered Engine Systems and Components");
 	}
 
-	const ecs::EntityWorld& Application::GetWorld()
+	ecs::EntityWorld& Application::GetWorld()
 	{
 		return m_EntityWorld;
-	}
-
-	bool Application::OnWindowClose(WindowCloseEvent& e)
-	{
-		m_Running = false;
-		return true;
-	}
-
-	bool Application::OnWindowResize(WindowResizeEvent& e)
-	{
-		if (e.GetWidth() == 0 || e.GetHeight() == 0)
-		{
-			m_Minimized = true;
-
-			return false;
-		}
-
-		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
-
-		return false;
 	}
 
 	void Application::Close()
 	{
 		m_Running = false;
+	}
+
+	bool Application::IsViewportFocused()
+	{
+		return m_EntityWorld.GetSystem<ecs::RenderSystem>().IsViewportFocused();
 	}
 
 	void Application::PushLayer(Layer* layer)

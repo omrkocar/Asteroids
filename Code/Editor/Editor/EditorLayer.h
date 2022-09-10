@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Saz/Core/Layer.h"
-#include "Saz/Events/Event.h"
 #include "glm/ext/vector_float3.hpp"
 #include "Saz/OrthographicCameraController.h"
 #include "Saz/Rendering/Shader.h"
 #include "Saz/Rendering/VertexArray.h"
 #include "Saz/Rendering/Texture.h"
-#include "Saz/ParticleSystem.h"
 
 namespace Saz { class FrameBuffer; }
 
@@ -22,11 +20,8 @@ public:
 	virtual void OnDetach() override;
 
 	void OnUpdate(const Saz::GameTime& gameTime) override;
-	void OnEvent(Saz::Event& event) override;
 	void OnImGuiRender() override;
 private:
-	Saz::OrthographicCameraController m_CameraController;
-
 	Saz::Ref<Saz::Texture2D> m_Texture;
 	Saz::Ref<Saz::FrameBuffer> m_FrameBuffer;
 

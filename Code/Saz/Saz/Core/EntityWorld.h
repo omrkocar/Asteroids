@@ -36,17 +36,23 @@ namespace ecs
 		void Destroy();
 
 		void Update(const Saz::GameTime& gameTime);
+		void ImGuiRender();
 
 		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity()->ecs::Entity;
 		void DestroyEntity(const ecs::Entity& entity);
 
+		ecs::Entity TryGetEntityWithTag(const String& tag);
+
 		template<class TComponent>
 		bool HasComponent(const ecs::Entity& entity) const;
 
 		template<class TComponent, typename... TArgs>
 		auto GetComponent(const ecs::Entity& entity) -> TComponent&;
+
+		template<typename... Components>
+		auto GetAllEntitiesWith();
 
 		template<class TComponent, typename... TArgs>
 		auto TryGetComponent(const ecs::Entity& entity)->TComponent*;
@@ -67,6 +73,8 @@ namespace ecs
 		void RegisterSystem(TArgs&&... args);
 
 		void DestroyAllEntities();
+
+		ecs::Entity GetMainCameraEntity();
 
 	public:
 		entt::registry m_Registry;

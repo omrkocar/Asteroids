@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/Core/WindowBase.h>
+#include "Core/Vector.h"
 
 struct GLFWwindow;
 
@@ -25,9 +26,14 @@ namespace Saz
 		virtual uint32_t GetWidth() const override;
 		virtual uint32_t GetHeight() const override;
 
-		inline virtual void* GetNativeWindow() const override { return m_Window; }
+		virtual bool ShouldClose() const override;
 
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; }
+		static void OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
+
+		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const;
+		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const;
+
+		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
 	private:
 		virtual void Init(const WindowProps& props);
@@ -37,13 +43,14 @@ namespace Saz
 		GLFWwindow* m_Window;
 		Ref<GraphicsContext> m_Context;
 
+		vec2 m_MousePos = vec2::Zero();
+		vec2 m_MouseDelta = vec2::Zero();
+
 		struct WindowData
 		{
 			std::string Title;
 			uint32_t Width, Height;
 			bool VSync;
-
-			EventCallbackFn EventCallback;
 		};
 
 		WindowData m_Data;

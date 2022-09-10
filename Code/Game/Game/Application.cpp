@@ -1,14 +1,13 @@
 #include "GamePCH.h"
 
 #include "Application.h"
-#include "SpaceGame/SpaceGameLayer.h"
 
 namespace Game
 {
 
 	Application::Application()
 	{
-		PushLayer(new SpaceGameLayer());
+		
 	}
 
 	Application::~Application()

@@ -8,11 +8,19 @@
 #include "Saz/TransformComponent.h"
 
 #include <entt/entt.hpp>
+#include "NameComponent.h"
+#include "glm/ext/matrix_clip_space.inl"
+#include "WindowResizedOneFrameComponent.h"
+#include "Screen.h"
+#include "imgui.h"
+#include "glm/gtc/type_ptr.inl"
+#include "RenderSystem.h"
+#include "Core/Application.h"
 
 namespace
 {
-	constexpr float s_TranslateSpeed = 1000.f;
-	constexpr float s_RotateSpeed = 350.0f;
+	float s_TranslateSpeed = 2.0f;
+	constexpr float s_RotateSpeed = 5.0f;
 }
 
 namespace ecs
@@ -24,67 +32,81 @@ namespace ecs
 
 	void CameraSystem::Destroy()
 	{
+		
+	}
+
+	void CameraSystem::Init()
+	{
+		m_CameraEntity = m_World->CreateEntity();
+		auto& cam = m_World->AddComponent<component::CameraComponent>(m_CameraEntity);
+		cam.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Perspective);
+		m_World->AddComponent<component::NameComponent>(m_CameraEntity).Name = "Main Camera";
+		m_World->AddComponent<component::TransformComponent>(m_CameraEntity, glm::vec3(0, 0, 10.0f));
+
+		m_SecondCamera = m_World->CreateEntity();
+		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
+		cam2.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Orthographic);
+		cam2.Primary = false;
+		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Camera B";
+		m_World->AddComponent<component::TransformComponent>(m_SecondCamera, glm::vec3(0, 0, 10.0f));
+
 		auto& registry = m_World->m_Registry;
-		const auto cameraView = registry.view<component::CameraComponent>();
-		for (const auto& entity : cameraView)
-		{
-			const auto& cameraComp = cameraView.get<component::CameraComponent>(entity);
-		}
+		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
 	}
 
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
-	{
+	{		
 		auto& registry = m_World->m_Registry;
-		const auto cameraView = registry.view<component::CameraComponent, component::TransformComponent, component::MovementComponent>();
-		for (const auto& entity : cameraView)
+
+		if (Saz::Application::Get().IsViewportFocused() == false)
+			return;
+		
+		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();
+		for (auto& cameraEntity : cameraView)
 		{
-			const auto inputView = registry.view<component::InputComponent>();
+			auto& cameraComponent= cameraView.get<component::CameraComponent>(cameraEntity);
+			if (cameraComponent.Primary == false)
+				continue;
+
+			const auto inputView = m_World->GetAllEntitiesWith<const component::InputComponent>();
 			for (auto& inputEntity : inputView)
 			{
-				const auto& inputComponent = inputView.get<component::InputComponent>(inputEntity);
+				const auto& inputComponent = inputView.get<const component::InputComponent>(inputEntity);
+				auto& transformComponent = cameraView.get<component::TransformComponent>(cameraEntity);
 
-				component::CameraComponent& cameraComponent = cameraView.get<component::CameraComponent>(entity);
-				component::TransformComponent& transformComponent = cameraView.get<component::TransformComponent>(entity);
-				component::MovementComponent& movementComponent = cameraView.get<component::MovementComponent>(entity);
+				if (inputComponent.IsKeyHeld(Input::KeyCode::A))
+					transformComponent.Position.x -= s_TranslateSpeed * gameTime.GetDeltaTime();
 
-				vec3 translateDir = vec3::Zero();
+				if (inputComponent.IsKeyHeld(Input::KeyCode::D))
+					transformComponent.Position.x += s_TranslateSpeed * gameTime.GetDeltaTime();
 
-				/*if (inputComponent.IsKeyHeld(Input::EMouse::Right))
-				{
-					float speed = movementComponent.m_Speed * gameTime.m_DeltaTime;
-					vec3& position = transformComponent.m_Position;
-					vec3& rotation = transformComponent.m_Rotation;
+				if (inputComponent.IsKeyHeld(Input::KeyCode::W))
+					transformComponent.Position.y += s_TranslateSpeed * gameTime.GetDeltaTime();
 
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::W))
-						translateDir.z += 1.0f;
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::S))
-						translateDir.z -= 1.0f;
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::A))
-						translateDir.x -= 1.0f;
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::D))
-						translateDir.x += 1.0f;
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::Q))
-						translateDir.y -= 1.0f;
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::E))
-						translateDir.y += 1.0f;
+				if (inputComponent.IsKeyHeld(Input::KeyCode::S))
+					transformComponent.Position.y -= s_TranslateSpeed * gameTime.GetDeltaTime();
 
-					if (inputComponent.IsKeyHeld(Input::EKeyboard::Shift_L))
-						speed *= 3.f;
-
-					translateDir.Normalize();
-					position += (translateDir * speed) * Saz::Quaternion::FromRotator(rotation);
-
-					vec3 rotator = vec3::Zero();
-					rotator.x = inputComponent.m_MouseDelta.y * s_RotateSpeed * gameTime.m_DeltaTime;
-					rotator.y = -inputComponent.m_MouseDelta.x * s_RotateSpeed * gameTime.m_DeltaTime;
-
-					rotation += rotator;
-
-					cameraComponent.camera2D->SetPosition({ position.x, position.y, position.z });
-				}*/
-
-				
+				if (inputComponent.IsKeyHeld(Input::KeyCode::Q))
+					transformComponent.Rotation -= s_RotateSpeed * gameTime.GetDeltaTime();
+				if (inputComponent.IsKeyHeld(Input::KeyCode::E))
+					transformComponent.Rotation += s_RotateSpeed * gameTime.GetDeltaTime();
 			}
+		}
+	}
+
+	void CameraSystem::ImGuiRender()
+	{
+	}
+
+	void CameraSystem::OnWindowResized(entt::registry& registry, entt::entity entity)
+	{
+		auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
+		auto windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
+		for (auto& cameraEntity : cameraView)
+		{
+			auto& cameraComp = cameraView.get<component::CameraComponent>(cameraEntity);
+			if (!cameraComp.FixedAspectRatio)
+				cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
 		}
 	}
 }
