@@ -67,6 +67,7 @@ namespace Saz
 		SAZ_PROFILE_FUNCTION();
 
 		m_EntityWorld.Destroy();
+		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)

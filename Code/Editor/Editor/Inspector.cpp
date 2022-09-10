@@ -14,7 +14,12 @@
 
 namespace
 {
-	constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+	constexpr ImGuiTreeNodeFlags treeNodeFlags =
+		ImGuiTreeNodeFlags_DefaultOpen |
+		ImGuiTreeNodeFlags_AllowItemOverlap |
+		ImGuiTreeNodeFlags_Framed |
+		ImGuiTreeNodeFlags_SpanAvailWidth |
+		ImGuiTreeNodeFlags_FramePadding;
 
 	static void DrawVec3Control(const String& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
@@ -78,6 +83,45 @@ namespace
 
 		ImGui::PopID();
 	}
+
+	template<typename Component, typename UIFunction>
+	static void DrawComponent(ecs::EntityWorld& world, const String& name, ecs::Entity entity, UIFunction uiFunction)
+	{
+		if (world.HasComponent<Component>(entity) == false)
+			return;
+
+		auto& component = world.GetComponent<Component>(entity);
+		ImVec2 contentRegionAvaliable = ImGui::GetContentRegionAvail();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImGui::Separator();
+		bool open = ImGui::TreeNodeEx((void*)typeid(Component).hash_code(), treeNodeFlags, name.c_str());
+		ImGui::PopStyleVar();
+
+		ImGui::SameLine(contentRegionAvaliable.x - lineHeight * 0.5f);
+
+		if (ImGui::Button("+", ImVec2(lineHeight, lineHeight)))
+			ImGui::OpenPopup("ComponentSettings");
+
+		bool removeComponent = false;
+		if (ImGui::BeginPopup("ComponentSettings"))
+		{
+			if (ImGui::MenuItem("Remove Component"))
+				removeComponent = true;
+
+			ImGui::EndPopup();
+		}
+
+		if (open)
+		{
+			uiFunction(component);
+			ImGui::TreePop();
+		}
+
+		if (removeComponent)
+			world.RemoveComponent<Component>(entity);
+	}
 }
 
 namespace ecs
@@ -101,26 +145,6 @@ namespace ecs
 		{
 			auto entity = m_WorldOutliner.m_SelectedEntity;
 			DrawComponents(entity);
-
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (ImGui::MenuItem("Camera Component"))
-				{
-					m_World->AddComponent<component::CameraComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Sprite Component"))
-				{
-					m_World->AddComponent<component::SpriteComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndPopup();
-			}
 		}
 
 		ImGui::End();
@@ -128,64 +152,91 @@ namespace ecs
 
 	void Inspector::DrawComponents(Entity entity)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
+		ImGui::PushFont(boldFont);
+
 		DrawNameComponent(entity);
+
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+		DrawAddComponentPopup(entity);
+		ImGui::PopItemWidth();
+
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
 		DrawSpriteComponent(entity);
+
+		ImGui::PopFont();
+	}
+
+	void Inspector::DrawAddComponentPopup(Entity entity)
+	{
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+
+		if (ImGui::BeginPopup("AddComponent"))
+		{
+			if (ImGui::MenuItem("Transform Component"))
+			{
+				m_World->AddComponent<component::TransformComponent>(entity);
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Camera Component"))
+			{
+				m_World->AddComponent<component::CameraComponent>(entity);
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Component"))
+			{
+				m_World->AddComponent<component::SpriteComponent>(entity);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	void Inspector::DrawNameComponent(Entity entity)
 	{
-		if (m_World->HasComponent<component::NameComponent>(entity))
-		{
-			auto& name = m_World->GetComponent<component::NameComponent>(entity).Name;
+		auto& name = m_World->GetComponent<component::NameComponent>(entity).Name;
 
-			ImGui::Text("Name");
-			static char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strcpy(buffer, name.c_str());
-			if (ImGui::InputText(" ", buffer, sizeof(buffer)))
-			{
-				name = String(buffer);
-			}
-		}
+		static char buffer[256];
+		memset(buffer, 0, sizeof(buffer));
+		strcpy(buffer, name.c_str());
+		if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+		{
+			name = String(buffer);
+		}		
 	}
 
 	void Inspector::DrawTransformComponent(Entity entity)
 	{
-		if (m_World->HasComponent<component::TransformComponent>(entity))
-		{
-			if (ImGui::TreeNodeEx((void*)typeid(component::TransformComponent).hash_code(), treeNodeFlags, "Transform Component"))
+		DrawComponent<component::TransformComponent>(*m_World, "Transform Component", entity, [](auto& component)
 			{
-
-				auto& transform = m_World->GetComponent<component::TransformComponent>(entity);
-
-				DrawVec3Control("Position", transform.Position);
-				glm::vec3 rotation = glm::degrees(transform.Rotation);
+				DrawVec3Control("Position", component.Position);
+				glm::vec3 rotation = glm::degrees(component.Rotation);
 				DrawVec3Control("Rotation", rotation);
-				transform.Rotation = glm::radians(rotation);
-				DrawVec3Control("Scale", transform.Scale, 1.0f);
+				component.Rotation = glm::radians(rotation);
+				DrawVec3Control("Scale", component.Scale, 1.0f);
+			});
 
-				ImGui::TreePop();
-
-			}
-		}
 	}
 
 	void Inspector::DrawCameraComponent(Entity entity)
 	{
-		if (m_World->HasComponent<component::CameraComponent>(entity))
-		{
-			if (ImGui::TreeNodeEx((void*)typeid(component::CameraComponent).hash_code(), treeNodeFlags, "Camera Component"))
+		DrawComponent<component::CameraComponent>(*m_World, "Camera Component", entity, [](auto& component)
 			{
-				auto& cameraComp = m_World->GetComponent<component::CameraComponent>(entity);
-				auto& camera = cameraComp.Camera;
-				bool isProjection = cameraComp.Camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective;
+				auto& camera = component.Camera;
+				bool isProjection = component.Camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective;
 
-				ImGui::Checkbox("Primary", &cameraComp.Primary);
+				ImGui::Checkbox("Primary", &component.Primary);
 
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
-				const char* currentProjectionTypeString = projectionTypeStrings[(int)cameraComp.Camera.GetProjectionType()];
+				const char* currentProjectionTypeString = projectionTypeStrings[(int)component.Camera.GetProjectionType()];
 
 				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 				{
@@ -195,7 +246,7 @@ namespace ecs
 						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
 						{
 							currentProjectionTypeString = projectionTypeStrings[i];
-							cameraComp.Camera.SetProjectionType((Saz::SceneCamera::ProjectionType)i);
+							component.Camera.SetProjectionType((Saz::SceneCamera::ProjectionType)i);
 						}
 
 						if (isSelected)
@@ -234,47 +285,20 @@ namespace ecs
 					if (ImGui::DragFloat("Far", &orthoFar))
 						camera.SetOrthographicFarClip(orthoFar);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComp.FixedAspectRatio);
+					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
+			});
 
-
-				ImGui::TreePop();
-			}
-		}
 	}
 
 	void Inspector::DrawSpriteComponent(Entity entity)
 	{
-		if (m_World->HasComponent<component::SpriteComponent>(entity))
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 
-			bool open = ImGui::TreeNodeEx((void*)typeid(component::TransformComponent).hash_code(), treeNodeFlags, "Sprite Component");
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			if (ImGui::Button("+", ImVec2(20, 20)))
-				ImGui::OpenPopup("ComponentSettings");
-
-			ImGui::PopStyleVar();
-
-			bool removeComponent = false;
-			if (ImGui::BeginPopup("ComponentSettings"))
+		DrawComponent<component::SpriteComponent>(*m_World, "Sprite Component", entity, [](auto& component)
 			{
-				if (ImGui::MenuItem("Remove Component"))
-					removeComponent = true;
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			});
 
-				ImGui::EndPopup();
-			}
-
-			if (open)
-			{
-				auto& spriteComp = m_World->GetComponent<component::SpriteComponent>(entity);
-				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.Color), 0.1f);
-				ImGui::TreePop();
-			}
-
-			if (removeComponent)
-				m_World->RemoveComponent<component::SpriteComponent>(entity);
-		}
 	}
 
 }

@@ -27,16 +27,12 @@ namespace ecs
 		if (!m_IsActive)
 			return;
 
-		
-
 		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
 
 		auto& registry = m_World->m_Registry;
-		const auto view = m_World->GetAllEntitiesWith<component::NameComponent>();
+		const auto view = m_World->GetAllEntitiesWith<component::NameComponent, component::TransformComponent>();
 		for (const ecs::Entity& entity : view)
 		{
-			auto& nameComp = view.get<component::NameComponent>(entity);
-
 			DrawEntityNode(entity);
 		}
 
@@ -74,6 +70,7 @@ namespace ecs
 	{
 		auto& nameComp = m_World->GetComponent<component::NameComponent>(entity);
 		ImGuiTreeNodeFlags flags = ((m_SelectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)entity, flags, nameComp.Name.c_str());
 		if (ImGui::IsItemClicked())
 		{

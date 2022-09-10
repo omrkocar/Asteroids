@@ -24,7 +24,11 @@ namespace ecs
 		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
+	private:
 		void DrawComponents(Entity entity);
+
+		void DrawAddComponentPopup(Entity entity);
+
 		void DrawNameComponent(Entity entity);
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);

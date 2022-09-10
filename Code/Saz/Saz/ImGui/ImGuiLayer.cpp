@@ -28,6 +28,8 @@ namespace Saz
 		SetupImGuiStyle();
 
 		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontFromFileTTF("C:/Dev/SazEngine/Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 18.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("C:/Dev/SazEngine/Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 18.0f);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -142,22 +144,6 @@ namespace Saz
 		style.ItemSpacing = ImVec2(6.00f, 6.00f);
 		style.ItemInnerSpacing = ImVec2(6.00f, 6.00f);
 		style.TouchExtraPadding = ImVec2(0.00f, 0.00f);
-		style.IndentSpacing = 25;
-		style.ScrollbarSize = 15;
-		style.GrabMinSize = 10;
-		style.WindowBorderSize = 1;
-		style.ChildBorderSize = 1;
-		style.PopupBorderSize = 1;
-		style.FrameBorderSize = 1;
-		style.TabBorderSize = 1;
-		style.WindowRounding = 7;
-		style.ChildRounding = 4;
-		style.FrameRounding = 3;
-		style.PopupRounding = 4;
-		style.ScrollbarRounding = 9;
-		style.GrabRounding = 3;
-		style.LogSliderDeadzone = 4;
-		style.TabRounding = 4;
 	}
 
 }
