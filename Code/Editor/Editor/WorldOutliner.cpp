@@ -48,6 +48,16 @@ namespace ecs
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			m_SelectedEntity = entt::null;
 
+		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		{
+			if (ImGui::MenuItem("Create Empty Object"))
+			{
+				CreateBaseEntity();
+			}
+			
+			ImGui::EndPopup();
+		}
+
 		ImGui::End();
 	}
 
@@ -63,6 +73,14 @@ namespace ecs
 
 		if (opened)
 			ImGui::TreePop();
+	}
+
+	ecs::Entity WorldOutliner::CreateBaseEntity()
+	{
+		auto entity = m_World->CreateEntity();
+		m_World->AddComponent<component::NameComponent>(entity, "Empty Object");
+		m_World->AddComponent<component::TransformComponent>(entity);
+		return entity;
 	}
 
 }

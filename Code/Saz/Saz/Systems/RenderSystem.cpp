@@ -46,13 +46,13 @@ namespace ecs
 
 		auto entity = m_World->CreateEntity();
 		m_World->AddComponent<component::TransformComponent>(entity);
-		m_World->AddComponent<component::NameComponent>(entity, "Square");
-		m_World->AddComponent<component::SpriteRendererComponent>(entity, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		m_World->AddComponent<component::NameComponent>(entity, "Blue Square");
+		m_World->AddComponent<component::SpriteComponent>(entity, glm::vec4{ 0.0f, 0.0f, 0.9f, 1.0f });
 
 		auto entity2 = m_World->CreateEntity();
-		m_World->AddComponent<component::TransformComponent>(entity2, glm::vec3(2.0f, 0.0f, 0.0f), 45.0f);
-		m_World->AddComponent<component::NameComponent>(entity2, "Square");
-		m_World->AddComponent<component::SpriteRendererComponent>(entity2, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		m_World->AddComponent<component::TransformComponent>(entity2, glm::vec3(2.0f, 0.0f, 0.0f));
+		m_World->AddComponent<component::NameComponent>(entity2, "Red Square");
+		m_World->AddComponent<component::SpriteComponent>(entity2, glm::vec4{ 1.0f, 0.1f, 0.0f, 1.0f });
 	}
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
@@ -102,16 +102,14 @@ namespace ecs
 
 				SAZ_PROFILE_SCOPE("Renderer Draw");
 
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraTransformComp.Position)
-					* glm::rotate(glm::mat4(1.0f), cameraTransformComp.Rotation, glm::vec3(0.0f, 0.f, 1.f))
-					* glm::scale(glm::mat4(1.0f), { cameraTransformComp.Scale.x, cameraTransformComp.Scale.y, 1.0f });
+				glm::mat4 transform = cameraTransformComp.GetTransform();
 				Saz::Renderer2D::BeginScene(cameraComponent.Camera, transform);
 
-				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteRendererComponent>();
+				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
 				for (auto entity : view)
 				{
-					auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
-					Saz::Renderer2D::DrawRotatedQuad(transform.Position, transform.Scale, transform.Rotation, sprite.Color);
+					auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
+					Saz::Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
 				}
 
 				Saz::Renderer2D::EndScene();

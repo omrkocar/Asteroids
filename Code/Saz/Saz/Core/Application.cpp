@@ -67,7 +67,6 @@ namespace Saz
 		SAZ_PROFILE_FUNCTION();
 
 		m_EntityWorld.Destroy();
-		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
@@ -129,7 +128,7 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::SceneComponent>();
 		m_EntityWorld.RegisterComponent<component::MovementComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
-		m_EntityWorld.RegisterComponent<component::SpriteRendererComponent>();
+		m_EntityWorld.RegisterComponent<component::SpriteComponent>();
 		m_EntityWorld.RegisterComponent<component::TransformComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);

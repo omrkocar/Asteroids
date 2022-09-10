@@ -28,5 +28,7 @@ namespace ecs
 
 	private:
 		void DrawEntityNode(Entity entity);
+
+		Entity CreateBaseEntity();
 	};
 }

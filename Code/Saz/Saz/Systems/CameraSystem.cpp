@@ -47,7 +47,7 @@ namespace ecs
 		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
 		cam2.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Orthographic);
 		cam2.Primary = false;
-		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "ClipSpace Camera";
+		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Camera B";
 		m_World->AddComponent<component::TransformComponent>(m_SecondCamera, glm::vec3(0, 0, 10.0f));
 
 		auto& registry = m_World->m_Registry;
@@ -96,12 +96,6 @@ namespace ecs
 
 	void CameraSystem::ImGuiRender()
 	{
-		static bool primaryCamera;
-		if (ImGui::Checkbox("Camera A", &primaryCamera))
-		{
-			m_World->GetComponent<component::CameraComponent>(m_CameraEntity).Primary = primaryCamera;
-			m_World->GetComponent<component::CameraComponent>(m_SecondCamera).Primary = !primaryCamera;
-		}
 	}
 
 	void CameraSystem::OnWindowResized(entt::registry& registry, entt::entity entity)

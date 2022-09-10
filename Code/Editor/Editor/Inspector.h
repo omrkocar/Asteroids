@@ -26,6 +26,10 @@ namespace ecs
 		virtual void ImGuiRender() override;
 
 		void DrawComponents(Entity entity);
+		void DrawNameComponent(Entity entity);
+		void DrawTransformComponent(Entity entity);
+		void DrawCameraComponent(Entity entity);
+		void DrawSpriteComponent(Entity entity);
 
 	private:
 		WorldOutliner& m_WorldOutliner;

@@ -10,13 +10,13 @@ namespace Saz
 
 namespace component
 {
-	struct SpriteRendererComponent
+	struct SpriteComponent
 	{
 		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
-		SpriteRendererComponent() = default;
-		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec4& color)
+		SpriteComponent() = default;
+		SpriteComponent(const SpriteComponent&) = default;
+		SpriteComponent(const glm::vec4& color)
 			: Color(color) {}
 	};
 
