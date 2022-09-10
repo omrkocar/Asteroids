@@ -8,6 +8,7 @@
 #include <entt/entt.hpp>
 #include "TransformComponent.h"
 #include "Saz/Core/GameTime.h"
+#include "Saz/NameComponent.h"
 
 namespace ecs
 {	
@@ -24,12 +25,14 @@ namespace ecs
 
 	void InputSystem::Init()
 	{
-		
+		ecs::Entity entity = m_World->CreateEntity();
+		m_World->AddComponent<component::NameComponent>(entity).Name = "InputEntity";
+		m_World->AddComponent<component::InputComponent>(entity);
 	}
 
 	void InputSystem::Update(const Saz::GameTime& gameTime)
 	{
-		/*auto& registry = m_World->m_Registry;
+		auto& registry = m_World->m_Registry;
 
 		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 		m_MousePrevious = std::move(m_MouseCurrent);
@@ -48,6 +51,6 @@ namespace ecs
 			inputComponent.m_MouseCurrent = m_MouseCurrent;
 			inputComponent.m_MouseDelta = mouseDelta;
 			inputComponent.m_MousePosition = mousePos;
-		}*/
+		}
 	}
 }

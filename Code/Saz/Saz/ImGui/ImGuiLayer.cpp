@@ -54,16 +54,6 @@ namespace Saz
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnEvent(Event& e)
-	{
-		if (m_BlockEvents == false)
-			return;
-
-		ImGuiIO& io = ImGui::GetIO();
-		e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse; 
-		e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-	}
-
 	void ImGuiLayer::Begin()
 	{
 		SAZ_PROFILE_FUNCTION();

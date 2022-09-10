@@ -1,7 +1,14 @@
 #pragma once
 
 #include <Core/String.h>
-#include <Saz/Events/Event.h>
+#include "Core/Set.h"
+#include "Core/Vector.h"
+
+namespace Input
+{
+	enum class KeyCode : uint16_t;
+	enum class MouseCode : uint16_t;
+}
 
 namespace Saz
 {
@@ -27,8 +34,6 @@ namespace Saz
 		WindowBase() = delete;
 		WindowBase(const WindowProps& props) {}
 		virtual ~WindowBase() {}
-		
-		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual void Init() {}
 		virtual void PostInit() {}
@@ -44,9 +49,12 @@ namespace Saz
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual void* GetNativeWindow() const = 0;
+		virtual bool ShouldClose() const = 0;
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
+		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const = 0;
+
+		virtual void* GetNativeWindow() const = 0;
 
 		static Scope<WindowBase> Create(const WindowProps& props = WindowProps());
 

@@ -112,12 +112,14 @@ namespace Saz
 		
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
 		SAZ_PROFILE_FUNCTION();
 
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
 		s_RenderData.TextureShader->Bind();
-		s_RenderData.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_RenderData.TextureShader->SetMat4("u_ViewProjection", viewProj);
 
 		s_RenderData.QuadIndexCount = 0;
 		s_RenderData.QuadVertexBufferPtr = s_RenderData.QuadVertexBufferBase;

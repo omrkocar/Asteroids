@@ -1,8 +1,6 @@
 #include "SazPCH.h"
 #include "SceneSystem.h"
 
-#include "Saz/Utils/FileHelpers.h"
-#include "Saz/InputComponent.h"
 #include "Saz/CameraComponent.h"
 #include "Saz/LevelComponent.h"
 #include "Saz/MovementComponent.h"

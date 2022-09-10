@@ -2,7 +2,6 @@
 
 #include <Saz/Systems/System.h>
 #include "Core/WindowBase.h"
-#include "OrthographicCameraController.h"
 #include "glm/glm.hpp"
 
 namespace Saz { class FrameBuffer; }
@@ -28,7 +27,6 @@ namespace ecs
 
 	private:
 		Saz::WindowBase& m_Window;
-		Saz::OrthographicCameraController m_CameraController;
 
 
 		glm::vec2 m_SceneSize = { 0.0f, 0.0f };

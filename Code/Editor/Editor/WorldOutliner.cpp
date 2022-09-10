@@ -26,20 +26,25 @@ namespace ecs
 
 	void WorldOutliner::DrawWorldOutliner()
 	{
+		
+	}
+
+	void WorldOutliner::ImGuiRender()
+	{
 		if (ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar))
 		{
-			bool objectHandledRightClick = false;
+			static bool objectHandledRightClick = false;
 			if (ImGui::BeginListBox("Objects", ImVec2(-1, -1)))
 			{
 				auto& registry = m_World->m_Registry;
-				const auto view = registry.view<component::LevelComponent, component::NameComponent>();
+				const auto view = registry.view<component::NameComponent>();
 
 				for (const ecs::Entity& entity : view)
 				{
 					auto& nameComp = view.get<component::NameComponent>(entity);
 
-					ImGui::PushID(&entity);
-					ImGui::Text(nameComp.m_Name.c_str());
+					ImGui::PushID(static_cast<int32_t>(entity));
+					ImGui::Text(nameComp.Name.c_str());
 
 					if (ImGui::IsItemClicked())
 					{
@@ -56,10 +61,10 @@ namespace ecs
 						size_t clipSize = clipText.length();
 						const size_t size = 32;
 						char newText[size];
-						strncpy_s(newText, size, nameComp.m_Name.c_str(), sizeof(newText));
+						strncpy_s(newText, size, nameComp.Name.c_str(), sizeof(newText));
 
-						ImGui::InputText("", newText, size);
-						nameComp.m_Name = newText;
+						/*ImGui::InputText("", newText, size);
+						nameComp.Name = newText;*/
 
 						ImGui::Separator();
 
@@ -86,7 +91,7 @@ namespace ecs
 						m_World->AddComponent<component::LevelComponent>(entity);
 						//auto& cam = m_World->AddComponent<component::CameraComponent>(entity);
 						auto& nameComp = m_World->AddComponent<component::NameComponent>(entity);
-						nameComp.m_Name = "Camera";
+						nameComp.Name = "Camera";
 					}
 
 					ImGui::EndPopup();

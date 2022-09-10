@@ -16,12 +16,14 @@
 #include "imgui.h"
 #include "Core/Application.h"
 #include "glm/gtc/type_ptr.inl"
+#include "NameComponent.h"
+#include "glm/ext/matrix_transform.hpp"
+#include "WindowResizedOneFrameComponent.h"
 
 namespace ecs
 {
 	RenderSystem::RenderSystem(Saz::WindowBase& window)
 		: m_Window(window)
-		, m_CameraController(1280.0f / 720.0f, true)
 	{
 		
 	}
@@ -41,10 +43,15 @@ namespace ecs
 		frameBufferComp.FrameBuffer = Saz::FrameBuffer::Create(fbSpec);
 		m_FrameBuffer = frameBufferComp.FrameBuffer;
 
+		auto entity = m_World->CreateEntity();
+		m_World->AddComponent<component::TransformComponent>(entity);
+		m_World->AddComponent<component::NameComponent>(entity, "Square");
+		m_World->AddComponent<component::SpriteRendererComponent>(entity, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
-		m_SquareEntity = m_World->CreateEntity();
-		m_World->AddComponent<component::TransformComponent>(m_SquareEntity);
-		m_World->AddComponent<component::SpriteRendererComponent>(m_SquareEntity, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		auto entity2 = m_World->CreateEntity();
+		m_World->AddComponent<component::TransformComponent>(entity2, glm::vec3(2.0f, 0.0f, 0.0f), 45.0f);
+		m_World->AddComponent<component::NameComponent>(entity2, "Square");
+		m_World->AddComponent<component::SpriteRendererComponent>(entity2, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 	}
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
@@ -52,6 +59,7 @@ namespace ecs
 		auto& registry = m_World->m_Registry;
 
 		const auto frameBufferView = registry.view<component::FrameBufferComponent>();
+		const auto cameraView = registry.view<component::CameraComponent, component::TransformComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
 			const auto& frameBufferComp = registry.get<component::FrameBufferComponent>(frameBufferEntity);
@@ -60,13 +68,14 @@ namespace ecs
 				m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
 				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
 			{
-				m_FrameBuffer->Resize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
-				m_CameraController.ResizeBounds(m_SceneSize.x, m_SceneSize.y);
-			}
+				uint32_t width = (uint32_t)m_SceneSize.x;
+				uint32_t height = (uint32_t)m_SceneSize.y;
+				m_FrameBuffer->Resize(width, height);
 
-			// Update
-			if (m_ViewportFocused)
-				m_CameraController.OnUpdate(gameTime);
+				auto& world = Saz::Application::Get().GetWorld();
+				ecs::Entity entity = world.CreateEntity();
+				world.AddComponent<component::WindowResizedOneFrameComponent>(entity, width, height);
+			}
 
 			Saz::Renderer2D::ResetStats();
 			// Render
@@ -82,17 +91,26 @@ namespace ecs
 				rotation += gameTime.GetDeltaTime() * 50.0f;
 
 				SAZ_PROFILE_SCOPE("Renderer Draw");
-
-				Saz::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-				auto view = registry.view<component::TransformComponent, component::SpriteRendererComponent>();
-				for (auto entity : view)
+				for (const auto& cameraEntity : cameraView)
 				{
-					auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
-					Saz::Renderer2D::DrawQuad(transform, sprite.Color);
-				}
+					const auto& [cameraComp, transformComp] = registry.get<component::CameraComponent, component::TransformComponent>(cameraEntity);
+					if (!cameraComp.Primary)
+						continue;
 
-				Saz::Renderer2D::EndScene();
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), transformComp.Position)
+						* glm::scale(glm::mat4(1.0f), { transformComp.Scale.x, transformComp.Scale.y, 1.0f });
+					Saz::Renderer2D::BeginScene(cameraComp.Camera, transform);
+
+					auto view = registry.view<component::TransformComponent, component::SpriteRendererComponent>();
+					for (auto entity : view)
+					{
+						auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteRendererComponent>(entity);
+						Saz::Renderer2D::DrawQuad(transform.Position, transform.Scale, sprite.Color);
+					}
+
+					Saz::Renderer2D::EndScene();
+				}				
 			}
 
 			frameBufferComp.FrameBuffer->Unbind();
@@ -163,11 +181,7 @@ namespace ecs
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		auto& color = m_World->GetComponent<component::SpriteRendererComponent>(m_SquareEntity).Color;
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(color));
-
-
+		
 		static char str0[128] = "Hello, world!";
 		ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
 

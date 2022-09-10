@@ -16,6 +16,7 @@ namespace ecs
 		WorldOutliner();
 
 		virtual void Update(const Saz::GameTime& gameTime) override;
+		virtual void ImGuiRender() override;
 
 		void DrawWorldOutliner();
 		bool m_IsActive = true;

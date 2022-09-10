@@ -37,7 +37,6 @@ namespace Saz
 		Saz::Log::Init();
 
 		m_Window = WindowBase::Create(WindowProps(name));
-		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 	}
 
 	Application::~Application()
@@ -87,7 +86,7 @@ namespace Saz
 		m_Window->OnUpdate(gameTime);
 	}
 
-	void Application::OnEvent(Event& e)
+	/*void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
@@ -99,7 +98,7 @@ namespace Saz
 			if (e.Handled)
 				break;
 		}
-	}
+	}*/
 
 	void Application::Run()
 	{
@@ -109,7 +108,7 @@ namespace Saz
 
 		Saz::GameTime gameTime;
 
-		while (m_Running)
+		while (!m_Window->ShouldClose())
 		{
 			gameTime.m_TotalTime = (float)glfwGetTime();
 			gameTime.m_DeltaTime = gameTime.m_TotalTime - m_LastFrameTime;
@@ -124,7 +123,7 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		//m_EntityWorld.RegisterComponent<component::CameraComponent>();
+		m_EntityWorld.RegisterComponent<component::CameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::LevelComponent>();
 		m_EntityWorld.RegisterComponent<component::SceneComponent>();
@@ -141,12 +140,12 @@ namespace Saz
 		IMGUI_LOG_INFO("Registered Engine Systems and Components");
 	}
 
-	const ecs::EntityWorld& Application::GetWorld()
+	ecs::EntityWorld& Application::GetWorld()
 	{
 		return m_EntityWorld;
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	/*bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
 		return true;
@@ -165,7 +164,7 @@ namespace Saz
 		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
 		return false;
-	}
+	}*/
 
 	void Application::Close()
 	{

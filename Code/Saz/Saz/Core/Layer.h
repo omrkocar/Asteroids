@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Saz/Events/Event.h"
 #include <Core/String.h>
 
 namespace Saz {
@@ -16,7 +15,6 @@ namespace Saz {
 		virtual void OnDetach() {}
 		virtual void OnUpdate(const GameTime& gameTime) {}
 		virtual void OnImGuiRender() {}
-		virtual void OnEvent(Event& event) {}
 
 		const std::string& GetName() const { return m_DebugName; }
 	protected:

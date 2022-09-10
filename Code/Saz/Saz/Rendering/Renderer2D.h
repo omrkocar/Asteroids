@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Saz/Rendering/OrthographicCamera.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
+#include "glm/glm.hpp"
+#include "Camera.h"
 
 namespace Saz
 {
@@ -12,7 +13,7 @@ namespace Saz
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 
 		static void Flush();

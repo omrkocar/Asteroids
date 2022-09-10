@@ -3,7 +3,6 @@
 #include <Saz/Core/EntityWorld.h>
 #include <Saz/Core/LayerStack.h>
 #include <Saz/Core/WindowBase.h>
-#include "Saz/Events/ApplicationEvent.h"
 #include "Saz/ImGui/ImGuiLayer.h"
 #include "Core/String.h"
 
@@ -12,7 +11,6 @@ namespace Saz
 {
 	class ResourceManager;
 	class GameTime;
-	class OrthographicCamera;
 }
 
 namespace imgui
@@ -39,7 +37,7 @@ namespace Saz
 
 		inline static Application& Get() { return *s_Instance; }
 		inline WindowBase& GetWindow() { return *m_Window; }
-		const ecs::EntityWorld& GetWorld();
+		ecs::EntityWorld& GetWorld();
 
 		void Close();
 
@@ -51,9 +49,6 @@ namespace Saz
 		virtual void Register();
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
-		void OnEvent(Event& e);
-		bool OnWindowClose(WindowCloseEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);

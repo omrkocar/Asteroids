@@ -4,6 +4,6 @@ namespace component
 {
 	struct NameComponent
 	{
-		String m_Name;
+		String Name = "Entity";
 	};
 }

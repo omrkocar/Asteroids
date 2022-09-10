@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
+#include <Core/KeyCodes.h>
+#include <Core/MouseCodes.h>
+#include <Core/Set.h>
 
 namespace Saz
 {
@@ -26,9 +29,9 @@ namespace ecs
 	private:
 		Saz::WindowBase& m_Window;
 
-		/*Set<Input::EKeyboard> m_KeyboardPrevious;
-		Set<Input::EKeyboard> m_KeyboardCurrent;
-		Set<Input::EMouse> m_MousePrevious;
-		Set<Input::EMouse> m_MouseCurrent;*/
+		Set<Input::KeyCode> m_KeyboardPrevious;
+		Set<Input::KeyCode> m_KeyboardCurrent;
+		Set<Input::MouseCode> m_MousePrevious;
+		Set<Input::MouseCode> m_MouseCurrent;
 	};
 }
