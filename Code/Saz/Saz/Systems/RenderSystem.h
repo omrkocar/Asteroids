@@ -33,6 +33,8 @@ namespace ecs
 		bool IsViewportFocused() { return m_ViewportFocused; }
 
 	private:
+		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
+	private:
 		Saz::WindowBase& m_Window;
 		CameraSystem& m_CameraSystem;
 

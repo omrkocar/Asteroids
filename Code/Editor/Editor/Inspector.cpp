@@ -12,14 +12,16 @@
 #include "Saz/RenderComponents.h"
 #include "imgui_internal.h"
 
-namespace 
+namespace
 {
+	constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 	static void DrawVec3Control(const String& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
 		ImGui::PushID(label.c_str());
 
 		ImGui::Columns(2);
-		
+
 		ImGui::SetColumnWidth(0, columnWidth);
 		ImGui::Text(label.c_str());
 
@@ -40,7 +42,7 @@ namespace
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##X", &values.x, 0.05f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -53,7 +55,7 @@ namespace
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Y", &values.y, 0.05f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
@@ -67,11 +69,11 @@ namespace
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Z", &values.z, 0.05f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 
 		ImGui::PopStyleVar();
-		
+
 		ImGui::Columns(1);
 
 		ImGui::PopID();
@@ -79,23 +81,16 @@ namespace
 }
 
 namespace ecs
-{	
+{
 	Inspector::Inspector(WorldOutliner& worldOutliner)
 		: m_WorldOutliner(worldOutliner)
 	{
-		
-	}
-
-	void Inspector::Init()
-	{
 
 	}
 
-	void Inspector::Update(const Saz::GameTime& gameTime)
+	void Inspector::LateUpdate(const Saz::GameTime& gameTime)
 	{
-		
 
-		
 	}
 
 	void Inspector::ImGuiRender()
@@ -103,7 +98,30 @@ namespace ecs
 		ImGui::Begin("Inspector");
 
 		if (m_WorldOutliner.m_SelectedEntity != entt::null)
-			DrawComponents(m_WorldOutliner.m_SelectedEntity);
+		{
+			auto entity = m_WorldOutliner.m_SelectedEntity;
+			DrawComponents(entity);
+
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+
+			if (ImGui::BeginPopup("AddComponent"))
+			{
+				if (ImGui::MenuItem("Camera Component"))
+				{
+					m_World->AddComponent<component::CameraComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Sprite Component"))
+				{
+					m_World->AddComponent<component::SpriteComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
+		}
 
 		ImGui::End();
 	}
@@ -137,8 +155,9 @@ namespace ecs
 	{
 		if (m_World->HasComponent<component::TransformComponent>(entity))
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(component::TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform Component"))
+			if (ImGui::TreeNodeEx((void*)typeid(component::TransformComponent).hash_code(), treeNodeFlags, "Transform Component"))
 			{
+
 				auto& transform = m_World->GetComponent<component::TransformComponent>(entity);
 
 				DrawVec3Control("Position", transform.Position);
@@ -148,6 +167,7 @@ namespace ecs
 				DrawVec3Control("Scale", transform.Scale, 1.0f);
 
 				ImGui::TreePop();
+
 			}
 		}
 	}
@@ -156,7 +176,7 @@ namespace ecs
 	{
 		if (m_World->HasComponent<component::CameraComponent>(entity))
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(component::CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera Component"))
+			if (ImGui::TreeNodeEx((void*)typeid(component::CameraComponent).hash_code(), treeNodeFlags, "Camera Component"))
 			{
 				auto& cameraComp = m_World->GetComponent<component::CameraComponent>(entity);
 				auto& camera = cameraComp.Camera;
@@ -227,14 +247,33 @@ namespace ecs
 	{
 		if (m_World->HasComponent<component::SpriteComponent>(entity))
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(component::SpriteComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Component"))
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+
+			bool open = ImGui::TreeNodeEx((void*)typeid(component::TransformComponent).hash_code(), treeNodeFlags, "Sprite Component");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("+", ImVec2(20, 20)))
+				ImGui::OpenPopup("ComponentSettings");
+
+			ImGui::PopStyleVar();
+
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+
+				ImGui::EndPopup();
+			}
+
+			if (open)
 			{
 				auto& spriteComp = m_World->GetComponent<component::SpriteComponent>(entity);
-
 				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.Color), 0.1f);
-
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				m_World->RemoveComponent<component::SpriteComponent>(entity);
 		}
 	}
 

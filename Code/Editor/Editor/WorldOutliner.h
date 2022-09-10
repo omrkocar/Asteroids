@@ -15,7 +15,7 @@ namespace ecs
 		
 		WorldOutliner();
 
-		virtual void Update(const Saz::GameTime& gameTime) override;
+		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
 		bool IsVisible() { return m_IsActive; }
@@ -25,6 +25,7 @@ namespace ecs
 		bool m_IsActive = true;
 		bool m_IsObjectInspectorOn = true;
 		ecs::Entity m_SelectedEntity = entt::null;
+		Entity m_EntityToDelete = entt::null;
 
 	private:
 		void DrawEntityNode(Entity entity);

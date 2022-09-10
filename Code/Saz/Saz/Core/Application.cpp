@@ -115,6 +115,7 @@ namespace Saz
 			m_LastFrameTime = gameTime.m_TotalTime;
 
 			Update(gameTime);
+			m_EntityWorld.LateUpdate(gameTime);
 		}
 	}
 

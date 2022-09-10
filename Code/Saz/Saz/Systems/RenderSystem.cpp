@@ -53,6 +53,8 @@ namespace ecs
 		m_World->AddComponent<component::TransformComponent>(entity2, glm::vec3(2.0f, 0.0f, 0.0f));
 		m_World->AddComponent<component::NameComponent>(entity2, "Red Square");
 		m_World->AddComponent<component::SpriteComponent>(entity2, glm::vec4{ 1.0f, 0.1f, 0.0f, 1.0f });
+
+		m_World->m_Registry.on_construct<component::CameraComponent>().connect<&RenderSystem::OnCameraComponentAdded>(this);
 	}
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
@@ -206,6 +208,11 @@ namespace ecs
 		ImGui::PopStyleVar();
 
 		ImGui::End();
+	}
+
+	void RenderSystem::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)
+	{
+		m_World->GetComponent<component::CameraComponent>(entity).Camera.SetViewportSize(m_SceneSize.x, m_SceneSize.y);
 	}
 
 }

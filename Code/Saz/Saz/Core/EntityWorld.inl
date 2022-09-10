@@ -76,6 +76,12 @@ void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 	m_Registry.remove<TComponent>(entity);
 }
 
+template<class TComponent, typename Type>
+void SubscribeToComponentAdd(const ecs::Entity& entity, TComponent& component, Type&& func)
+{
+	m_Registry.on_construct<TComponent>().connect<&func>();
+}
+
 template<class TSystem>
 TSystem& ecs::EntityWorld::GetSystem()
 {

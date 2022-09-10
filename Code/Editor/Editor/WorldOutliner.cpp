@@ -17,13 +17,6 @@ namespace ecs
 		
 	}
 
-	void WorldOutliner::Update(const Saz::GameTime& gameTime)
-	{
-
-
-		//DrawWorldOutliner();
-	}
-
 	void WorldOutliner::DrawWorldOutliner()
 	{
 		
@@ -33,6 +26,8 @@ namespace ecs
 	{
 		if (!m_IsActive)
 			return;
+
+		
 
 		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
 
@@ -61,6 +56,20 @@ namespace ecs
 		ImGui::End();
 	}
 
+
+	void WorldOutliner::LateUpdate(const Saz::GameTime& gameTime)
+	{
+		if (m_World->IsAlive(m_EntityToDelete))
+		{
+			m_World->DestroyEntity(m_EntityToDelete);
+
+			if (m_SelectedEntity == m_EntityToDelete)
+				m_SelectedEntity = entt::null;
+
+			m_EntityToDelete = entt::null;
+		}
+	}
+
 	void WorldOutliner::DrawEntityNode(Entity entity)
 	{
 		auto& nameComp = m_World->GetComponent<component::NameComponent>(entity);
@@ -69,6 +78,17 @@ namespace ecs
 		if (ImGui::IsItemClicked())
 		{
 			m_SelectedEntity = entity;
+		}
+
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete Object"))
+			{
+				m_EntityToDelete = entity;
+			}
+
+			ImGui::EndPopup();
 		}
 
 		if (opened)
@@ -82,5 +102,4 @@ namespace ecs
 		m_World->AddComponent<component::TransformComponent>(entity);
 		return entity;
 	}
-
 }

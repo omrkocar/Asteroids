@@ -39,16 +39,14 @@ namespace ecs
 	{
 		m_CameraEntity = m_World->CreateEntity();
 		auto& cam = m_World->AddComponent<component::CameraComponent>(m_CameraEntity);
-		cam.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Perspective);
 		m_World->AddComponent<component::NameComponent>(m_CameraEntity).Name = "Main Camera";
-		m_World->AddComponent<component::TransformComponent>(m_CameraEntity, glm::vec3(0, 0, 10.0f));
+		m_World->AddComponent<component::TransformComponent>(m_CameraEntity);
 
 		m_SecondCamera = m_World->CreateEntity();
 		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
-		cam2.Camera.SetProjectionType(Saz::SceneCamera::ProjectionType::Orthographic);
 		cam2.Primary = false;
 		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Camera B";
-		m_World->AddComponent<component::TransformComponent>(m_SecondCamera, glm::vec3(0, 0, 10.0f));
+		m_World->AddComponent<component::TransformComponent>(m_SecondCamera);
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);

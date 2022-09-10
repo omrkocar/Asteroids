@@ -16,6 +16,7 @@ namespace ecs
 		virtual void Destroy() {}
 
 		virtual void Update(const Saz::GameTime& gameTime) {}
+		virtual void LateUpdate(const Saz::GameTime& gameTime) {}
 		virtual void ImGuiRender() {}
 
 	protected:

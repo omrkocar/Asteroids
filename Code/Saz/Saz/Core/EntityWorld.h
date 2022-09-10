@@ -36,6 +36,7 @@ namespace ecs
 		void Destroy();
 
 		void Update(const Saz::GameTime& gameTime);
+		void LateUpdate(const Saz::GameTime& gameTime);
 		void ImGuiRender();
 
 		bool IsAlive(const ecs::Entity& entity) const;
@@ -65,6 +66,9 @@ namespace ecs
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
+
+		template<class TComponent, typename Type>
+		void SubscribeToComponentAdd(const ecs::Entity& entity, TComponent& component, Type&& func);
 
 		template<class TSystem>
 		auto GetSystem()->TSystem&;
