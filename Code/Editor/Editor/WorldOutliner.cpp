@@ -6,10 +6,11 @@
 #include <entt/entt.hpp>
 #include "Saz/NameComponent.h"
 #include "Saz/LevelComponent.h"
-#include "imgui.h"
 #include "Saz/CameraComponent.h"
 #include "Saz/TransformComponent.h"
 #include "Saz/SceneComponent.h"
+
+#include <imgui/imgui.h>
 
 namespace ecs
 {	

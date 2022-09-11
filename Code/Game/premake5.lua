@@ -20,11 +20,12 @@ project "Game"
 		"%{wks.location}/Code/Saz/",
 		"%{wks.location}/Code/Game/",
 		"%{wks.location}/3rdParty/spdlog/include",
-		"%{wks.location}/3rdParty/GLFW/include",
+		"%{wks.location}/3rdParty/GLFW/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
-		"%{wks.location}/3rdParty/glm",
+		"%{wks.location}/3rdParty/imgui",
+		"%{wks.location}/3rdParty/glm/glm",
 		"%{wks.location}/3rdParty/stb_image",
-		"%{wks.location}/3rdParty/yaml-cpp/include"
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
 	}
 
 	libdirs

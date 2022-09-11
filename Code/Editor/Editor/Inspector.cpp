@@ -4,14 +4,15 @@
 #include "Saz/Core/GameTime.h"
 #include <Saz/Screen.h>
 #include "Saz/TransformComponent.h"
-#include "imgui.h"
 #include "Saz/NameComponent.h"
 #include "Saz/CameraComponent.h"
 #include "Core/String.h"
 #include "glm/gtc/type_ptr.inl"
 #include "Saz/RenderComponents.h"
-#include "imgui_internal.h"
 #include "Saz/SceneComponent.h"
+
+#include <imgui/imgui_internal.h>
+#include <imgui/imgui.h>
 
 namespace
 {
