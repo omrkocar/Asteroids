@@ -11,14 +11,18 @@
 #include <Saz/RenderComponents.h>
 #include <Saz/WindowResizedOneFrameComponent.h>
 #include <Saz/CameraComponent.h>
-
-#include <imgui/imgui.h>
 #include "Saz/SceneComponent.h"
 #include "Saz/InputComponent.h"
 
+#include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
+#include "Saz/TransformComponent.h"
+#include "glm/gtc/type_ptr.inl"
+
 namespace ecs
 {
-	SceneEditor::SceneEditor()
+	SceneEditor::SceneEditor(WorldOutliner& worldOutliner)
+		: m_WorldOutliner(worldOutliner)
 	{
 		
 	}
@@ -98,6 +102,19 @@ namespace ecs
 					OpenScene();
 				}
 			}
+			if (inputComp.IsKeyPressed(Input::KeyCode::Q))
+				m_GizmoType = -1;
+			if (inputComp.IsKeyPressed(Input::KeyCode::W))
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+
+			if (inputComp.IsKeyPressed(Input::KeyCode::E))
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+
+			if (inputComp.IsKeyPressed(Input::KeyCode::R))
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
 		}
 	}
 
@@ -119,18 +136,71 @@ namespace ecs
 		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused = m_ViewportFocused;
 		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered = m_ViewPortHovered;
 
-		ImVec2 scenePanelSize = ImGui::GetContentRegionAvail();
-		if (m_SceneSize != *((glm::vec2*)&scenePanelSize))
-		{
-			m_SceneSize = { scenePanelSize.x, scenePanelSize.y };
-		}
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		m_SceneSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		uint32_t textureId = m_FrameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureId, ImVec2{ m_SceneSize.x, m_SceneSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
-		ImGui::End();
+
+		// Gizmos
+		Entity selectedEntity = m_WorldOutliner.m_SelectedEntity;
+		if (m_World->IsAlive(selectedEntity))
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+
+			auto cameraEntity = m_World->GetMainCameraEntity();
+			if (m_World->IsAlive(cameraEntity))
+			{
+				const auto& camera = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity).Camera;
+				const glm::mat4& cameraProjection = camera.GetProjection();
+				glm::mat4 cameraView = camera.GetViewMatrix();
+
+				auto& tc = m_World->GetComponent<component::TransformComponent>(selectedEntity);
+				glm::mat4 transform = tc.GetTransform();
+
+				const auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
+				bool snap = inputComponent.IsKeyHeld(Input::KeyCode::LeftControl);
+				float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+				// Snap to 45 degrees for rotation
+				if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+					snapValue = 45.0f;
+
+				float snapValues[3] = { snapValue, snapValue, snapValue };
+
+				ImGuizmo::Manipulate(
+					glm::value_ptr(cameraView),
+					glm::value_ptr(cameraProjection),
+					(ImGuizmo::OPERATION)m_GizmoType,
+					ImGuizmo::LOCAL,
+					glm::value_ptr(transform),
+					nullptr, snap ? snapValues : nullptr);
+
+				if (ImGuizmo::IsUsing())
+				{
+					glm::vec3 position, rotation, scale;
+					Math::DecomposeTransform(transform, position, rotation, scale);
+					tc.Position = position;
+					tc.Rotation = rotation;
+					tc.Scale = scale;
+
+				}
+			}
+		}
 
 		ImGui::PopStyleVar();
+		ImGui::End();
+
 	}
 
 	void SceneEditor::DrawProfiler()

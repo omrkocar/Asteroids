@@ -17,12 +17,14 @@ namespace Saz {
 		
 	}
 
-	void EditorCamera::Setup(float fov, float aspectRatio, float nearClip, float farClip)
+	void EditorCamera::Setup(float fov, float aspectRatio, float nearClip, float farClip, float yaw, float pitch)
 	{
 		m_FOV = fov;
 		m_AspectRatio = aspectRatio;
 		m_NearClip = nearClip;
 		m_FarClip = farClip;
+		m_Yaw = yaw;
+		m_Pitch = pitch;
 		m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearClip, farClip);
 		UpdateView();
 	}

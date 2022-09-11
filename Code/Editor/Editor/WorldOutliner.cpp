@@ -22,6 +22,7 @@ namespace ecs
 	void WorldOutliner::Init()
 	{
 		m_World->m_Registry.on_construct<component::LoadSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
+		m_World->m_Registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
 	}
 
 	void WorldOutliner::DrawWorldOutliner()
@@ -37,7 +38,7 @@ namespace ecs
 		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
 
 		auto& registry = m_World->m_Registry;
-		const auto view = m_World->GetAllEntitiesWith<component::NameComponent, component::TransformComponent>();
+		const auto view = m_World->GetAllEntitiesWith<component::NameComponent, component::SceneEntityComponent>();
 		for (const ecs::Entity& entity : view)
 		{
 			DrawEntityNode(entity);

@@ -14,9 +14,7 @@ namespace Saz {
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
-		void Setup(float fov, float aspectRatio, float nearClip, float farClip);
-
-		void OnUpdate(const GameTime& gameTime);
+		void Setup(float fov, float aspectRatio, float nearClip, float farClip, float yaw = 0.0f, float pitch = 0.0f);
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
@@ -34,6 +32,19 @@ namespace Saz {
 
 		float GetPitch() const { return m_Pitch; }
 		float GetYaw() const { return m_Yaw; }
+
+		float SetPitch(float pitch) { m_Pitch = pitch; }
+		float SetYaw(float yaw) { m_Yaw = yaw; }
+
+		void SetFOV(float fov) { m_FOV = fov; }
+		void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
+		void SetNearClip(float nearClip) { m_NearClip = nearClip; }
+		void SetFarClip(float farClip) { m_FarClip = farClip; }
+
+		float GetFOV() { return m_FOV; }
+		float GetAspectRatio() { return m_AspectRatio; }
+		float GetNearClip() { return m_NearClip; }
+		float GetFarClip() { return m_FarClip; }
 
 		bool OnMouseScroll(float YOffset);
 	public:

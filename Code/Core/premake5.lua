@@ -14,4 +14,5 @@ project "Core"
 	includedirs 
 	{
 		"%{wks.location}/Code/Core/",
+		"%{IncludeDir.glm}",
 	}

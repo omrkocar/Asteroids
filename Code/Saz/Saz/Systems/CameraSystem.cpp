@@ -9,7 +9,6 @@
 
 #include <entt/entt.hpp>
 #include "NameComponent.h"
-#include "glm/ext/matrix_clip_space.inl"
 #include "WindowResizedOneFrameComponent.h"
 #include "Screen.h"
 #include "imgui.h"
@@ -38,15 +37,22 @@ namespace ecs
 
 	void CameraSystem::Init()
 	{
-		auto mainCamera = m_World->CreateEntity();
-		auto& cameraComp = m_World->AddComponent<component::EditorCameraComponent>(mainCamera);
-		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f);
-		m_World->AddComponent<component::InputComponent>(mainCamera);
-		m_World->AddComponent<component::TransformComponent>(mainCamera);
-		m_World->SetMainCamera(mainCamera);
-
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
+	}
+
+	void CameraSystem::PostInit()
+	{
+		if (!m_World->IsAlive(m_World->GetMainCameraEntity()))
+		{
+			auto mainCamera = m_World->CreateEntity();
+			auto& cameraComp = m_World->AddComponent<component::EditorCameraComponent>(mainCamera);
+			cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f);
+			m_World->AddComponent<component::InputComponent>(mainCamera);
+			m_World->AddComponent<component::TransformComponent>(mainCamera);
+			m_World->AddComponent<component::SceneEntityComponent>(mainCamera);
+			m_World->SetMainCamera(mainCamera);
+		}
 	}
 
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
@@ -56,6 +62,9 @@ namespace ecs
 		const auto& cameraEntity = m_World->GetMainCameraEntity();
 
 		if (!m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered)
+			return;
+
+		if (!m_World->IsAlive(cameraEntity))
 			return;
 
 		auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity);

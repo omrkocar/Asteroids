@@ -20,6 +20,9 @@ namespace Saz
 		virtual void OnDetach() override;
 
 		void Begin();
+
+		void DockingBegin();
+
 		void End();
 
 		void SetBlockEvents(bool block) { m_BlockEvents = block; }

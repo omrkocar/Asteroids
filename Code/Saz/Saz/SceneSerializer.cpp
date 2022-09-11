@@ -10,6 +10,7 @@
 #include "RenderComponents.h"
 #include "glm/glm.hpp"
 #include "SceneComponent.h"
+#include "InputComponent.h"
 
 namespace YAML {
 
@@ -83,7 +84,7 @@ namespace Saz
 
 	static void SerializeEntity(YAML::Emitter& out, ecs::EntityWorld& world, ecs::Entity entity)
 	{
-		if (!world.HasComponent<component::NameComponent>(entity))
+		if (!world.HasComponent<component::SceneEntityComponent>(entity))
 			return;
 
 		out << YAML::BeginMap; // Entity
@@ -134,6 +135,27 @@ namespace Saz
 
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
 			out << YAML::Key << "FixedAspectRatio" << YAML::Value << cameraComponent.FixedAspectRatio;
+
+			out << YAML::EndMap; // CameraComponent
+		}
+
+		if (world.HasComponent<component::EditorCameraComponent>(entity))
+		{
+			out << YAML::Key << "EditorCameraComponent";
+			out << YAML::BeginMap; // CameraComponent
+
+			auto& cameraComponent = world.GetComponent<component::EditorCameraComponent>(entity);
+			auto& camera = cameraComponent.Camera;
+
+			out << YAML::Key << "EditorCamera" << YAML::Value;
+			out << YAML::BeginMap; // Camera
+			out << YAML::Key << "Pitch" << YAML::Value << camera.GetPitch();
+			out << YAML::Key << "Yaw" << YAML::Value << camera.GetYaw();
+			out << YAML::Key << "AspectRatio" << YAML::Value << camera.GetAspectRatio();
+			out << YAML::Key << "FOV" << YAML::Value << camera.GetFOV();
+			out << YAML::Key << "NearClip" << YAML::Value << camera.GetNearClip();
+			out << YAML::Key << "FarClip" << YAML::Value << camera.GetFarClip();
+			out << YAML::EndMap; // Camera
 
 			out << YAML::EndMap; // CameraComponent
 		}
@@ -207,7 +229,7 @@ namespace Saz
 			{
 				ecs::Entity deserializedEntity = m_World.CreateEntity();
 				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
-				m_World.AddComponent<component::SceneEntityComponent>(deserializedEntity);
+				bool isSceneEntity = true;
 
 				std::string name;
 				auto nameComponent = entity["NameComponent"];
@@ -218,7 +240,7 @@ namespace Saz
 					nameComp.Name = name;
 				}
 
-
+				m_World.AddComponent<component::SceneEntityComponent>(deserializedEntity);
 				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
 				m_World.AddComponent<component::TransformComponent>(deserializedEntity);
@@ -231,6 +253,25 @@ namespace Saz
 					tc.Position = transformComponent["Position"].as<glm::vec3>();
 					tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
 					tc.Scale = transformComponent["Scale"].as<glm::vec3>();
+				}
+
+				auto editorCameraComponent = entity["EditorCameraComponent"];
+				if (editorCameraComponent)
+				{
+					auto& cc = m_World.AddComponent<component::EditorCameraComponent>(deserializedEntity);
+					m_World.AddComponent<component::InputComponent>(deserializedEntity);
+
+					auto& cameraProps = editorCameraComponent["EditorCamera"];
+
+					float fov = cameraProps["FOV"].as<float>();
+					float aspectRatio = cameraProps["AspectRatio"].as<float>();
+					float nearClip = cameraProps["NearClip"].as<float>();
+					float farClip = cameraProps["FarClip"].as<float>();
+					float yaw = cameraProps["Yaw"].as<float>();
+					float pitch = cameraProps["Pitch"].as<float>();
+					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch);
+					m_World.SetMainCamera(deserializedEntity);
+					isSceneEntity = false;
 				}
 
 				auto cameraComponent = entity["CameraComponent"];

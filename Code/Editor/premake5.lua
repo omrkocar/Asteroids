@@ -36,7 +36,8 @@ project "Editor"
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{wks.location}/3rdParty/glm/glm",
 		"%{wks.location}/3rdParty/stb_image",
-		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include",
+		"%{IncludeDir.ImGuizmo}",
 	}
 
 	links 

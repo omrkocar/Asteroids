@@ -51,6 +51,17 @@ workspace "Saz"
 		{ ["/"] = { "**premake5.lua" } },
 	}
 
+	IncludeDir = {}
+	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"
+	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
+	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
+	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/GLFW/include"
+	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
+	IncludeDir["glm"] = "%{wks.location}/3rdParty/glm/glm"
+	IncludeDir["stb_image"] = "%{wks.location}/3rdParty/stb_image"
+	IncludeDir["yaml_cpp"] = "%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
+	IncludeDir["ImGuizmo"] = "%{wks.location}/3rdParty/imguizmo/"
+
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"
 	include "Code/Editor/premake5.lua"
@@ -68,6 +79,7 @@ workspace "Saz"
 		include "3rdParty/glm/premake5.lua"
 		include "3rdParty/stb_image/premake5.lua"
 		include "3rdParty/yaml-cpp/premake5.lua"
+		include "3rdParty/imguizmo/premake5.lua"
 		group ""
 	
 

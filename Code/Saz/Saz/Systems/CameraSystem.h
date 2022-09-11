@@ -20,6 +20,7 @@ namespace ecs
 		virtual void Destroy() override;
 
 		virtual void Init() override;
+		virtual void PostInit() override;
 
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender();

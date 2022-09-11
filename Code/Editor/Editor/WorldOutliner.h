@@ -16,6 +16,7 @@ namespace ecs
 		WorldOutliner();
 
 		virtual void Init() override;
+
 		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 

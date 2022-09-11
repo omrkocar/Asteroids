@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <glm/glm.hpp>
 
 constexpr float LARGE_FLOAT = 9999999.0f;
 constexpr float EPSILON = 0.0000001f;
@@ -93,4 +94,6 @@ namespace Math
 		if (newvalue < value)
 			value = newvalue;
 	}
+
+	bool DecomposeTransform(const glm::mat4& transform, glm::vec3& outPosition, glm::vec3& outRotation, glm::vec3& outScale);
 }

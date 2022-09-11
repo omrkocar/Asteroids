@@ -17,14 +17,10 @@ project "Core_ut"
 	{
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/Code/Core/",
-	}
-
-	libdirs 
-	{ 
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/"
+		"%{IncludeDir.glm}",
 	}
 	
 	links 
 	{ 
-		"Core.lib" 
+		"Core"
 	}

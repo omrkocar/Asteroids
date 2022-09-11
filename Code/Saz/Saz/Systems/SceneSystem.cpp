@@ -17,6 +17,8 @@ namespace ecs
 	{
 		m_SceneEntity = m_World->CreateEntity();
 		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(m_SceneEntity);
+
+		//LoadScene(entt::null, "C:/Dev/SazEngine/Data/Scenes/3DCube.saz");
 	}
 
 	void SceneSystem::PostInit()
@@ -74,7 +76,8 @@ namespace ecs
 		
 		UpdateWindowName(scenePath);
 
-		m_World->DestroyEntity(loadSceneEntity);
+		if (m_World->IsAlive(loadSceneEntity))
+			m_World->DestroyEntity(loadSceneEntity);
 	}
 
 	void SceneSystem::SaveScene(Entity saveSceneEntity, const String& scenePath)

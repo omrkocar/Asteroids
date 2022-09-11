@@ -29,16 +29,6 @@ project "Saz"
 		"MultiProcessorCompile"
 	}
 
-	IncludeDir = {}
-	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"
-	IncludeDir["entt"] = "%{wks.location}/3rdParty/entt/include"
-	IncludeDir["spdlog"] = "%{wks.location}/3rdParty/spdlog/include"
-	IncludeDir["GLFW"] = "%{wks.location}/3rdParty/GLFW/GLFW/include"
-	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
-	IncludeDir["glm"] = "%{wks.location}/3rdParty/glm/glm"
-	IncludeDir["stb_image"] = "%{wks.location}/3rdParty/stb_image"
-	IncludeDir["yaml_cpp"] = "%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
-
 	includedirs {
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
@@ -53,6 +43,7 @@ project "Saz"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}",
 	}
 
 	links {
@@ -60,6 +51,7 @@ project "Saz"
 		"ImGui",
 		"GLFW",
 		"GLAD",
+		"ImGuizmo",
 		"yaml-cpp",
 		"opengl32.lib"
 	}

@@ -2,6 +2,12 @@
 
 #include <Saz/Systems/System.h>
 #include "glm/glm.hpp"
+#include "WorldOutliner.h"
+
+namespace ImGuizmo
+{
+	enum OPERATION;
+}
 
 namespace Saz
 {
@@ -15,7 +21,7 @@ namespace ecs
 	{
 	public:
 		
-		SceneEditor();
+		SceneEditor(WorldOutliner& worldOutliner);
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
@@ -37,9 +43,13 @@ namespace ecs
 		void DrawMenuBar();
 
 	private:
+		WorldOutliner& m_WorldOutliner;
+
 		bool m_ViewportFocused = false;
 		bool m_ViewPortHovered = false;
 		glm::vec2 m_SceneSize = { 0.0f, 0.0f };
+		glm::vec2 m_ViewportBounds[2];
+		int m_GizmoType;
 		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
 	};
 }
