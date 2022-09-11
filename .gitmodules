@@ -10,3 +10,6 @@
 [submodule "3rdParty/imguizmo/imguizmo"]
 	path = 3rdParty/imguizmo
 	url = https://github.com/thecherno/imguizmo.git
+[submodule "3rdParty/GLFW/GLFW"]
+	path = 3rdParty/GLFW/GLFW
+	url = https://github.com/TheCherno/GLFW
