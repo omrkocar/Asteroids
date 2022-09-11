@@ -16,6 +16,7 @@
 #include "glm/gtc/type_ptr.inl"
 #include "RenderSystem.h"
 #include "Core/Application.h"
+#include "SceneComponent.h"
 
 namespace
 {
@@ -37,7 +38,7 @@ namespace ecs
 
 	void CameraSystem::Init()
 	{
-		m_CameraEntity = m_World->CreateEntity();
+		/*m_CameraEntity = m_World->CreateEntity();
 		auto& cam = m_World->AddComponent<component::CameraComponent>(m_CameraEntity);
 		m_World->AddComponent<component::NameComponent>(m_CameraEntity).Name = "Main Camera";
 		m_World->AddComponent<component::TransformComponent>(m_CameraEntity);
@@ -46,7 +47,7 @@ namespace ecs
 		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
 		cam2.Primary = false;
 		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Camera B";
-		m_World->AddComponent<component::TransformComponent>(m_SecondCamera);
+		m_World->AddComponent<component::TransformComponent>(m_SecondCamera);*/
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
@@ -56,7 +57,7 @@ namespace ecs
 	{		
 		auto& registry = m_World->m_Registry;
 
-		if (Saz::Application::Get().IsViewportFocused() == false)
+		if (!m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused)
 			return;
 		
 		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();

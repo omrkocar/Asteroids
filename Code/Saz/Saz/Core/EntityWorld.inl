@@ -27,8 +27,18 @@ bool ecs::EntityWorld::HasComponent(const ecs::Entity& entity) const
 template<class TComponent, typename... TArgs>
 auto ecs::EntityWorld::GetComponent(const ecs::Entity& entity)->TComponent&
 {
-	SAZ_ASSERT(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
+	SAZ_CORE_ASSERT(HasComponent<TComponent>(entity), "Entity doesn't have this component!");
 	return m_Registry.get<TComponent>(entity);
+}
+
+template<class TComponent>
+auto ecs::EntityWorld::GetSingleComponent()->TComponent&
+{
+	for (const ecs::Entity& entity : m_Registry.view<TComponent>())
+		return GetComponent<TComponent>(entity);
+
+	SAZ_CORE_ASSERT(false, "Trying to fetch a component that doesn't exist!");
+	return GetComponent<TComponent>(entt::null);
 }
 
 template<typename... Components>
@@ -48,6 +58,16 @@ auto ecs::EntityWorld::TryGetComponent(const ecs::Entity& entity)->TComponent*
 	return nullptr;
 }
 
+template<class TComponent, typename... TArgs>
+void ecs::EntityWorld::DestroyEntitesWith()
+{
+	auto view = GetAllEntitiesWith<TComponent>();
+	for (auto& entity : view)
+	{
+		m_Registry.destroy(entity);
+	}
+}
+
 template<class TComponent>
 void ecs::EntityWorld::RegisterComponent()
 {
@@ -65,21 +85,15 @@ void ecs::EntityWorld::RegisterComponent()
 template<class TComponent, typename... TArgs>
 auto ecs::EntityWorld::AddComponent(const ecs::Entity& entity, TArgs&&... args)->TComponent&
 {
-	SAZ_ASSERT(!m_Registry.has<TComponent>(entity), "Attempting to add a component that already exists on the Entity. Investigate!");
+	SAZ_CORE_ASSERT(!m_Registry.has<TComponent>(entity), "Attempting to add a component that already exists on the Entity. Investigate!");
 	return m_Registry.emplace<TComponent>(entity, std::forward<TArgs>(args)...);
 }
 
 template<class TComponent>
 void ecs::EntityWorld::RemoveComponent(const ecs::Entity& entity)
 {
-	SAZ_ASSERT(m_Registry.has<TComponent>(entity), "Attempting to remove a component that does not exist on the Entity!");
+	SAZ_CORE_ASSERT(m_Registry.has<TComponent>(entity), "Attempting to remove a component that does not exist on the Entity!");
 	m_Registry.remove<TComponent>(entity);
-}
-
-template<class TComponent, typename Type>
-void SubscribeToComponentAdd(const ecs::Entity& entity, TComponent& component, Type&& func)
-{
-	m_Registry.on_construct<TComponent>().connect<&func>();
 }
 
 template<class TSystem>
@@ -93,7 +107,7 @@ TSystem& ecs::EntityWorld::GetSystem()
 			return entry.m_TypeId == typeId;
 		});
 
-	SAZ_ASSERT((result != m_SystemEntries.end()), "Attempting to access an invalid system or it has not been registered yet!");
+	SAZ_CORE_ASSERT((result != m_SystemEntries.end()), "Attempting to access an invalid system or it has not been registered yet!");
 	return *dynamic_cast<TSystem*>(result->m_System);
 }
 

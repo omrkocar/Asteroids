@@ -27,6 +27,7 @@ namespace Saz
 		virtual uint32_t GetHeight() const override;
 
 		virtual bool ShouldClose() const override;
+		void SetShouldClose(bool close) { m_ShouldClose = close; }
 
 		static void OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
 
@@ -35,13 +36,15 @@ namespace Saz
 
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
+		virtual void Shutdown() override;
+
 	private:
 		virtual void Init(const WindowProps& props);
-		virtual void Shutdown();
 
 	private:
 		GLFWwindow* m_Window;
 		Ref<GraphicsContext> m_Context;
+		bool m_ShouldClose = false;
 
 		vec2 m_MousePos = vec2::Zero();
 		vec2 m_MouseDelta = vec2::Zero();

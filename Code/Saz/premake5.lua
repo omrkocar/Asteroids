@@ -37,6 +37,7 @@ project "Saz"
 	IncludeDir["GLAD"] = "%{wks.location}/3rdParty/GLAD/include"
 	IncludeDir["glm"] = "%{wks.location}/3rdParty/glm"
 	IncludeDir["stb_image"] = "%{wks.location}/3rdParty/stb_image"
+	IncludeDir["yaml_cpp"] = "%{wks.location}/3rdParty/yaml-cpp/include"
 
 	includedirs {
 		"%{wks.location}/Code/Core/",
@@ -50,6 +51,7 @@ project "Saz"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	libdirs
@@ -63,6 +65,7 @@ project "Saz"
 		"ImGui",
 		"GLFW",
 		"GLAD",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 

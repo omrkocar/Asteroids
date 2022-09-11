@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/KeyCodes.h>
-#include <Core/MouseCodes.h>
+#include <Saz/Core/KeyCodes.h>
+#include <Saz/Core/MouseCodes.h>
 #include <Core/Set.h>
 #include <Core/Vector.h>
 

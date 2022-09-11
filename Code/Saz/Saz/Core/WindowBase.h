@@ -44,11 +44,14 @@ namespace Saz
 
 		virtual const std::string& GetTitle() const = 0;
 		virtual void SetTitle(const std::string& title) = 0;
+		
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
 		virtual bool ShouldClose() const = 0;
+
+		virtual void Shutdown() = 0;
 
 		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
 		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const = 0;

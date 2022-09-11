@@ -5,6 +5,7 @@
 #include "Editor/WorldOutliner.h"
 #include "Editor/Inspector.h"
 #include "Editor/EditorLayer.h"
+#include "SceneEditor.h"
 
 Application::Application()
 	: Saz::Application("Saz Editor")
@@ -19,10 +20,11 @@ Application::~Application()
 
 void Application::Init()
 {
-	Saz::Application::Init();
-
 	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
+	m_EntityWorld.RegisterSystem<ecs::SceneEditor>();
+
+	Saz::Application::Init();
 }
 
 void Application::Destroy()

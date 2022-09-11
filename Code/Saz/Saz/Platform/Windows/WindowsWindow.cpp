@@ -8,9 +8,6 @@
 #include <GLFW/glfw3.h>
 #include "Core/KeyCodes.h"
 #include "Rendering/Renderer.h"
-#include "Core/Application.h"
-#include "Core/EntityWorld.h"
-#include "Saz/WindowResizedOneFrameComponent.h"
 
 namespace Saz
 {
@@ -104,6 +101,7 @@ namespace Saz
 	void WindowsWindow::SetTitle(const std::string& title)
 	{
 		m_Data.Title = title;
+		glfwSetWindowTitle(m_Window, title.c_str());
 	}
 
 	uint32_t WindowsWindow::GetWidth() const

@@ -52,11 +52,17 @@ namespace ecs
 		template<class TComponent, typename... TArgs>
 		auto GetComponent(const ecs::Entity& entity) -> TComponent&;
 
+		template<class TComponent>
+		auto GetSingleComponent()->TComponent&;
+
 		template<typename... Components>
 		auto GetAllEntitiesWith();
 
 		template<class TComponent, typename... TArgs>
 		auto TryGetComponent(const ecs::Entity& entity)->TComponent*;
+
+		template<class TComponent, typename... TArgs>
+		void DestroyEntitesWith();
 
 		template<class TComponent>
 		void RegisterComponent();
@@ -66,9 +72,6 @@ namespace ecs
 
 		template<class TComponent>
 		void RemoveComponent(const ecs::Entity& entity);
-
-		template<class TComponent, typename Type>
-		void SubscribeToComponentAdd(const ecs::Entity& entity, TComponent& component, Type&& func);
 
 		template<class TSystem>
 		auto GetSystem()->TSystem&;

@@ -36,6 +36,7 @@ project "Editor"
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{wks.location}/3rdParty/glm",
 		"%{wks.location}/3rdParty/stb_image",
+		"%{wks.location}/3rdParty/yaml-cpp/include"
 	}
 
 	libdirs{

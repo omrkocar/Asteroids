@@ -6,11 +6,6 @@
 namespace Saz
 {
 	class GameTime;
-
-	namespace sfml
-	{
-		class Window;
-	}
 }
 
 namespace ecs 
@@ -33,6 +28,8 @@ namespace ecs
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);
 		void DrawSpriteComponent(Entity entity);
+
+		void OnSceneLoadRequest(entt::registry& registry, entt::entity entity);
 
 	private:
 		WorldOutliner& m_WorldOutliner;

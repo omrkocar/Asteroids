@@ -67,6 +67,7 @@ workspace "Saz"
 		include "3rdParty/GLAD/premake5.lua"
 		include "3rdParty/glm/premake5.lua"
 		include "3rdParty/stb_image/premake5.lua"
+		include "3rdParty/yaml-cpp/premake5.lua"
 		group ""
 	
 

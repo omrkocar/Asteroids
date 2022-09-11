@@ -20,5 +20,12 @@ namespace ecs
 		virtual void Destroy();
 
 		virtual void Update(const Saz::GameTime& gameTime);
+		void NewScene(Entity newSceneEntity);
+		void LoadScene(Entity loadSceneEntity, const String& scenePath);
+		void SaveScene(Entity saveSceneEntity, const String& scenePath);
+		void UpdateWindowName(const String& scenePath);
+
+	private:
+		Entity m_SceneEntity;
 	};
 }

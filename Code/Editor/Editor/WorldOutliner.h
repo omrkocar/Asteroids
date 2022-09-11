@@ -15,6 +15,7 @@ namespace ecs
 		
 		WorldOutliner();
 
+		virtual void Init() override;
 		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
@@ -31,5 +32,6 @@ namespace ecs
 		void DrawEntityNode(Entity entity);
 
 		Entity CreateBaseEntity();
+		void OnSceneLoadRequest(entt::registry& registry, entt::entity entity);
 	};
 }

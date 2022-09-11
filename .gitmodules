@@ -10,3 +10,9 @@
 [submodule "3rdParty/optick"]
 	path = 3rdParty/optick
 	url = https://github.com/bombomby/optick.git
+[submodule "3rdParty/yaml-cpp"]
+	path = 3rdParty/yaml-cpp
+	url = https://github.com/TheCherno/yaml-cpp.git
+[submodule "3rdParty/imguizmo"]
+	path = 3rdParty/imguizmo
+	url = https://github.com/thecherno/imguizmo.git

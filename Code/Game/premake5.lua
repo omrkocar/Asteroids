@@ -24,6 +24,7 @@ project "Game"
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/glm",
 		"%{wks.location}/3rdParty/stb_image",
+		"%{wks.location}/3rdParty/yaml-cpp/include"
 	}
 
 	libdirs

@@ -11,6 +11,7 @@
 #include "glm/gtc/type_ptr.inl"
 #include "Saz/RenderComponents.h"
 #include "imgui_internal.h"
+#include "Saz/SceneComponent.h"
 
 namespace
 {
@@ -129,7 +130,7 @@ namespace ecs
 	Inspector::Inspector(WorldOutliner& worldOutliner)
 		: m_WorldOutliner(worldOutliner)
 	{
-
+		
 	}
 
 	void Inspector::LateUpdate(const Saz::GameTime& gameTime)
@@ -300,5 +301,4 @@ namespace ecs
 			});
 
 	}
-
 }
