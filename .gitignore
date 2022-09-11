@@ -4,9 +4,9 @@ Intermediate
 Projects
 /3rdParty/imgui/imgui/examples
 /3rdParty/glfw/glfw/examples
-.sln
 bin
 bin-int
+.sln
 /*.sln
 *.vcxproj
 *.vcxproj.user

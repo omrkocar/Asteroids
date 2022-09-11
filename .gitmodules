@@ -1,3 +1,15 @@
 [submodule "3rdParty/GLFW/GLFW"]
 	path = 3rdParty/GLFW/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "3rdParty/glm/glm"]
+	path = 3rdParty/glm/glm
+	url = https://github.com/g-truc/glm
+[submodule "3rdParty/imguizmo/imguizmo"]
+	path = 3rdParty/imguizmo/imguizmo
+	url = https://github.com/thecherno/imguizmo.git
+[submodule "3rdParty/imgui/imgui"]
+	path = 3rdParty/imgui/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "3rdParty/yaml-cpp/yaml-cpp"]
+	path = 3rdParty/yaml-cpp/yaml-cpp
+	url = https://github.com/TheCherno/yaml-cpp.git
