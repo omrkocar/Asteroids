@@ -4,15 +4,15 @@ project "yaml-cpp"
 
 	files
 	{
-		"src/**.h",
-		"src/**.cpp",
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/src/**.h",
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/src/**.cpp",
 		
-		"include/**.h"
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include/**.h"
 	}
 
 	includedirs
 	{
-		"include"
+		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
 	}
 
 	filter "system:windows"
