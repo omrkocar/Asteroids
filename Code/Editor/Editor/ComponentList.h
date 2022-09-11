@@ -12,7 +12,7 @@ namespace ecs
 {
 	using ComponentsList = TypeList<
 		component::NameComponent,
-		component::CameraComponent,
+		component::EditorCameraComponent,
 		component::InputComponent,
 		component::LevelComponent,
 		component::MovementComponent,

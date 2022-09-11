@@ -47,7 +47,6 @@ namespace ecs
 		auto& registry = m_World->m_Registry;
 
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
-		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
 			const auto& frameBufferComp = registry.get<component::FrameBufferComponent>(frameBufferEntity);
@@ -64,13 +63,13 @@ namespace ecs
 			{
 				Saz::Renderer2D::ResetStats();
 
-				auto& cameraComponent = m_World->GetComponent<component::CameraComponent>(mainCameraEntity);
+				auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(mainCameraEntity);
 				auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
 
 				SAZ_PROFILE_SCOPE("Renderer Draw");
 
 				glm::mat4 transform = cameraTransformComp.GetTransform();
-				Saz::Renderer2D::BeginScene(cameraComponent.Camera, transform);
+				Saz::Renderer2D::BeginScene(cameraComponent.Camera);
 
 				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
 				for (auto entity : view)

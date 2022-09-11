@@ -115,8 +115,9 @@ namespace ecs
 		// Scene
 		ImGui::Begin("Scene");
 		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused = m_ViewportFocused;
 		m_ViewPortHovered = ImGui::IsWindowHovered();
+		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused = m_ViewportFocused;
+		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered = m_ViewPortHovered;
 
 		ImVec2 scenePanelSize = ImGui::GetContentRegionAvail();
 		if (m_SceneSize != *((glm::vec2*)&scenePanelSize))

@@ -20,7 +20,7 @@
 
 namespace
 {
-	float s_TranslateSpeed = 2.0f;
+	float s_TranslateSpeed = 10000.0f;
 	constexpr float s_RotateSpeed = 5.0f;
 }
 
@@ -38,16 +38,12 @@ namespace ecs
 
 	void CameraSystem::Init()
 	{
-		/*m_CameraEntity = m_World->CreateEntity();
-		auto& cam = m_World->AddComponent<component::CameraComponent>(m_CameraEntity);
-		m_World->AddComponent<component::NameComponent>(m_CameraEntity).Name = "Main Camera";
-		m_World->AddComponent<component::TransformComponent>(m_CameraEntity);
-
-		m_SecondCamera = m_World->CreateEntity();
-		auto& cam2 = m_World->AddComponent<component::CameraComponent>(m_SecondCamera);
-		cam2.Primary = false;
-		m_World->AddComponent<component::NameComponent>(m_SecondCamera).Name = "Camera B";
-		m_World->AddComponent<component::TransformComponent>(m_SecondCamera);*/
+		auto mainCamera = m_World->CreateEntity();
+		auto& cameraComp = m_World->AddComponent<component::EditorCameraComponent>(mainCamera);
+		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f);
+		m_World->AddComponent<component::InputComponent>(mainCamera);
+		m_World->AddComponent<component::TransformComponent>(mainCamera);
+		m_World->SetMainCamera(mainCamera);
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
@@ -57,40 +53,38 @@ namespace ecs
 	{		
 		auto& registry = m_World->m_Registry;
 
-		if (!m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused)
+		const auto& cameraEntity = m_World->GetMainCameraEntity();
+
+		if (!m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered)
 			return;
-		
-		const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent, component::TransformComponent>();
-		for (auto& cameraEntity : cameraView)
+
+		auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity);
+		if (m_World->HasComponent<component::MouseScrollOneFrameComponent>(cameraEntity))
 		{
-			auto& cameraComponent= cameraView.get<component::CameraComponent>(cameraEntity);
-			if (cameraComponent.Primary == false)
-				continue;
+			auto& scrollComponent = m_World->GetComponent<component::MouseScrollOneFrameComponent>(cameraEntity);
 
-			const auto inputView = m_World->GetAllEntitiesWith<const component::InputComponent>();
-			for (auto& inputEntity : inputView)
-			{
-				const auto& inputComponent = inputView.get<const component::InputComponent>(inputEntity);
-				auto& transformComponent = cameraView.get<component::TransformComponent>(cameraEntity);
-
-				if (inputComponent.IsKeyHeld(Input::KeyCode::A))
-					transformComponent.Position.x -= s_TranslateSpeed * gameTime.GetDeltaTime();
-
-				if (inputComponent.IsKeyHeld(Input::KeyCode::D))
-					transformComponent.Position.x += s_TranslateSpeed * gameTime.GetDeltaTime();
-
-				if (inputComponent.IsKeyHeld(Input::KeyCode::W))
-					transformComponent.Position.y += s_TranslateSpeed * gameTime.GetDeltaTime();
-
-				if (inputComponent.IsKeyHeld(Input::KeyCode::S))
-					transformComponent.Position.y -= s_TranslateSpeed * gameTime.GetDeltaTime();
-
-				if (inputComponent.IsKeyHeld(Input::KeyCode::Q))
-					transformComponent.Rotation -= s_RotateSpeed * gameTime.GetDeltaTime();
-				if (inputComponent.IsKeyHeld(Input::KeyCode::E))
-					transformComponent.Rotation += s_RotateSpeed * gameTime.GetDeltaTime();
-			}
+			cameraComponent.Camera.OnMouseScroll(scrollComponent.YOffset);
+			m_World->RemoveComponent<component::MouseScrollOneFrameComponent>(cameraEntity);
 		}
+		
+		auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
+		auto& transformComponent = m_World->GetComponent<component::TransformComponent>(cameraEntity);		
+
+		if (inputComponent.IsKeyHeld(Input::KeyCode::LeftAlt))
+		{
+			const glm::vec2& mouse{ inputComponent.GetMousePosition().x, inputComponent.GetMousePosition().y };
+			glm::vec2 delta = { inputComponent.GetMouseDelta().x * 0.003f, inputComponent.GetMouseDelta().y * 0.003f } ;
+
+			if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonMiddle))
+				cameraComponent.Camera.MousePan(delta);
+			else if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonLeft))
+				cameraComponent.Camera.MouseRotate(-delta);
+			else if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonRight))
+				cameraComponent.Camera.MouseZoom(delta.y);
+		}
+
+
+		cameraComponent.Camera.UpdateView();
 	}
 
 	void CameraSystem::ImGuiRender()
@@ -99,13 +93,10 @@ namespace ecs
 
 	void CameraSystem::OnWindowResized(entt::registry& registry, entt::entity entity)
 	{
-		auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
 		auto windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
-		for (auto& cameraEntity : cameraView)
-		{
-			auto& cameraComp = cameraView.get<component::CameraComponent>(cameraEntity);
-			if (!cameraComp.FixedAspectRatio)
-				cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
-		}
+
+		auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
+		cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
+		
 	}
 }

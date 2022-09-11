@@ -6,6 +6,7 @@
 #include "RenderCommand.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.inl"
+#include "EditorCamera.h"
 
 namespace Saz
 {
@@ -117,6 +118,21 @@ namespace Saz
 		SAZ_PROFILE_FUNCTION();
 
 		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		s_RenderData.TextureShader->Bind();
+		s_RenderData.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+		s_RenderData.QuadIndexCount = 0;
+		s_RenderData.QuadVertexBufferPtr = s_RenderData.QuadVertexBufferBase;
+
+		s_RenderData.TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		SAZ_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.GetViewProjection();
 
 		s_RenderData.TextureShader->Bind();
 		s_RenderData.TextureShader->SetMat4("u_ViewProjection", viewProj);

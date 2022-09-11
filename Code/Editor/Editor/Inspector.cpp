@@ -187,7 +187,7 @@ namespace ecs
 
 			if (ImGui::MenuItem("Camera Component"))
 			{
-				m_World->AddComponent<component::CameraComponent>(entity);
+				m_World->AddComponent<component::EditorCameraComponent>(entity);
 				ImGui::CloseCurrentPopup();
 			}
 

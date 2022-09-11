@@ -83,12 +83,15 @@ namespace ecs
 
 		ecs::Entity GetMainCameraEntity();
 
+		void SetMainCamera(Entity entity);
+
 	public:
 		entt::registry m_Registry;
 
 	protected:
 		DynamicArray<ComponentEntry> m_ComponentEntries;
 		DynamicArray<SystemEntry> m_SystemEntries;
+		Entity m_MainCamera;
 	};
 }
 

@@ -70,16 +70,12 @@ namespace ecs
 
 	ecs::Entity EntityWorld::GetMainCameraEntity()
 	{
-		auto view = GetAllEntitiesWith<component::CameraComponent>();
-		for (auto entity : view)
-		{
-			auto& comp = view.get<component::CameraComponent>(entity);
-			if (comp.Primary)
-				return entity;
-		}
+		return m_MainCamera;
+	}
 
-		return entt::null;
-		
+	void EntityWorld::SetMainCamera(Entity entity)
+	{
+		m_MainCamera = entity;
 	}
 
 }

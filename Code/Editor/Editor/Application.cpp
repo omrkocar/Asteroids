@@ -20,6 +20,7 @@ Application::~Application()
 
 void Application::Init()
 {
+
 	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
 	m_EntityWorld.RegisterSystem<ecs::SceneEditor>();
@@ -35,6 +36,7 @@ void Application::Destroy()
 void Application::Register()
 {
 	Saz::Application::Register();
+
 }
 
 void Application::Update(const Saz::GameTime& gameTime)

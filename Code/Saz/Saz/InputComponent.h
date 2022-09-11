@@ -18,6 +18,7 @@ namespace component
 		bool IsKeyReleased(Input::MouseCode key) const;
 
 		const vec2& GetMousePosition() { return m_MousePosition; }
+		const vec2& GetMouseDelta() { return m_MouseDelta; }
 
 		Set<Input::KeyCode> m_KeyboardPrevious;
 		Set<Input::KeyCode> m_KeyboardCurrent;
@@ -26,5 +27,10 @@ namespace component
 
 		vec2 m_MouseDelta;
 		vec2 m_MousePosition;
+	};
+
+	struct MouseScrollOneFrameComponent
+	{
+		float YOffset = 0.0f;
 	};
 }

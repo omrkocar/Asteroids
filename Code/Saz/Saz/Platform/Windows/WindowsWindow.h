@@ -15,7 +15,10 @@ namespace Saz
 		explicit WindowsWindow(const WindowProps& props);
 		virtual ~WindowsWindow() override;
 
+
+		virtual void PostInit() override;
 		void OnUpdate(const GameTime& gameTime) override;
+		virtual void Shutdown() override;
 
 		virtual void SetVSync(bool enabled);
 		virtual bool IsVSync() const;
@@ -36,10 +39,8 @@ namespace Saz
 
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
-		virtual void Shutdown() override;
-
 	private:
-		virtual void Init(const WindowProps& props);
+		void Init(const WindowProps& props);
 
 	private:
 		GLFWwindow* m_Window;

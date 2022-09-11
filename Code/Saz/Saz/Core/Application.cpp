@@ -45,7 +45,6 @@ namespace Saz
 	void Application::Init()
 	{
 		m_EntityWorld.Init();
-
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -64,7 +63,7 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_EntityWorld.RegisterComponent<component::CameraComponent>();
+		m_EntityWorld.RegisterComponent<component::EditorCameraComponent>();
 		m_EntityWorld.RegisterComponent<component::InputComponent>();
 		m_EntityWorld.RegisterComponent<component::MovementComponent>();
 		m_EntityWorld.RegisterComponent<component::NameComponent>();
@@ -75,6 +74,7 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::LoadSceneRequestOneFrameComponent>();
 		m_EntityWorld.RegisterComponent<component::SaveSceneRequestOneFrameComponent>();
 		m_EntityWorld.RegisterComponent<component::NewSceneRequestOneFrameComponent>();
+		m_EntityWorld.RegisterComponent<component::MouseScrollOneFrameComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();

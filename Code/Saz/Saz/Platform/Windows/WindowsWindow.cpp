@@ -8,6 +8,8 @@
 #include <GLFW/glfw3.h>
 #include "Core/KeyCodes.h"
 #include "Rendering/Renderer.h"
+#include "Core/Application.h"
+#include "InputComponent.h"
 
 namespace Saz
 {
@@ -54,6 +56,21 @@ namespace Saz
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 		glfwSetFramebufferSizeCallback(m_Window, OnWindowResized);
+	}
+
+	void WindowsWindow::PostInit()
+	{
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+				auto& world = Saz::Application::Get().GetWorld();
+				if (!world.HasComponent<component::MouseScrollOneFrameComponent>(world.GetMainCameraEntity()))
+				{
+					auto& scrollComponent = world.AddComponent<component::MouseScrollOneFrameComponent>(world.GetMainCameraEntity());
+					scrollComponent.YOffset = (float)yOffset;
+				}		
+			});
 	}
 
 	void WindowsWindow::Shutdown()

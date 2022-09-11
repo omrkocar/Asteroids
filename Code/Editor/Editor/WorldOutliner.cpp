@@ -49,7 +49,8 @@ namespace ecs
 		{
 			if (ImGui::MenuItem("Create Empty Object"))
 			{
-				CreateBaseEntity();
+				auto entity = CreateBaseEntity();
+				m_SelectedEntity = entity;
 			}
 			
 			ImGui::EndPopup();

@@ -9,8 +9,9 @@ namespace component
 	{
 		String Name = {};
 		String Path = {};
-		glm::vec2 m_SceneSize;
+		glm::vec2 SceneSize;
 		bool IsFocused;
+		bool IsHovered;
 	};
 
 	struct NewSceneRequestOneFrameComponent

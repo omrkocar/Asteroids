@@ -23,6 +23,7 @@ namespace ecs
 
 
 		bool IsViewportFocused() const { return m_ViewportFocused; }
+		bool IsViewportHovered() const { return m_ViewPortHovered; }
 
 	private:
 		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
