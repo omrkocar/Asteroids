@@ -55,12 +55,6 @@ project "Saz"
 		"%{IncludeDir.yaml_cpp}",
 	}
 
-	libdirs
-	{
-		"%{wks.location}/Build/Core/%{cfg.buildcfg}_%{cfg.platform}/",
-		"%{wks.location}/Build/ImGui/%{cfg.buildcfg}_%{cfg.platform}/",
-	}
-
 	links {
 		"Core",
 		"ImGui",

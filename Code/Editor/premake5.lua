@@ -39,11 +39,6 @@ project "Editor"
 		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
 	}
 
-	libdirs{
-		"%{wks.location}/3rdParty/",
-		"%{wks.location}/Build/Saz/%{cfg.buildcfg}_%{cfg.platform}/",
-	}
-
 	links 
 	{
 		"Saz",

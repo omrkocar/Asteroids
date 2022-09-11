@@ -28,11 +28,6 @@ project "Game"
 		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
 	}
 
-	libdirs
-	{
-		"%{wks.location}/Build/Saz/%{cfg.buildcfg}_%{cfg.platform}/",
-	}
-
 	links 
 	{
 		"Saz",

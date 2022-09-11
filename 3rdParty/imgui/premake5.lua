@@ -6,8 +6,8 @@ project "ImGui"
 
 	files
 	{
-		"*.cpp",
-		"*.h",
+		"imgui/*.cpp",
+		"imgui/*.h",
 		"%{wks.location}/3rdParty/imgui/premake5.*"
 	}
 
@@ -16,8 +16,3 @@ project "ImGui"
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/imgui/imgui",
 	}
-
-    defines
-    {
-         "IMGUI_API=__declspec(dllexport)"
-    }
