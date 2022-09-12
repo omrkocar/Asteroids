@@ -8,15 +8,15 @@
 
 namespace ecs
 {	
-	SceneSystem::SceneSystem()
-	{
-
-	}
+	constexpr char* strLastOpenScene = "LastOpenScene.txt";
 
 	void SceneSystem::Init()
 	{
-		m_SceneEntity = m_World->CreateEntity();
-		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(m_SceneEntity);
+		auto sceneEntity = m_World->CreateEntity();
+		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(sceneEntity);
+
+		Saz::SceneSerializer serializer(*m_World);
+		serializer.DeserializeLastOpenScene(strLastOpenScene);
 	}
 
 	void SceneSystem::PostInit()
@@ -26,7 +26,9 @@ namespace ecs
 
 	void SceneSystem::Destroy()
 	{
-
+		Saz::SceneSerializer serializer(*m_World);
+		auto& sceneComp = m_World->GetSingleComponent<component::LoadedSceneComponent>();
+		serializer.SerializeLastOpenScene(strLastOpenScene, sceneComp.Path);
 	}
 
 	void SceneSystem::Update(const Saz::GameTime& gameTime)
@@ -91,7 +93,7 @@ namespace ecs
 
 	void SceneSystem::UpdateWindowName(const String& scenePath)
 	{
-		auto& scene = m_World->GetComponent<component::LoadedSceneComponent>(m_SceneEntity);
+		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 		scene.Path = scenePath;
 		String name = "Empty Scene";
 		if (scenePath.empty() == false)

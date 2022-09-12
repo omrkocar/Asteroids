@@ -13,6 +13,7 @@ Entities:
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
+        Distance: 6.60785723
   - Entity: 12837192831273
     NameComponent:
       Name: Square

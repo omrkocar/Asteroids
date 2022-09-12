@@ -14,7 +14,7 @@ namespace Saz {
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
-		void Setup(float fov, float aspectRatio, float nearClip, float farClip, float yaw = 0.0f, float pitch = 0.0f);
+		void Setup(float fov, float aspectRatio, float nearClip, float farClip, float yaw = 0.0f, float pitch = 0.0f, float distance = 10.0f);
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }

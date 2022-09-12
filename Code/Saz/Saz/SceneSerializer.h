@@ -15,6 +15,9 @@ namespace Saz
 		bool Deserialize(const String& filepath);
 		bool DeserializeRuntime(const String& filepath);
 
+		void SerializeLastOpenScene(const String& filepath, const String& lastOpenScenePath);
+		void DeserializeLastOpenScene(const String& filepath);
+
 	private:
 		ecs::EntityWorld& m_World;
 	};

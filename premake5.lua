@@ -1,8 +1,6 @@
 -----------------------------------------------------
 -- Workspace
 -----------------------------------------------------
-include "solution_items.lua"
-
 workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }

@@ -155,6 +155,7 @@ namespace Saz
 			out << YAML::Key << "FOV" << YAML::Value << camera.GetFOV();
 			out << YAML::Key << "NearClip" << YAML::Value << camera.GetNearClip();
 			out << YAML::Key << "FarClip" << YAML::Value << camera.GetFarClip();
+			out << YAML::Key << "Distance" << YAML::Value << camera.GetDistance();
 			out << YAML::EndMap; // Camera
 
 			out << YAML::EndMap; // CameraComponent
@@ -269,7 +270,8 @@ namespace Saz
 					float farClip = cameraProps["FarClip"].as<float>();
 					float yaw = cameraProps["Yaw"].as<float>();
 					float pitch = cameraProps["Pitch"].as<float>();
-					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch);
+					float distance = cameraProps["Distance"].as<float>();
+					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch, distance);
 					m_World.SetMainCamera(deserializedEntity);
 					isSceneEntity = false;
 				}
@@ -311,6 +313,35 @@ namespace Saz
 		// Not implemented
 		SAZ_CORE_ASSERT(false, "Not implemented");
 		return false;
+	}
+
+	void SceneSerializer::SerializeLastOpenScene(const String& filepath, const String& lastOpenScenePath)
+	{
+		YAML::Emitter out;
+		out << YAML::BeginMap;
+		out << YAML::Key << "LastOpenScene" << YAML::Value << lastOpenScenePath;
+
+		out << YAML::EndMap;
+
+		std::ofstream fout(filepath);
+		fout << out.c_str();
+	}
+
+	void SceneSerializer::DeserializeLastOpenScene(const String& filepath)
+	{
+		std::ifstream stream(filepath);
+		std::stringstream strStream;
+		if (!strStream.good())
+			return;
+
+		strStream << stream.rdbuf();
+
+		YAML::Node data = YAML::Load(strStream.str());
+		if (!data["LastOpenScene"])
+			return;
+
+		std::string sceneName = data["LastOpenScene"].as<std::string>();
+		Deserialize(sceneName);
 	}
 
 }
