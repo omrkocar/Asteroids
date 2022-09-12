@@ -18,6 +18,9 @@ namespace Saz
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
+
+		// Editor-only
+		int EntityID = 0;
 	};
 
 	struct Renderer2DData
@@ -55,11 +58,12 @@ namespace Saz
 
 		s_RenderData.QuadVertexBuffer = Saz::VertexBuffer::Create(s_RenderData.MaxVertices * sizeof(QuadVertex));
 		s_RenderData.QuadVertexBuffer->SetLayout({
-			{ Saz::ShaderDataType::Float3,	"a_Position" },
-			{ Saz::ShaderDataType::Float4,	"a_Color" },
-			{ Saz::ShaderDataType::Float2,	"a_TexCoord" },
-			{ Saz::ShaderDataType::Float,	"a_TexIndex" },
-			{ Saz::ShaderDataType::Float,	"a_TilingFactor" },
+			{ Saz::ShaderDataType::Float3,	"a_Position"		},
+			{ Saz::ShaderDataType::Float4,	"a_Color"			},
+			{ Saz::ShaderDataType::Float2,	"a_TexCoord"		},
+			{ Saz::ShaderDataType::Float,	"a_TexIndex"		},
+			{ Saz::ShaderDataType::Float,	"a_TilingFactor"	},
+			{ Saz::ShaderDataType::Int,		"a_EntityID"		}
 			});
 		s_RenderData.QuadVertexArray->AddVertexBuffer(s_RenderData.QuadVertexBuffer);
 
@@ -204,7 +208,7 @@ namespace Saz
 		DrawQuad(transform, texture, tilingFactor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		constexpr size_t quadVertexCount = 4;
 		const float textureIndex = 0.0f; // White Texture
@@ -221,6 +225,7 @@ namespace Saz
 			s_RenderData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_RenderData.QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_RenderData.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_RenderData.QuadVertexBufferPtr->EntityID = entityID;
 			s_RenderData.QuadVertexBufferPtr++;
 		}
 
@@ -229,7 +234,7 @@ namespace Saz
 		s_RenderData.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor /*= glm::vec4(1.0f)*/)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		SAZ_PROFILE_FUNCTION();
 
@@ -265,6 +270,7 @@ namespace Saz
 			s_RenderData.QuadVertexBufferPtr->Color = tintColor;
 			s_RenderData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_RenderData.QuadVertexBufferPtr->TexIndex = textureIndex;
+			s_RenderData.QuadVertexBufferPtr->EntityID = entityID;
 			s_RenderData.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 			s_RenderData.QuadVertexBufferPtr++;
 		}
@@ -362,6 +368,11 @@ namespace Saz
 		s_RenderData.QuadIndexCount += 6;
 
 		s_RenderData.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, component::SpriteComponent& src, int entityID)
+	{
+		DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::ResetStats()

@@ -30,7 +30,7 @@ namespace Saz
 		return String();
 	}
 
-	String FileDialogs::SaveFile(const char* filter)
+	String FileDialogs::SaveFile(const char* filter, const char* defaultExtension)
 	{
 		OPENFILENAMEA ofn;
 		CHAR szFile[260] = { 0 };
@@ -39,9 +39,10 @@ namespace Saz
 		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrDefExt = defaultExtension;
 		ofn.lpstrFilter = filter;
 		ofn.nFilterIndex = 1;
-		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_OVERWRITEPROMPT;
 
 		if (GetSaveFileNameA(&ofn) == TRUE)
 		{

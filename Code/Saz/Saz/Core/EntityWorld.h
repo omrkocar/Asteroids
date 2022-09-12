@@ -35,6 +35,7 @@ namespace ecs
 		void PostInit();
 		void Destroy();
 
+		void PreUpdate(const Saz::GameTime& gameTime);
 		void Update(const Saz::GameTime& gameTime);
 		void LateUpdate(const Saz::GameTime& gameTime);
 		void ImGuiRender();

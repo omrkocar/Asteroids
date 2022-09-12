@@ -31,6 +31,12 @@ namespace ecs
 		m_ComponentEntries.clear();
 	}
 
+	void EntityWorld::PreUpdate(const Saz::GameTime& gameTime)
+	{
+		for (ecs::SystemEntry& entry : m_SystemEntries)
+			entry.m_System->PreUpdate(gameTime);
+	}
+
 	void EntityWorld::Update(const Saz::GameTime& gameTime)
 	{
 		for (ecs::SystemEntry& entry : m_SystemEntries)

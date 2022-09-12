@@ -25,6 +25,9 @@ namespace ecs
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
+
+		void ProcessInput();
+
 		virtual void ImGuiRender() override;
 
 
@@ -41,6 +44,8 @@ namespace ecs
 		void DrawScene();
 		void DrawProfiler();
 		void DrawMenuBar();
+
+		Entity m_HoveredEntity = entt::null;
 
 	private:
 		WorldOutliner& m_WorldOutliner;

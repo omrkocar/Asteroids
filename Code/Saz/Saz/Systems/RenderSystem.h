@@ -27,7 +27,9 @@ namespace ecs
 		~RenderSystem();
 
 		virtual void Init() override;
+		virtual void PreUpdate(const Saz::GameTime& gameTime) override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
+		virtual void LateUpdate(const Saz::GameTime& gameTime);
 
 	private:
 		Saz::WindowBase& m_Window;

@@ -1,14 +1,27 @@
 Scene: Untitled
 Entities:
   - Entity: 12837192831273
-    NameComponent:
-      Name: Top
     TransformComponent:
-      Position: [0, 0.5, 0]
-      Rotation: [1.57079637, 0.785398185, 0]
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    EditorCameraComponent:
+      EditorCamera:
+        Pitch: 0.436798722
+        Yaw: 12.5135822
+        AspectRatio: 1.31880903
+        FOV: 30
+        NearClip: 0.100000001
+        FarClip: 1000
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Left
+    TransformComponent:
+      Position: [-0.349999994, 0, 0.349999994]
+      Rotation: [0, -0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [0.749019623, 0.501960814, 0.0588235296, 1]
+      Color: [0.847058833, 0.541176498, 0, 1]
   - Entity: 12837192831273
     NameComponent:
       Name: Right
@@ -20,23 +33,10 @@ Entities:
       Color: [0.411764711, 0.286274523, 0.0274509806, 1]
   - Entity: 12837192831273
     NameComponent:
-      Name: Left
+      Name: Top
     TransformComponent:
-      Position: [-0.349999994, 0, 0.349999994]
-      Rotation: [0, -0.785398185, 0]
+      Position: [0, 0.5, 0]
+      Rotation: [1.57079637, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [0.847058833, 0.541176498, 0, 1]
-  - Entity: 12837192831273
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    EditorCameraComponent:
-      EditorCamera:
-        Pitch: 0.393598676
-        Yaw: 14.16959
-        AspectRatio: 1.31880903
-        FOV: 30
-        NearClip: 0.100000001
-        FarClip: 1000
+      Color: [0.749019623, 0.501960814, 0.0588235296, 1]

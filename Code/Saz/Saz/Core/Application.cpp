@@ -96,7 +96,9 @@ namespace Saz
 
 		if (!m_Minimized)
 		{
+			m_EntityWorld.PreUpdate(gameTime);
 			m_EntityWorld.Update(gameTime);
+			m_EntityWorld.LateUpdate(gameTime);
 		}
 
 		m_ImGuiLayer->Begin();
@@ -122,7 +124,6 @@ namespace Saz
 			m_LastFrameTime = gameTime.m_TotalTime;
 
 			Update(gameTime);
-			m_EntityWorld.LateUpdate(gameTime);
 		}
 	}
 

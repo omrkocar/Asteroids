@@ -32,6 +32,7 @@ namespace ecs
 		Entity m_FrameBufferEntity = m_World->CreateEntity();
 		auto& frameBufferComp = m_World->AddComponent<component::FrameBufferComponent>(m_FrameBufferEntity);
 		Saz::FrameBufferSpecification fbSpec;
+		fbSpec.Attachments = { Saz::FrameBufferTextureFormat::RGBA8, Saz::FrameBufferTextureFormat::RED_INTEGER, Saz::FrameBufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		frameBufferComp.FrameBuffer = Saz::FrameBuffer::Create(fbSpec);
@@ -53,25 +54,52 @@ namespace ecs
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
-			const auto& frameBufferComp = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity);
-			Saz::FrameBufferSpecification spec = m_FrameBuffer->GetSpecification();
+			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
+			Saz::FrameBufferSpecification spec = frameBuffer->GetSpecification();
 			if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
 				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
 			{
 				uint32_t width = (uint32_t)m_SceneSize.x;
 				uint32_t height = (uint32_t)m_SceneSize.y;
-				m_FrameBuffer->Resize(width, height);
+				frameBuffer->Resize(width, height);
 
 				auto& world = Saz::Application::Get().GetWorld();
 				ecs::Entity entity = world.CreateEntity();
 				world.AddComponent<component::WindowResizedOneFrameComponent>(entity, width, height);
 			}
+
+			auto [mx, my] = ImGui::GetMousePos();
+			mx -= m_ViewportBounds[0].x;
+			my -= m_ViewportBounds[0].y;
+			glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+			my = viewportSize.y - my;
+			int mouseX = (int)mx;
+			int mouseY = (int)my;
+
+			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+			{
+				int pixelData = m_FrameBuffer->ReadPixel(1, mouseX, mouseY);
+				m_HoveredEntity = pixelData != -1 ? (entt::entity)pixelData : entt::null;
+			}
 		}
 
+		ProcessInput();
+	}
+
+
+	void SceneEditor::ProcessInput()
+	{
 		const auto inputView = m_World->GetAllEntitiesWith<component::InputComponent>();
 		for (const auto& inputEntity : inputView)
 		{
 			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
+
+			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
+			{
+				if (m_ViewPortHovered && !ImGuizmo::IsOver() && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
+					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
+			}
+
 
 			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
 			bool shift = inputComp.IsKeyHeld(Input::KeyCode::LeftShift) || inputComp.IsKeyHeld(Input::KeyCode::RightShift);
@@ -86,7 +114,7 @@ namespace ecs
 						SaveScene();
 				}
 			}
-			
+
 			if (inputComp.IsKeyHeld(Input::KeyCode::N))
 			{
 				if (control)
@@ -296,7 +324,7 @@ namespace ecs
 		scenePath = m_World->GetSingleComponent<component::LoadedSceneComponent>().Path;
 		if (scenePath.empty())
 		{
-			scenePath = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0");
+			scenePath = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
 		}
 
 		auto entity = m_World->CreateEntity();
@@ -306,7 +334,7 @@ namespace ecs
 
 	void SceneEditor::SaveSceneAs()
 	{
-		const String& path = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0");
+		const String& path = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
 		if (!path.empty())
 		{
 			auto entity = m_World->CreateEntity();

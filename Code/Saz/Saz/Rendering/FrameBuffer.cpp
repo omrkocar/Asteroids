@@ -1,5 +1,5 @@
 #include "SazPCH.h"
-#include "Framebuffer.h"
+#include "FrameBuffer.h"
 #include "Platform/OpenGL/OpenGLFrameBuffer.h"
 #include "Renderer.h"
 
