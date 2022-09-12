@@ -31,7 +31,7 @@ namespace ecs
 
 	}
 
-	void RenderSystem::PreUpdate(const Saz::GameTime& gameTime)
+	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
 
@@ -40,25 +40,11 @@ namespace ecs
 		{
 			const auto& frameBuffer = registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
 
-			// Render
-			{
-				Saz::Renderer2D::ResetStats();
-				frameBuffer->Bind();
-				Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
-				Saz::RenderCommand::Clear();
-				frameBuffer->ClearColorAttachment(1, -1);
-			}
-		}
-	}
-
-	void RenderSystem::Update(const Saz::GameTime& gameTime)
-	{
-		auto& registry = m_World->m_Registry;
-
-		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
-		for (const auto& frameBufferEntity : frameBufferView)
-		{
-			const auto& frameBufferComp = registry.get<component::FrameBufferComponent>(frameBufferEntity);
+			Saz::Renderer2D::ResetStats();
+			frameBuffer->Bind();
+			Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+			Saz::RenderCommand::Clear();
+			frameBuffer->ClearColorAttachment(1, -1);
 
 			ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
 			if (m_World->IsAlive(mainCameraEntity))

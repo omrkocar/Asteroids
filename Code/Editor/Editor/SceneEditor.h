@@ -24,6 +24,7 @@ namespace ecs
 		SceneEditor(WorldOutliner& worldOutliner);
 
 		virtual void Init() override;
+		virtual void PreUpdate(const Saz::GameTime& gameTime) override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 		void ProcessInput();
@@ -33,11 +34,12 @@ namespace ecs
 
 		bool IsViewportFocused() const { return m_ViewportFocused; }
 		bool IsViewportHovered() const { return m_ViewPortHovered; }
-
+ 
 	private:
 		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
 		void SaveScene();
 		void SaveSceneAs();
 

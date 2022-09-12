@@ -45,13 +45,7 @@ namespace ecs
 	{
 		if (!m_World->IsAlive(m_World->GetMainCameraEntity()))
 		{
-			auto mainCamera = m_World->CreateEntity();
-			auto& cameraComp = m_World->AddComponent<component::EditorCameraComponent>(mainCamera);
-			cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f);
-			m_World->AddComponent<component::InputComponent>(mainCamera);
-			m_World->AddComponent<component::TransformComponent>(mainCamera);
-			m_World->AddComponent<component::SceneEntityComponent>(mainCamera);
-			m_World->SetMainCamera(mainCamera);
+			m_World->CreateMainCamera();
 		}
 	}
 
@@ -106,6 +100,5 @@ namespace ecs
 
 		auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
 		cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);
-		
 	}
 }

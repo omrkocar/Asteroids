@@ -82,8 +82,8 @@ namespace ecs
 
 		void DestroyAllEntities();
 
+		Entity CreateMainCamera();
 		ecs::Entity GetMainCameraEntity();
-
 		void SetMainCamera(Entity entity);
 
 	public:

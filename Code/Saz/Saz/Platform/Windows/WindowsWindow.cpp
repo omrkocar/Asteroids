@@ -69,7 +69,7 @@ namespace Saz
 				{
 					auto& scrollComponent = world.AddComponent<component::MouseScrollOneFrameComponent>(world.GetMainCameraEntity());
 					scrollComponent.YOffset = (float)yOffset;
-				}		
+				}
 			});
 	}
 

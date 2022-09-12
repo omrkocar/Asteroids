@@ -18,9 +18,12 @@
 #include <imguizmo/ImGuizmo.h>
 #include "Saz/TransformComponent.h"
 #include "glm/gtc/type_ptr.inl"
+#include <filesystem>
 
 namespace ecs
 {
+	extern const std::filesystem::path g_DataPath;
+
 	SceneEditor::SceneEditor(WorldOutliner& worldOutliner)
 		: m_WorldOutliner(worldOutliner)
 	{
@@ -37,8 +40,26 @@ namespace ecs
 		fbSpec.Height = 720;
 		frameBufferComp.FrameBuffer = Saz::FrameBuffer::Create(fbSpec);
 		m_FrameBuffer = frameBufferComp.FrameBuffer;
+	}
 
-		m_World->m_Registry.on_construct<component::CameraComponent>().connect<&SceneEditor::OnCameraComponentAdded>(this);
+	void SceneEditor::PreUpdate(const Saz::GameTime& gameTime)
+	{
+		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
+		for (const auto& frameBufferEntity : frameBufferView)
+		{
+			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
+			const Saz::FrameBufferSpecification& spec = frameBuffer->GetSpecification();
+			if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
+				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
+			{
+				uint32_t width = (uint32_t)m_SceneSize.x;
+				uint32_t height = (uint32_t)m_SceneSize.y;
+				frameBuffer->Resize(width, height);
+
+				ecs::Entity entity = m_World->CreateEntity();
+				m_World->AddComponent<component::WindowResizedOneFrameComponent>(entity, (uint32_t)width, (uint32_t)height);
+			}
+		}
 	}
 
 	void SceneEditor::Update(const Saz::GameTime& gameTime)
@@ -55,18 +76,6 @@ namespace ecs
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
 			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
-			Saz::FrameBufferSpecification spec = frameBuffer->GetSpecification();
-			if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
-				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
-			{
-				uint32_t width = (uint32_t)m_SceneSize.x;
-				uint32_t height = (uint32_t)m_SceneSize.y;
-				frameBuffer->Resize(width, height);
-
-				auto& world = Saz::Application::Get().GetWorld();
-				ecs::Entity entity = world.CreateEntity();
-				world.AddComponent<component::WindowResizedOneFrameComponent>(entity, width, height);
-			}
 
 			auto [mx, my] = ImGui::GetMousePos();
 			mx -= m_ViewportBounds[0].x;
@@ -78,7 +87,7 @@ namespace ecs
 
 			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 			{
-				int pixelData = m_FrameBuffer->ReadPixel(1, mouseX, mouseY);
+				int pixelData = frameBuffer->ReadPixel(1, mouseX, mouseY);
 				m_HoveredEntity = pixelData != -1 ? (entt::entity)pixelData : entt::null;
 			}
 		}
@@ -171,11 +180,23 @@ namespace ecs
 		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		m_SceneSize = { viewportPanelSize.x, viewportPanelSize.y };
+		if (m_SceneSize.x != viewportPanelSize.x || m_SceneSize.y != viewportPanelSize.y)
+		{
+			m_SceneSize = { viewportPanelSize.x, viewportPanelSize.y };
+		}
 
 		uint32_t textureId = m_FrameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureId, ImVec2{ m_SceneSize.x, m_SceneSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(std::filesystem::path(g_DataPath) / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
 
 		// Gizmos
 		Entity selectedEntity = m_WorldOutliner.m_SelectedEntity;
@@ -183,8 +204,6 @@ namespace ecs
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
 			auto cameraEntity = m_World->GetMainCameraEntity();
@@ -226,8 +245,8 @@ namespace ecs
 			}
 		}
 
-		ImGui::PopStyleVar();
 		ImGui::End();
+		ImGui::PopStyleVar();
 
 	}
 
@@ -290,14 +309,6 @@ namespace ecs
 		}
 	}
 
-	void SceneEditor::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)
-	{
-		if (m_SceneSize.x == 0 || m_SceneSize.y == 0)
-			return;
-
-		m_World->GetComponent<component::CameraComponent>(entity).Camera.SetViewportSize(m_SceneSize.x, m_SceneSize.y);
-	}
-
 	void SceneEditor::NewScene()
 	{
 		auto entity = m_World->CreateEntity();
@@ -318,10 +329,22 @@ namespace ecs
 		}
 	}
 
+	void SceneEditor::OpenScene(const std::filesystem::path& path)
+	{
+		if (path.extension().string() != ".saz")
+			return;
+
+
+		auto entity = m_World->CreateEntity();
+		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(entity);
+		sceneComponent.Path = path.string();
+
+		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
+	}
+
 	void SceneEditor::SaveScene()
 	{
-		String scenePath;
-		scenePath = m_World->GetSingleComponent<component::LoadedSceneComponent>().Path;
+		String scenePath = m_World->GetSingleComponent<component::LoadedSceneComponent>().Path;
 		if (scenePath.empty())
 		{
 			scenePath = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
@@ -342,5 +365,4 @@ namespace ecs
 			sceneComponent.Path = path;
 		}
 	}
-
 }

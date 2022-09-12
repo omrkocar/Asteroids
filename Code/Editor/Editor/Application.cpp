@@ -4,13 +4,13 @@
 
 #include "Editor/WorldOutliner.h"
 #include "Editor/Inspector.h"
-#include "Editor/EditorLayer.h"
 #include "SceneEditor.h"
+#include "ContentBrowser.h"
 
 Application::Application()
 	: Saz::Application("Saz Editor")
 {
-	//PushLayer(new EditorLayer());
+	
 }
 
 Application::~Application()
@@ -35,6 +35,7 @@ void Application::Register()
 	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
 	m_EntityWorld.RegisterSystem<ecs::SceneEditor>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
+	m_EntityWorld.RegisterSystem<ecs::ContentBrowser>();
 }
 
 void Application::Update(const Saz::GameTime& gameTime)

@@ -17,8 +17,6 @@ namespace ecs
 	{
 		m_SceneEntity = m_World->CreateEntity();
 		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(m_SceneEntity);
-
-		//LoadScene(entt::null, "C:/Dev/SazEngine/Data/Scenes/3DCube.saz");
 	}
 
 	void SceneSystem::PostInit()
@@ -60,6 +58,7 @@ namespace ecs
 	{
 		m_World->DestroyEntitesWith<component::SceneEntityComponent>();
 		m_World->DestroyEntity(newSceneEntity);
+		m_World->CreateMainCamera();
 		UpdateWindowName("");
 	}
 
@@ -105,5 +104,4 @@ namespace ecs
 		auto& window = Saz::Application::Get().GetWindow();
 		window.SetTitle(String("Saz Editor") + " - " + scene.Name);
 	}
-
 }

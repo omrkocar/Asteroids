@@ -138,7 +138,7 @@ namespace Saz::imgui
 	class Log
 	{
 	public:
-		Log(const char* fileName = "C:/Dev/SazEngine/ImGuiLog.txt");
+		Log(const char* fileName = "../../ImGuiLog.txt");
 		~Log();
 
 		inline static void NextLine()

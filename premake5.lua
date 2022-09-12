@@ -1,6 +1,8 @@
 -----------------------------------------------------
 -- Workspace
 -----------------------------------------------------
+include "solution_items.lua"
+
 workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }
@@ -14,6 +16,11 @@ workspace "Saz"
 
 	targetdir ("%{wks.location}/Build/%{prj.name}/" .. outputdir )
 	objdir ("%{wks.location}/Intermediate/%{prj.name}/" .. outputdir)
+
+	solution_items
+	{
+		".editorconfig"
+	}
 	
 	disablewarnings { "26812" }
 
@@ -50,6 +57,15 @@ workspace "Saz"
 	{ 
 		{ ["/"] = { "**premake5.lua" } },
 	}
+
+	filter "system:windows"
+		systemversion "latest"
+		defines{
+			"SAZ_PLATFORM_WINDOWS",
+		}
+
+	filter "files:%{wks.location}/3rdParty/**.cpp"
+		flags { "NoPCH" }
 
 	IncludeDir = {}
 	IncludeDir["ImGui"] = "%{wks.location}/3rdParty/imgui"

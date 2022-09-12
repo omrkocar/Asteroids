@@ -29,6 +29,13 @@ namespace Saz {
 		UpdateView();
 	}
 
+	void EditorCamera::SetViewportSize(float width, float height)
+	{
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+		UpdateProjection();
+	}
+
 	void EditorCamera::UpdateProjection()
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;

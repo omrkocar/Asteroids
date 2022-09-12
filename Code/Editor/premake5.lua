@@ -5,10 +5,9 @@
 project "Editor"
 	kind		"ConsoleApp"
 	dependson { "Saz" }
-	location	"%{wks.location}/Projects/Editor"
 	pchheader "EditorPCH.h"
 	pchsource "Editor/EditorPCH.cpp"
-	staticruntime "on"
+	staticruntime "off"
 
 	vpaths 
 	{ 
@@ -23,6 +22,7 @@ project "Editor"
 		"%{wks.location}/Data/Shaders/*.vert",
 		"%{wks.location}/Data/Shaders/*.gLsl",
 		"%{wks.location}/Data/Shaders/*.frag",
+		"%{wks.location}/Data/**",
 	}
 
 	includedirs {
@@ -31,6 +31,7 @@ project "Editor"
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
 		"%{wks.location}/Code/Editor/",
+		"%{wks.location}",
 		"%{wks.location}/3rdParty/GLFW/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/spdlog/include",
@@ -47,7 +48,3 @@ project "Editor"
 
 	filter "system:windows"
 		systemversion "latest"
-		defines
-		{
-			"SAZ_PLATFORM_WINDOWS"
-		}

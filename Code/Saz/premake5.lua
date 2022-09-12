@@ -54,16 +54,4 @@ project "Saz"
 		"ImGuizmo",
 		"yaml-cpp",
 		"opengl32.lib"
-	}
-
-	filter "system:windows"
-		systemversion "latest"
-
-		defines{
-			"SAZ_PLATFORM_WINDOWS",
-		}
-
-	filter "files:%{wks.location}/3rdParty/**.cpp"
-		flags { "NoPCH" }
-
-	
+	}	

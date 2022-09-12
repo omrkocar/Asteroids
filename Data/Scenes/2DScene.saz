@@ -1,0 +1,33 @@
+Scene: Untitled
+Entities:
+  - Entity: 12837192831273
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    EditorCameraComponent:
+      EditorCamera:
+        Pitch: 0.00999999978
+        Yaw: 0.00999999978
+        AspectRatio: 1.778
+        FOV: 30
+        NearClip: 0.100000001
+        FarClip: 1000
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Square
+    TransformComponent:
+      Position: [0, -0.722652912, 0]
+      Rotation: [0, -0, 0]
+      Scale: [0.5, 0.5, 0.610000014]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Ground
+    TransformComponent:
+      Position: [0, -1.06430972, 0]
+      Rotation: [0, -0, 0]
+      Scale: [3.21320677, 0.166764736, 1]
+    SpriteComponent:
+      Color: [0.723404288, 0.197012231, 0.197012231, 1]

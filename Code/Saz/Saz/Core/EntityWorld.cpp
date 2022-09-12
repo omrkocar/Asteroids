@@ -4,6 +4,9 @@
 #include "Saz/Systems/System.h"
 #include "Saz/NameComponent.h"
 #include "CameraComponent.h"
+#include "InputComponent.h"
+#include "TransformComponent.h"
+#include "SceneComponent.h"
 
 namespace ecs
 {
@@ -72,6 +75,18 @@ namespace ecs
 		m_Registry.each([this](auto entity) {
 			m_Registry.destroy(entity);
 		});
+	}
+
+	ecs::Entity EntityWorld::CreateMainCamera()
+	{
+		auto mainCamera = CreateEntity();
+		auto& cameraComp = AddComponent<component::EditorCameraComponent>(mainCamera);
+		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f, 0.01f, 0.01f);
+		AddComponent<component::InputComponent>(mainCamera);
+		AddComponent<component::TransformComponent>(mainCamera);
+		AddComponent<component::SceneEntityComponent>(mainCamera);
+		SetMainCamera(mainCamera);
+		return mainCamera;
 	}
 
 	ecs::Entity EntityWorld::GetMainCameraEntity()

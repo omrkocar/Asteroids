@@ -7,6 +7,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.inl"
 #include "EditorCamera.h"
+#include "UniformBuffer.h"
 
 namespace Saz
 {
@@ -45,6 +46,13 @@ namespace Saz
 		glm::vec4 QuadVertexPositions[4];
 
 		Renderer2D::Statistics Stats;
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		Ref<UniformBuffer> CameraUniformBuffer;
 	};
 
 	static Renderer2DData s_RenderData;
@@ -98,10 +106,10 @@ namespace Saz
 			samplers[i] = i;
 		}
 
-		s_RenderData.TextureShader = Shader::Create("C:/Dev/SazEngine/Data/Shaders/Texture.glsl");
-		s_RenderData.TextureShader->Bind();
+		s_RenderData.TextureShader = Shader::Create("../../Data/Shaders/Texture.glsl");
+		/*s_RenderData.TextureShader->Bind();
 
-		s_RenderData.TextureShader->SetIntArray("u_Textures", samplers, s_RenderData.MaxTextureSlots);
+		s_RenderData.TextureShader->SetIntArray("u_Textures", samplers, s_RenderData.MaxTextureSlots);*/
 		
 
 		s_RenderData.TextureSlots[0] = s_RenderData.WhiteTexture;
@@ -110,6 +118,8 @@ namespace Saz
 		s_RenderData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 		s_RenderData.QuadVertexPositions[2] = { 0.5f,  0.5f,  0.0f, 1.0f };
 		s_RenderData.QuadVertexPositions[3] = { -0.5f, 0.5f,  0.0f, 1.0f };
+
+		s_RenderData.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -123,8 +133,8 @@ namespace Saz
 
 		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
 
-		s_RenderData.TextureShader->Bind();
-		s_RenderData.TextureShader->SetMat4("u_ViewProjection", viewProj);
+		s_RenderData.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
+		s_RenderData.CameraUniformBuffer->SetData(&s_RenderData.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
 		s_RenderData.QuadIndexCount = 0;
 		s_RenderData.QuadVertexBufferPtr = s_RenderData.QuadVertexBufferBase;
@@ -138,8 +148,8 @@ namespace Saz
 
 		glm::mat4 viewProj = camera.GetViewProjection();
 
-		s_RenderData.TextureShader->Bind();
-		s_RenderData.TextureShader->SetMat4("u_ViewProjection", viewProj);
+		s_RenderData.CameraBuffer.ViewProjection = camera.GetViewProjection();
+		s_RenderData.CameraUniformBuffer->SetData(&s_RenderData.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
 		s_RenderData.QuadIndexCount = 0;
 		s_RenderData.QuadVertexBufferPtr = s_RenderData.QuadVertexBufferBase;
@@ -164,6 +174,7 @@ namespace Saz
 		for (uint32_t i = 0; i < s_RenderData.TextureSlotIndex; i++)
 			s_RenderData.TextureSlots[i]->Bind(i);
 
+		s_RenderData.TextureShader->Bind();
 		RenderCommand::DrawIndexed(s_RenderData.QuadVertexArray, s_RenderData.QuadIndexCount);
 		s_RenderData.Stats.DrawCalls++;
 	}

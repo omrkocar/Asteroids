@@ -29,13 +29,13 @@ namespace Saz
 		SetupImGuiStyle();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("C:/Dev/SazEngine/Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("C:/Dev/SazEngine/Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 18.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 18.0f);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-		io.IniFilename = "C:/Dev/SazEngine/3rdParty/imgui/imgui.ini";
+		io.IniFilename = "../../3rdParty/imgui/imgui.ini";
 
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
