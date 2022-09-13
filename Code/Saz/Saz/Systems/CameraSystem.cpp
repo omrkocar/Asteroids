@@ -62,12 +62,12 @@ namespace ecs
 			return;
 
 		auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity);
-		if (m_World->HasComponent<component::MouseScrollOneFrameComponent>(cameraEntity))
+		const auto scrollView = m_World->GetAllEntitiesWith<component::MouseScrollOneFrameComponent>();
+		for (auto& entity : scrollView)
 		{
-			auto& scrollComponent = m_World->GetComponent<component::MouseScrollOneFrameComponent>(cameraEntity);
+			auto& scrollComponent = m_World->GetComponent<component::MouseScrollOneFrameComponent>(entity);
 
 			cameraComponent.Camera.OnMouseScroll(scrollComponent.YOffset);
-			m_World->RemoveComponent<component::MouseScrollOneFrameComponent>(cameraEntity);
 		}
 		
 		auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
@@ -86,7 +86,6 @@ namespace ecs
 				cameraComponent.Camera.MouseZoom(delta.y);
 		}
 
-
 		cameraComponent.Camera.UpdateView();
 	}
 
@@ -96,7 +95,7 @@ namespace ecs
 
 	void CameraSystem::OnWindowResized(entt::registry& registry, entt::entity entity)
 	{
-		auto windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
+		auto& windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
 
 		auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
 		cameraComp.Camera.SetViewportSize(windowResizeComp.Width, windowResizeComp.Height);

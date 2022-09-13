@@ -1,1 +1,1 @@
-LastOpenScene: ""
+LastOpenScene: ../../Data\Scenes\3DScene.saz

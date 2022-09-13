@@ -20,8 +20,8 @@ namespace Saz
 		uint32_t Height;
 
 		WindowProps(const String& title = "Saz Engine",
-					uint32_t width = 2560,
-					uint32_t height = 1440)
+					uint32_t width = 1920,
+					uint32_t height = 1080)
 			: Title(title), Width(width), Height(height)
 		{}
 	};

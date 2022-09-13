@@ -5,6 +5,7 @@
 
 #include <imgui/imgui.h>
 #include "Saz/Rendering/Texture.h"
+#include "imgui/imgui_internal.h"
 
 namespace ecs
 {	
@@ -29,7 +30,7 @@ namespace ecs
 
 	void ContentBrowser::ImGuiRender()
 	{
-		ImGui::Begin("Content Browser");
+		ImGui::Begin("Content Browser", nullptr);
 
 		if (m_CurrentDirectory != std::filesystem::path(g_DataPath))
 		{

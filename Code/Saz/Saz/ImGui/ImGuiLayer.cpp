@@ -6,13 +6,14 @@
 #include <Saz/ImGui/ImGuiLog.h>
 #include <GLFW/glfw3.h>
 #include <imguizmo/ImGuizmo.h>
+#include "InputComponent.h"
 
 namespace Saz
 {
 	ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer")
 	{
-
+		
 	}
 
 	ImGuiLayer::~ImGuiLayer()
@@ -34,6 +35,13 @@ namespace Saz
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
 
 		io.IniFilename = "../../3rdParty/imgui/imgui.ini";
 
@@ -61,7 +69,6 @@ namespace Saz
 		ImGui::NewFrame();
 		DockingBegin();
 		ImGuizmo::BeginFrame();
-
 	}
 
 	void ImGuiLayer::End()

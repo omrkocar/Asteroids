@@ -25,7 +25,7 @@ namespace ecs
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-
+		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 	private:
 		Saz::WindowBase& m_Window;
 

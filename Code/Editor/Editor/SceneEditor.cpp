@@ -113,6 +113,9 @@ namespace ecs
 			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
 			bool shift = inputComp.IsKeyHeld(Input::KeyCode::LeftShift) || inputComp.IsKeyHeld(Input::KeyCode::RightShift);
 
+			if (!m_ViewportFocused)
+				return;
+
 			if (inputComp.IsKeyHeld(Input::KeyCode::S))
 			{
 				if (control)

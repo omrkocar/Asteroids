@@ -35,12 +35,6 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_Data.Title = props.Title;
-		m_Data.Width = props.Width;
-		m_Data.Height = props.Height;
-
-		SAZ_CORE_INFO("Creating Window {0} ({1}, {2}", props.Title, props.Width, props.Height);
-
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
@@ -49,12 +43,20 @@ namespace Saz
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		m_Data.Title = props.Title;
+		m_Data.Width = mode->width;
+		m_Data.Height = mode->height;
+
+		SAZ_CORE_INFO("Creating Window {0} ({1}, {2}", props.Title, props.Width, props.Height);
+
+		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(true);
+		SetVSync(false);
 		glfwSetFramebufferSizeCallback(m_Window, OnWindowResized);
 	}
 
@@ -65,11 +67,10 @@ namespace Saz
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				auto& world = Saz::Application::Get().GetWorld();
-				if (!world.HasComponent<component::MouseScrollOneFrameComponent>(world.GetMainCameraEntity()))
-				{
-					auto& scrollComponent = world.AddComponent<component::MouseScrollOneFrameComponent>(world.GetMainCameraEntity());
-					scrollComponent.YOffset = (float)yOffset;
-				}
+				auto entity = world.CreateEntity();
+				
+				auto& scrollComponent = world.AddComponent<component::MouseScrollOneFrameComponent>(entity);
+				scrollComponent.YOffset = (float)yOffset;
 			});
 	}
 
