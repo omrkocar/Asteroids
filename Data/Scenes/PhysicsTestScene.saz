@@ -1,0 +1,35 @@
+Scene: Untitled
+Entities:
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Empty Object
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 12837192831273
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    EditorCameraComponent:
+      EditorCamera:
+        Pitch: 0.00999999978
+        Yaw: 0.00999999978
+        AspectRatio: 1.778
+        FOV: 30
+        NearClip: 0.100000001
+        FarClip: 1000
+        Distance: 10

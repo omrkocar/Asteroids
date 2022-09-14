@@ -70,6 +70,7 @@ workspace "Saz"
 	IncludeDir["stb_image"] = "%{wks.location}/3rdParty/stb_image"
 	IncludeDir["yaml_cpp"] = "%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include"
 	IncludeDir["ImGuizmo"] = "%{wks.location}/3rdParty/imguizmo/"
+	IncludeDir["Box2D"] = "%{wks.location}/3rdParty/box2d/include"
 
 	include "Code/Saz/premake5.lua"
 	include "Code/Core/premake5.lua"

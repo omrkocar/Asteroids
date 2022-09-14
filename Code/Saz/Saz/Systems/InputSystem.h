@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
-#include <Core/KeyCodes.h>
-#include <Core/MouseCodes.h>
+#include <Saz/Core/KeyCodes.h>
+#include <Saz/Core/MouseCodes.h>
 #include <Core/Set.h>
 
 struct GLFWwindow;
@@ -21,13 +21,11 @@ namespace ecs
 	class InputSystem final : public System
 	{
 	public:
-		
 		InputSystem(Saz::WindowBase& window);
 		~InputSystem();
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-		static void OnMouseScroll(GLFWwindow* window, double xOffset, double yOffset);
 	private:
 		Saz::WindowBase& m_Window;
 

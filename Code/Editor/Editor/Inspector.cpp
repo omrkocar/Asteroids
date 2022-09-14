@@ -14,6 +14,7 @@
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui.h>
 #include "Saz/Rendering/Texture.h"
+#include "Saz/PhysicsComponents.h"
 
 namespace
 {
@@ -168,6 +169,8 @@ namespace ecs
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
 		DrawSpriteComponent(entity);
+		DrawRigidbody2DComponent(entity);
+		DrawBoxCollider2DComponent(entity);
 
 		ImGui::PopFont();
 	}
@@ -179,22 +182,49 @@ namespace ecs
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (ImGui::MenuItem("Transform Component"))
+			if (!m_World->HasComponent<component::TransformComponent>(entity))
 			{
-				m_World->AddComponent<component::TransformComponent>(entity);
-				ImGui::CloseCurrentPopup();
+				if (ImGui::MenuItem("Transform Component"))
+				{
+					m_World->AddComponent<component::TransformComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
 			}
 
-			if (ImGui::MenuItem("Camera Component"))
+			if (!m_World->HasComponent<component::CameraComponent>(entity))
 			{
-				m_World->AddComponent<component::CameraComponent>(entity);
-				ImGui::CloseCurrentPopup();
+				if (ImGui::MenuItem("Camera Component"))
+				{
+					m_World->AddComponent<component::CameraComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
 			}
 
-			if (ImGui::MenuItem("Sprite Component"))
+			if (!m_World->HasComponent<component::SpriteComponent>(entity))
 			{
-				m_World->AddComponent<component::SpriteComponent>(entity);
-				ImGui::CloseCurrentPopup();
+				if (ImGui::MenuItem("Sprite Component"))
+				{
+					m_World->AddComponent<component::SpriteComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_World->HasComponent<component::Rigidbody2DComponent>(entity))
+			{
+				if (ImGui::MenuItem("Rigidbody2D Component"))
+				{
+					m_World->AddComponent<component::Rigidbody2DComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
+			if (!m_World->HasComponent<component::BoxCollider2DComponent>(entity))
+			{
+				if (ImGui::MenuItem("BoxCollider2D Component"))
+				{
+					m_World->AddComponent<component::BoxCollider2DComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
 			}
 
 			ImGui::EndPopup();
@@ -316,4 +346,48 @@ namespace ecs
 			});
 
 	}
+
+	void Inspector::DrawRigidbody2DComponent(Entity entity)
+	{
+		DrawComponent<component::Rigidbody2DComponent>(*m_World, "Rigidbody2D Component", entity, [](auto& component)
+			{
+				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
+				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+
+				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+						if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
+						{
+							currentBodyTypeString = bodyTypeStrings[i];
+							component.Type = (component::Rigidbody2DComponent::BodyType)i;
+						}
+
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+
+				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
+			});
+	}
+
+	void Inspector::DrawBoxCollider2DComponent(Entity entity)
+	{
+		DrawComponent<component::BoxCollider2DComponent>(*m_World, "BoxCollider2D Component", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
+				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			});
+
+	}
+
 }

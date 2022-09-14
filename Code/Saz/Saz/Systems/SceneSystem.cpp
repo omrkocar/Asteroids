@@ -16,7 +16,9 @@ namespace ecs
 		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(sceneEntity);
 
 		Saz::SceneSerializer serializer(*m_World);
-		serializer.DeserializeLastOpenScene(strLastOpenScene);
+		const String& scenePath = serializer.DeserializeLastOpenScene(strLastOpenScene);
+		sceneComp.Path = scenePath;
+		UpdateWindowName(scenePath);
 	}
 
 	void SceneSystem::PostInit()
@@ -29,7 +31,9 @@ namespace ecs
 		Saz::SceneSerializer serializer(*m_World);
 		auto& sceneComp = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 		if (sceneComp.Path != "")
+		{
 			serializer.SerializeLastOpenScene(strLastOpenScene, sceneComp.Path);
+		}
 	}
 
 	void SceneSystem::Update(const Saz::GameTime& gameTime)

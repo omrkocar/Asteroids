@@ -69,6 +69,8 @@ namespace ecs
 			m_World->RemoveComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::SceneStateChangedOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::SceneStateChangedOneFrameComponent>(m_Entity);
 
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
@@ -177,18 +179,16 @@ namespace ecs
 		{
 			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
 
-			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
-			{
-				if (m_ViewPortHovered && !ImGuizmo::IsOver() && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
-					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
-			}
-
-
 			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
 			bool shift = inputComp.IsKeyHeld(Input::KeyCode::LeftShift) || inputComp.IsKeyHeld(Input::KeyCode::RightShift);
 
-			if (!m_ViewportFocused)
-				return;
+			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
+			{
+				if (m_ViewPortHovered && !ImGuizmo::IsOver() && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
+				{
+					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
+				}
+			}
 
 			if (inputComp.IsKeyPressed(Input::KeyCode::S))
 			{
@@ -216,6 +216,13 @@ namespace ecs
 					OpenScene();
 				}
 			}
+
+			if (!m_ViewportFocused)
+			{
+				m_GizmoType = -1;
+				return;
+			}
+
 			if (inputComp.IsKeyPressed(Input::KeyCode::Q))
 				m_GizmoType = -1;
 			if (inputComp.IsKeyPressed(Input::KeyCode::W))
@@ -259,10 +266,8 @@ namespace ecs
 		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_SceneSize.x != viewportPanelSize.x || m_SceneSize.y != viewportPanelSize.y)
-		{
-			m_SceneSize = { viewportPanelSize.x, viewportPanelSize.y };
-		}
+		m_SceneSize = { viewportPanelSize.x, viewportPanelSize.y };
+		
 
 		uint32_t textureId = m_FrameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureId, ImVec2{ m_SceneSize.x, m_SceneSize.y }, ImVec2{ 0,1 }, ImVec2{ 1, 0 });
@@ -287,50 +292,51 @@ namespace ecs
 	void SceneEditor::DrawGizmos()
 	{
 		Entity selectedEntity = m_WorldOutliner.m_SelectedEntity;
-		if (m_World->IsAlive(selectedEntity))
+		if (!m_World->IsAlive(selectedEntity))
+			return;
+
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+
+		auto cameraEntity = m_World->GetMainCameraEntity();
+		if (m_World->IsAlive(cameraEntity))
 		{
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+			const auto& camera = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity).Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			glm::mat4 cameraView = camera.GetViewMatrix();
 
-			auto cameraEntity = m_World->GetMainCameraEntity();
-			if (m_World->IsAlive(cameraEntity))
+			auto& tc = m_World->GetComponent<component::TransformComponent>(selectedEntity);
+			glm::mat4 transform = tc.GetTransform();
+
+			const auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
+			bool snap = inputComponent.IsKeyHeld(Input::KeyCode::LeftControl);
+			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+			// Snap to 45 degrees for rotation
+			if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(
+				glm::value_ptr(cameraView),
+				glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)m_GizmoType,
+				ImGuizmo::WORLD,
+				glm::value_ptr(transform),
+				nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
 			{
-				const auto& camera = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity).Camera;
-				const glm::mat4& cameraProjection = camera.GetProjection();
-				glm::mat4 cameraView = camera.GetViewMatrix();
+				glm::vec3 position, rotation, scale;
+				Math::DecomposeTransform(transform, position, rotation, scale);
+				tc.Position = position;
+				tc.Rotation = rotation;
+				tc.Scale = scale;
 
-				auto& tc = m_World->GetComponent<component::TransformComponent>(selectedEntity);
-				glm::mat4 transform = tc.GetTransform();
-
-				const auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
-				bool snap = inputComponent.IsKeyHeld(Input::KeyCode::LeftControl);
-				float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-				// Snap to 45 degrees for rotation
-				if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
-					snapValue = 45.0f;
-
-				float snapValues[3] = { snapValue, snapValue, snapValue };
-
-				ImGuizmo::Manipulate(
-					glm::value_ptr(cameraView),
-					glm::value_ptr(cameraProjection),
-					(ImGuizmo::OPERATION)m_GizmoType,
-					ImGuizmo::LOCAL,
-					glm::value_ptr(transform),
-					nullptr, snap ? snapValues : nullptr);
-
-				if (ImGuizmo::IsUsing())
-				{
-					glm::vec3 position, rotation, scale;
-					Math::DecomposeTransform(transform, position, rotation, scale);
-					tc.Position = position;
-					tc.Rotation = rotation;
-					tc.Scale = scale;
-
-				}
 			}
 		}
+		
 	}
 
 	void SceneEditor::DrawToolbar()
@@ -366,11 +372,13 @@ namespace ecs
 
 	void SceneEditor::OnScenePlay()
 	{
+		auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Play);
 		m_Scene->SceneState = SceneState::Play;
 	}
 
 	void SceneEditor::OnSceneStop()
 	{
+		auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
 		m_Scene->SceneState = SceneState::Editor;
 	}
 
@@ -440,6 +448,12 @@ namespace ecs
 
 	void SceneEditor::NewScene()
 	{
+		if (m_Scene->SceneState != SceneState::Editor)
+		{
+			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
+			m_Scene->SceneState = SceneState::Editor;
+		}
+
 		m_World->AddComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
 
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
@@ -450,6 +464,12 @@ namespace ecs
 		const String& path = Saz::FileDialogs::OpenFile("Saz Scene (*.saz)\0*.saz\0");
 		if (!path.empty())
 		{
+			if (m_Scene->SceneState != SceneState::Editor)
+			{
+				auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
+				m_Scene->SceneState = SceneState::Editor;
+			}
+
 			auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 			sceneComponent.Path = path;
 			Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
@@ -461,6 +481,11 @@ namespace ecs
 		if (path.extension().string() != ".saz")
 			return;
 
+		if (m_Scene->SceneState != SceneState::Editor)
+		{
+			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
+			m_Scene->SceneState = SceneState::Editor;
+		}
 
 		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 		sceneComponent.Path = path.string();

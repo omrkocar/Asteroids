@@ -27,8 +27,8 @@ namespace ecs
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);
 		void DrawSpriteComponent(Entity entity);
-
-		void OnSceneLoadRequest(entt::registry& registry, entt::entity entity);
+		void DrawRigidbody2DComponent(Entity entity);
+		void DrawBoxCollider2DComponent(Entity entity);
 
 	private:
 		WorldOutliner& m_WorldOutliner;

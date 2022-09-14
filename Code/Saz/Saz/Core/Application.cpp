@@ -22,6 +22,8 @@
 #include "GLFW/glfw3.h"
 #include "Saz/Rendering/Renderer.h"
 #include "SceneComponent.h"
+#include "Systems/PhysicsSystem.h"
+#include "PhysicsComponents.h"
 
 namespace Saz
 {
@@ -62,23 +64,6 @@ namespace Saz
 	void Application::Register()
 	{
 		SAZ_PROFILE_FUNCTION();
-
-		m_EntityWorld.RegisterComponent<component::EditorCameraComponent>();
-		m_EntityWorld.RegisterComponent<component::InputComponent>();
-		m_EntityWorld.RegisterComponent<component::MovementComponent>();
-		m_EntityWorld.RegisterComponent<component::NameComponent>();
-		m_EntityWorld.RegisterComponent<component::SpriteComponent>();
-		m_EntityWorld.RegisterComponent<component::TransformComponent>();
-		m_EntityWorld.RegisterComponent<component::LoadedSceneComponent>();
-		m_EntityWorld.RegisterComponent<component::SceneEntityComponent>();
-		m_EntityWorld.RegisterComponent<component::LoadSceneRequestOneFrameComponent>();
-		m_EntityWorld.RegisterComponent<component::SaveSceneRequestOneFrameComponent>();
-		m_EntityWorld.RegisterComponent<component::NewSceneRequestOneFrameComponent>();
-
-		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
-		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
-		m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window, m_EntityWorld.GetSystem<ecs::CameraSystem>());
-		m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
 	}
 
 	void Application::Destroy()

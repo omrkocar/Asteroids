@@ -38,6 +38,11 @@ namespace component
 		String Path = {};
 	};
 
+	struct SceneStateChangedOneFrameComponent
+	{
+		SceneState SceneState;
+	};
+
 	struct SceneEntityComponent
 	{
 		String ScenePath{};

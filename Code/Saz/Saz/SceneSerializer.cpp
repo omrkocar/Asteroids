@@ -11,8 +11,31 @@
 #include "glm/glm.hpp"
 #include "SceneComponent.h"
 #include "InputComponent.h"
+#include "PhysicsComponents.h"
 
 namespace YAML {
+
+	template<>
+	struct convert<glm::vec2>
+	{
+		static Node encode(const glm::vec2& rhs)
+		{
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			return node;
+		}
+
+		static bool decode(const Node& node, glm::vec2& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+
+			rhs.x = node[0].as<float>();
+			rhs.y = node[1].as<float>();
+			return true;
+		}
+	};
 
 	template<>
 	struct convert<glm::vec3>
@@ -68,6 +91,13 @@ namespace YAML {
 
 namespace Saz
 {
+	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+		return out;
+	}
+
 	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 	{
 		out << YAML::Flow;
@@ -170,6 +200,34 @@ namespace Saz
 			out << YAML::Key << "Color" << YAML::Value << spriteComponent.Color;
 
 			out << YAML::EndMap; // SpriteRendererComponent
+		}
+
+		if (world.HasComponent<component::Rigidbody2DComponent>(entity))
+		{
+			out << YAML::Key << "Rigidbody2DComponent";
+			out << YAML::BeginMap; // Rigidbody2DComponent
+
+			auto& rigidbody2D = world.GetComponent<component::Rigidbody2DComponent>(entity);
+			out << YAML::Key << "BodyType" << YAML::Value << (int)rigidbody2D.Type;
+			out << YAML::Key << "FixedRotation" << YAML::Value << rigidbody2D.FixedRotation;
+
+			out << YAML::EndMap; // Rigidbody2DComponent
+		}
+
+		if (world.HasComponent<component::BoxCollider2DComponent>(entity))
+		{
+			out << YAML::Key << "BoxCollider2DComponent";
+			out << YAML::BeginMap; // BoxCollider2DComponent
+
+			auto& boxCollider2D = world.GetComponent<component::BoxCollider2DComponent>(entity);
+			out << YAML::Key << "Size" << YAML::Value << boxCollider2D.Size;
+			out << YAML::Key << "Offset" << YAML::Value << boxCollider2D.Offset;
+			out << YAML::Key << "Density" << YAML::Value << boxCollider2D.Density;
+			out << YAML::Key << "Friction" << YAML::Value << boxCollider2D.Friction;
+			out << YAML::Key << "Restitution" << YAML::Value << boxCollider2D.Restitution;
+			out << YAML::Key << "RestitutionThreshold" << YAML::Value << boxCollider2D.RestitutionThreshold;
+
+			out << YAML::EndMap; // BoxCollider2DComponent
 		}
 
 		out << YAML::EndMap; // Entity
@@ -300,6 +358,26 @@ namespace Saz
 					auto& src = m_World.AddComponent<component::SpriteComponent>(deserializedEntity);
 					src.Color = spriteComponent["Color"].as<glm::vec4>();
 				}
+
+				auto rigidbody2D = entity["Rigidbody2DComponent"];
+				if (rigidbody2D)
+				{
+					auto& rb = m_World.AddComponent<component::Rigidbody2DComponent>(deserializedEntity);
+					rb.Type = (component::Rigidbody2DComponent::BodyType)rigidbody2D["BodyType"].as<int>();
+					rb.FixedRotation = rigidbody2D["FixedRotation"].as<bool>();
+				}
+
+				auto boxCollider2D = entity["BoxCollider2DComponent"];
+				if (boxCollider2D)
+				{
+					auto& rb = m_World.AddComponent<component::BoxCollider2DComponent>(deserializedEntity);
+					rb.Size = boxCollider2D["Size"].as<glm::vec2>();
+					rb.Offset = boxCollider2D["Offset"].as<glm::vec2>();
+					rb.Density = boxCollider2D["Density"].as<float>();
+					rb.Friction = boxCollider2D["Friction"].as<float>();
+					rb.Restitution = boxCollider2D["Restitution"].as<float>();
+					rb.RestitutionThreshold = boxCollider2D["RestitutionThreshold"].as<float>();
+				}
 			}
 		}
 
@@ -325,21 +403,23 @@ namespace Saz
 		fout << out.c_str();
 	}
 
-	void SceneSerializer::DeserializeLastOpenScene(const String& filepath)
+	String SceneSerializer::DeserializeLastOpenScene(const String& filepath)
 	{
+		// TODO: improve this later
 		std::ifstream stream(filepath);
 		std::stringstream strStream;
 		if (!strStream.good())
-			return;
+			return "";
 
 		strStream << stream.rdbuf();
 
 		YAML::Node data = YAML::Load(strStream.str());
 		if (!data["LastOpenScene"])
-			return;
+			return "";
 
 		std::string sceneName = data["LastOpenScene"].as<std::string>();
 		Deserialize(sceneName);
+		return sceneName;
 	}
 
 }

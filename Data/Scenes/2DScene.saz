@@ -2,22 +2,80 @@ Scene: Untitled
 Entities:
   - Entity: 12837192831273
     NameComponent:
+      Name: Square3
+    TransformComponent:
+      Position: [0.5, 2.09356761, 1.16415322e-10]
+      Rotation: [0, -0, 0]
+      Scale: [0.200000003, 0.200000003, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 0.75
+      RestitutionThreshold: 1
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Square2
+    TransformComponent:
+      Position: [-0.404279649, 2.11469936, 0]
+      Rotation: [0, -0, -0.0824900046]
+      Scale: [0.300000072, 0.300000072, 1]
+    SpriteComponent:
+      Color: [0.772549033, 0.124213755, 0.124213755, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0.400000006
+      RestitutionThreshold: 1
+  - Entity: 12837192831273
+    NameComponent:
       Name: Ground
     TransformComponent:
-      Position: [0, -1.06430972, 0]
+      Position: [0, -1.10424829, 0]
       Rotation: [0, -0, 0]
-      Scale: [3.21320677, 0.166764736, 1]
+      Scale: [11.7905731, 0.200000003, 1]
     SpriteComponent:
-      Color: [0.723404288, 0.197012231, 0.197012231, 1]
+      Color: [0.795744658, 0.334248811, 0.104970589, 1]
+    Rigidbody2DComponent:
+      BodyType: 0
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 12837192831273
     NameComponent:
       Name: Square
     TransformComponent:
-      Position: [0, -0.722652912, 0]
-      Rotation: [0, -0, 0]
-      Scale: [0.5, 0.5, 0.610000014]
+      Position: [-1.5, 2.17022681, 2.34052e-10]
+      Rotation: [0, -0, -0.679751635]
+      Scale: [0.5, 0.5, 1]
     SpriteComponent:
-      Color: [1, 1, 1, 1]
+      Color: [0, 0.731914997, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0.400000006
+      RestitutionThreshold: 1
   - Entity: 12837192831273
     TransformComponent:
       Position: [0, 0, 0]
@@ -25,10 +83,28 @@ Entities:
       Scale: [1, 1, 1]
     EditorCameraComponent:
       EditorCamera:
-        Pitch: 0.00999999978
-        Yaw: 0.00999999978
-        AspectRatio: 2.30329943
+        Pitch: 0.0387996137
+        Yaw: -0.0475994311
+        AspectRatio: 1.84077084
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
-        Distance: 6.60785723
+        Distance: 13.7812214
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Camera
+    TransformComponent:
+      Position: [0, 0.602424145, 8.3263731]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false

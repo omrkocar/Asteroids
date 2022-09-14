@@ -83,6 +83,7 @@ namespace ecs
 		bool opened = ImGui::TreeNodeEx((void*)entity, flags, nameComp.Name.c_str());
 		if (ImGui::IsItemClicked())
 		{
+			// Add a one frame component for this
 			m_SelectedEntity = entity;
 		}
 

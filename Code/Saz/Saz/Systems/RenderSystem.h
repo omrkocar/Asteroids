@@ -1,13 +1,12 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
-#include "Core/WindowBase.h"
-#include "glm/glm.hpp"
-#include "CameraSystem.h"
+#include <Saz/Core/WindowBase.h>
+#include <glm/glm.hpp>
 
 namespace ecs
 {
-
+	class CameraSystem;
 }
 
 namespace Saz

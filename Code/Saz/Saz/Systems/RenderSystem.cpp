@@ -11,6 +11,7 @@
 #include "Rendering/RenderCommand.h"
 #include "Platform/OpenGL/OpenGLFrameBuffer.h"
 #include "Rendering/Renderer.h"
+#include <Saz/Systems/CameraSystem.h>
 
 namespace ecs
 {
