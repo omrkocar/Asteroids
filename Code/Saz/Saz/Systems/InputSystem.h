@@ -5,6 +5,8 @@
 #include <Core/MouseCodes.h>
 #include <Core/Set.h>
 
+struct GLFWwindow;
+
 namespace Saz
 {
 	class GameTime;
@@ -25,7 +27,7 @@ namespace ecs
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
+		static void OnMouseScroll(GLFWwindow* window, double xOffset, double yOffset);
 	private:
 		Saz::WindowBase& m_Window;
 
@@ -33,5 +35,7 @@ namespace ecs
 		Set<Input::KeyCode> m_KeyboardCurrent;
 		Set<Input::MouseCode> m_MousePrevious;
 		Set<Input::MouseCode> m_MouseCurrent;
+
+		Entity m_Entity;
 	};
 }

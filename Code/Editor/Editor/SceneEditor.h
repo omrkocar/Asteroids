@@ -4,6 +4,10 @@
 #include "glm/glm.hpp"
 #include "WorldOutliner.h"
 
+namespace Saz { class Texture2D; }
+
+namespace component { struct LoadedSceneComponent; }
+
 namespace ImGuizmo
 {
 	enum OPERATION;
@@ -24,8 +28,13 @@ namespace ecs
 		SceneEditor(WorldOutliner& worldOutliner);
 
 		virtual void Init() override;
-		virtual void PreUpdate(const Saz::GameTime& gameTime) override;
+		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
+
+		void ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer);
+
+		void RenderScene();
+		void RenderRuntime();
 
 		void ProcessInput();
 
@@ -36,7 +45,7 @@ namespace ecs
 		bool IsViewportHovered() const { return m_ViewPortHovered; }
  
 	private:
-		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
+		void OnLevelLoaded(entt::registry& registry, entt::entity entity);
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
@@ -44,13 +53,24 @@ namespace ecs
 		void SaveSceneAs();
 
 		void DrawScene();
+
+		void DrawGizmos();
+
 		void DrawProfiler();
 		void DrawMenuBar();
+		void DrawToolbar();
+
+		void OnScenePlay();
+		void OnSceneStop();
 
 		Entity m_HoveredEntity = entt::null;
 
 	private:
 		WorldOutliner& m_WorldOutliner;
+		component::LoadedSceneComponent* m_Scene;
+
+		Saz::Ref<Saz::Texture2D> m_PlayIcon;
+		Saz::Ref<Saz::Texture2D> m_StopIcon;
 
 		bool m_ViewportFocused = false;
 		bool m_ViewPortHovered = false;
@@ -58,5 +78,6 @@ namespace ecs
 		glm::vec2 m_ViewportBounds[2];
 		int m_GizmoType;
 		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
+		Entity m_Entity = entt::null;
 	};
 }

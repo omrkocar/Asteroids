@@ -54,20 +54,19 @@ namespace ecs
 		auto& registry = m_World->m_Registry;
 
 		const auto& cameraEntity = m_World->GetMainCameraEntity();
+		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 
-		if (!m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered)
+		if (scene.SceneState != SceneState::Editor || !scene.IsHovered)
 			return;
 
 		if (!m_World->IsAlive(cameraEntity))
 			return;
 
 		auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(cameraEntity);
-		const auto scrollView = m_World->GetAllEntitiesWith<component::MouseScrollOneFrameComponent>();
-		for (auto& entity : scrollView)
+		
+		if (ImGui::GetIO().MouseWheel != 0.0f)
 		{
-			auto& scrollComponent = m_World->GetComponent<component::MouseScrollOneFrameComponent>(entity);
-
-			cameraComponent.Camera.OnMouseScroll(scrollComponent.YOffset);
+			cameraComponent.Camera.OnMouseScroll(ImGui::GetIO().MouseWheel);
 		}
 		
 		auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);

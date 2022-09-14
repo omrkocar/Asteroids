@@ -230,7 +230,6 @@ namespace Saz
 			{
 				ecs::Entity deserializedEntity = m_World.CreateEntity();
 				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
-				bool isSceneEntity = true;
 
 				std::string name;
 				auto nameComponent = entity["NameComponent"];
@@ -273,7 +272,6 @@ namespace Saz
 					float distance = cameraProps["Distance"].as<float>();
 					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch, distance);
 					m_World.SetMainCamera(deserializedEntity);
-					isSceneEntity = false;
 				}
 
 				auto cameraComponent = entity["CameraComponent"];

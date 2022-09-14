@@ -74,7 +74,6 @@ namespace Saz
 		m_EntityWorld.RegisterComponent<component::LoadSceneRequestOneFrameComponent>();
 		m_EntityWorld.RegisterComponent<component::SaveSceneRequestOneFrameComponent>();
 		m_EntityWorld.RegisterComponent<component::NewSceneRequestOneFrameComponent>();
-		m_EntityWorld.RegisterComponent<component::MouseScrollOneFrameComponent>();
 
 		m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 		m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
@@ -96,9 +95,7 @@ namespace Saz
 
 		if (!m_Minimized)
 		{
-			m_EntityWorld.PreUpdate(gameTime);
 			m_EntityWorld.Update(gameTime);
-			m_EntityWorld.LateUpdate(gameTime);
 		}
 
 		m_ImGuiLayer->Begin();

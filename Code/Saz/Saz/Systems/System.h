@@ -15,9 +15,7 @@ namespace ecs
 		virtual void PostInit() {}
 		virtual void Destroy() {}
 
-		virtual void PreUpdate(const Saz::GameTime& gameTime) {}
 		virtual void Update(const Saz::GameTime& gameTime) {}
-		virtual void LateUpdate(const Saz::GameTime& gameTime) {}
 		virtual void ImGuiRender() {}
 
 	protected:

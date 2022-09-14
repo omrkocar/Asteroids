@@ -10,6 +10,7 @@
 #include "Rendering/Renderer.h"
 #include "Core/Application.h"
 #include "InputComponent.h"
+#include "imgui.h"
 
 namespace Saz
 {
@@ -56,7 +57,7 @@ namespace Saz
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
-		SetVSync(false);
+		SetVSync(true);
 		glfwSetFramebufferSizeCallback(m_Window, OnWindowResized);
 	}
 
@@ -64,13 +65,8 @@ namespace Saz
 	{
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				auto& world = Saz::Application::Get().GetWorld();
-				auto entity = world.CreateEntity();
-				
-				auto& scrollComponent = world.AddComponent<component::MouseScrollOneFrameComponent>(entity);
-				scrollComponent.YOffset = (float)yOffset;
+				ImGuiIO& io = ImGui::GetIO();
+				io.MouseWheel += (float)yOffset;
 			});
 	}
 

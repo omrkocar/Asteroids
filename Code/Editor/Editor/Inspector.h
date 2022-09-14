@@ -16,7 +16,6 @@ namespace ecs
 		
 		Inspector(WorldOutliner& worldOutliner);
 
-		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
 	private:

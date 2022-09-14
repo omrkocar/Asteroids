@@ -19,6 +19,8 @@
 #include "Saz/TransformComponent.h"
 #include "glm/gtc/type_ptr.inl"
 #include <filesystem>
+#include "Saz/Rendering/RenderCommand.h"
+#include "Saz/Rendering/Texture.h"
 
 namespace ecs
 {
@@ -40,14 +42,33 @@ namespace ecs
 		fbSpec.Height = 720;
 		frameBufferComp.FrameBuffer = Saz::FrameBuffer::Create(fbSpec);
 		m_FrameBuffer = frameBufferComp.FrameBuffer;
+
+		auto& registry = m_World->m_Registry;
+		registry.on_destroy<component::LoadSceneRequestOneFrameComponent>().connect<&SceneEditor::OnLevelLoaded>(this);
+
+		m_PlayIcon = Saz::Texture2D::Create("../../Data/Textures/PlayButton.png");
+		m_StopIcon = Saz::Texture2D::Create("../../Data/Textures/StopButton.png");
+
+		m_Entity = m_World->CreateEntity();
 	}
 
-	void SceneEditor::PreUpdate(const Saz::GameTime& gameTime)
+	void SceneEditor::PostInit()
 	{
+		m_Scene = &m_World->GetSingleComponent<component::LoadedSceneComponent>();
+	}
+
+	void SceneEditor::Update(const Saz::GameTime& gameTime)
+	{
+		auto& registry = m_World->m_Registry;
+
+		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
+
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
 		{
 			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
+
 			const Saz::FrameBufferSpecification& spec = frameBuffer->GetSpecification();
 			if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
 				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
@@ -56,45 +77,92 @@ namespace ecs
 				uint32_t height = (uint32_t)m_SceneSize.y;
 				frameBuffer->Resize(width, height);
 
-				ecs::Entity entity = m_World->CreateEntity();
-				m_World->AddComponent<component::WindowResizedOneFrameComponent>(entity, (uint32_t)width, (uint32_t)height);
+				m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)width, (uint32_t)height);
 			}
-		}
-	}
 
-	void SceneEditor::Update(const Saz::GameTime& gameTime)
-	{
-		auto& registry = m_World->m_Registry;
+			Saz::Renderer2D::ResetStats();
+			frameBuffer->Bind();
+			Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+			Saz::RenderCommand::Clear();
+			frameBuffer->ClearColorAttachment(1, -1);
 
-		const auto windowResizeView = m_World->GetAllEntitiesWith<const component::WindowResizedOneFrameComponent>();
-		for (auto& ent : windowResizeView)
-		{
-			m_World->DestroyEntity(ent);
-		}
+			if (m_Scene->SceneState == SceneState::Editor)
+				RenderScene();
+			else
+				RenderRuntime();
 
-		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
-		for (const auto& frameBufferEntity : frameBufferView)
-		{
-			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
+			ProcessMousePicking(frameBuffer);
 
-			auto [mx, my] = ImGui::GetMousePos();
-			mx -= m_ViewportBounds[0].x;
-			my -= m_ViewportBounds[0].y;
-			glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-			my = viewportSize.y - my;
-			int mouseX = (int)mx;
-			int mouseY = (int)my;
-
-			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-			{
-				int pixelData = frameBuffer->ReadPixel(1, mouseX, mouseY);
-				m_HoveredEntity = pixelData != -1 ? (entt::entity)pixelData : entt::null;
-			}
+			frameBuffer->Unbind();
 		}
 
 		ProcessInput();
 	}
 
+	void SceneEditor::ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer)
+	{
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+		glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+		my = viewportSize.y - my;
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = frameBuffer->ReadPixel(1, mouseX, mouseY);
+			m_HoveredEntity = pixelData != -1 ? (entt::entity)pixelData : entt::null;
+		}
+	}
+
+	void SceneEditor::RenderScene()
+	{
+		ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
+		if (m_World->IsAlive(mainCameraEntity))
+		{
+			auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(mainCameraEntity);
+			auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
+
+			SAZ_PROFILE_SCOPE("Renderer Draw");
+
+			glm::mat4 transform = cameraTransformComp.GetTransform();
+			Saz::Renderer2D::BeginScene(cameraComponent.Camera);
+
+			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
+			for (auto entity : view)
+			{
+				auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
+				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			}
+
+			Saz::Renderer2D::EndScene();
+		}
+	}
+
+	void SceneEditor::RenderRuntime()
+	{
+		auto& cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
+		for (auto& cameraEntity : cameraView)
+		{
+			auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(cameraEntity);
+			auto& cameraComponent = m_World->GetComponent<component::CameraComponent>(cameraEntity);
+
+			SAZ_PROFILE_SCOPE("Renderer Draw");
+
+			glm::mat4 cameraTransform = cameraTransformComp.GetTransform();
+			Saz::Renderer2D::BeginScene(cameraComponent.Camera, cameraTransform);
+
+			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
+			for (auto& entity : view)
+			{
+				auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
+				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			}
+
+			Saz::Renderer2D::EndScene();
+		}
+	}
 
 	void SceneEditor::ProcessInput()
 	{
@@ -160,7 +228,15 @@ namespace ecs
 
 	void SceneEditor::ImGuiRender()
 	{
+		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
+
 		DrawScene();
+		DrawToolbar();
 		DrawMenuBar();
 		DrawProfiler();
 	}
@@ -173,8 +249,9 @@ namespace ecs
 		ImGui::Begin("Scene");
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
-		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsFocused = m_ViewportFocused;
-		m_World->GetSingleComponent<component::LoadedSceneComponent>().IsHovered = m_ViewPortHovered;
+		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
+		scene.IsFocused = m_ViewportFocused;
+		scene.IsHovered = m_ViewPortHovered;
 
 		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
 		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
@@ -201,7 +278,15 @@ namespace ecs
 			ImGui::EndDragDropTarget();
 		}
 
-		// Gizmos
+		DrawGizmos();
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+
+	}
+
+	void SceneEditor::DrawGizmos()
+	{
 		Entity selectedEntity = m_WorldOutliner.m_SelectedEntity;
 		if (m_World->IsAlive(selectedEntity))
 		{
@@ -247,10 +332,47 @@ namespace ecs
 				}
 			}
 		}
+	}
+
+	void SceneEditor::DrawToolbar()
+	{
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Saz::Ref<Saz::Texture2D> icon = m_Scene->SceneState == SceneState::Editor ? m_PlayIcon : m_StopIcon;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			
+			if (m_Scene->SceneState == SceneState::Editor)
+				OnScenePlay();
+			else if (m_Scene->SceneState == SceneState::Play)
+				OnSceneStop();
+		}
 
 		ImGui::End();
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
+	}
 
+	void SceneEditor::OnScenePlay()
+	{
+		m_Scene->SceneState = SceneState::Play;
+	}
+
+	void SceneEditor::OnSceneStop()
+	{
+		m_Scene->SceneState = SceneState::Editor;
 	}
 
 	void SceneEditor::DrawProfiler()
@@ -312,10 +434,14 @@ namespace ecs
 		}
 	}
 
+	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)
+	{
+		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
+	}
+
 	void SceneEditor::NewScene()
 	{
-		auto entity = m_World->CreateEntity();
-		auto& sceneComponent = m_World->AddComponent<component::NewSceneRequestOneFrameComponent>(entity);
+		m_World->AddComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
 
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 	}
@@ -325,8 +451,7 @@ namespace ecs
 		const String& path = Saz::FileDialogs::OpenFile("Saz Scene (*.saz)\0*.saz\0");
 		if (!path.empty())
 		{
-			auto entity = m_World->CreateEntity();
-			auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(entity);
+			auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 			sceneComponent.Path = path;
 			Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 		}
@@ -338,8 +463,7 @@ namespace ecs
 			return;
 
 
-		auto entity = m_World->CreateEntity();
-		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(entity);
+		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 		sceneComponent.Path = path.string();
 
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
@@ -353,8 +477,7 @@ namespace ecs
 			scenePath = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
 		}
 
-		auto entity = m_World->CreateEntity();
-		auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(entity);
+		auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
 		sceneComponent.Path = scenePath;
 	}
 
@@ -363,8 +486,7 @@ namespace ecs
 		const String& path = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
 		if (!path.empty())
 		{
-			auto entity = m_World->CreateEntity();
-			auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(entity);
+			auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
 			sceneComponent.Path = path;
 		}
 	}

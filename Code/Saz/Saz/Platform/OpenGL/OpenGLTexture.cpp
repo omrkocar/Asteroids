@@ -2,7 +2,7 @@
 #include "SazPCH.h"
 #include "OpenGLTexture.h"
 
-#include "stb_image.h"
+#include <stb_image/stb_image.h>
 
 namespace Saz
 {

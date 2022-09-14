@@ -3,6 +3,14 @@
 #include "Core/String.h"
 #include "glm/glm.hpp"
 
+enum class SceneState
+{
+	Editor,
+	Play,
+	Simulate,
+
+};
+
 namespace component
 {
 	struct LoadedSceneComponent
@@ -12,6 +20,7 @@ namespace component
 		glm::vec2 SceneSize;
 		bool IsFocused;
 		bool IsHovered;
+		SceneState SceneState;
 	};
 
 	struct NewSceneRequestOneFrameComponent

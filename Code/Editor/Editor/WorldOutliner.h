@@ -17,7 +17,7 @@ namespace ecs
 
 		virtual void Init() override;
 
-		virtual void LateUpdate(const Saz::GameTime& gameTime) override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender() override;
 
 		bool IsVisible() { return m_IsActive; }

@@ -7,6 +7,7 @@ namespace Saz {
 
 	SceneCamera::SceneCamera()
 	{
+		m_AspectRatio = 1.7f;
 		RecalculateProjection();
 	}
 
@@ -31,7 +32,7 @@ namespace Saz {
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
 		SAZ_CORE_ASSERT(width > 0 && height > 0, "");
-		m_AspectRatio = (float)width / (float)height;
+		m_AspectRatio = 1.7f;
 		RecalculateProjection();
 	}
 

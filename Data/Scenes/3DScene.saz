@@ -1,6 +1,33 @@
 Scene: Untitled
 Entities:
   - Entity: 12837192831273
+    NameComponent:
+      Name: Top
+    TransformComponent:
+      Position: [0, 0.5, 0]
+      Rotation: [1.57079637, 0.785398185, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [0.749019623, 0.501960814, 0.0588235296, 1]
+  - Entity: 12837192831273
+    NameComponent:
+      Name: Camera
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 12837192831273
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
@@ -9,7 +36,7 @@ Entities:
       EditorCamera:
         Pitch: 0.436798722
         Yaw: 12.5135822
-        AspectRatio: 1.69943821
+        AspectRatio: 1.95371366
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
@@ -32,12 +59,3 @@ Entities:
       Scale: [1, 1, 1]
     SpriteComponent:
       Color: [0.411764711, 0.286274523, 0.0274509806, 1]
-  - Entity: 12837192831273
-    NameComponent:
-      Name: Top
-    TransformComponent:
-      Position: [0, 0.5, 0]
-      Rotation: [1.57079637, 0.785398185, 0]
-      Scale: [1, 1, 1]
-    SpriteComponent:
-      Color: [0.749019623, 0.501960814, 0.0588235296, 1]

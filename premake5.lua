@@ -14,11 +14,6 @@ workspace "Saz"
 
 	targetdir ("%{wks.location}/Build/%{prj.name}/" .. outputdir )
 	objdir ("%{wks.location}/Intermediate/%{prj.name}/" .. outputdir)
-
-	solution_items
-	{
-		".editorconfig"
-	}
 	
 	disablewarnings { "26812" }
 

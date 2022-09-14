@@ -38,34 +38,32 @@ namespace ecs
 		for (const auto& newSceneEntity : newSceneView)
 		{
 			auto& sceneRequestComp = m_World->m_Registry.get<component::NewSceneRequestOneFrameComponent>(newSceneEntity);
-			NewScene(newSceneEntity);
+			NewScene();
 		}
 
 		const auto loadSceneView = m_World->GetAllEntitiesWith<component::LoadSceneRequestOneFrameComponent>();
 		for (const auto& loadSceneEntity : loadSceneView)
 		{
 			auto& sceneRequestComp = m_World->m_Registry.get<component::LoadSceneRequestOneFrameComponent>(loadSceneEntity);
-			LoadScene(loadSceneEntity, sceneRequestComp.Path);
+			LoadScene(sceneRequestComp.Path);
 		}
 
 		const auto saveSceneView = m_World->GetAllEntitiesWith<component::SaveSceneRequestOneFrameComponent>();
 		for (const auto& saveSceneEntity : saveSceneView)
 		{
 			auto& sceneRequestComp = m_World->m_Registry.get<component::SaveSceneRequestOneFrameComponent>(saveSceneEntity);
-			SaveScene(saveSceneEntity, sceneRequestComp.Path);
+			SaveScene(sceneRequestComp.Path);
 		}
-
 	}
 
-	void SceneSystem::NewScene(Entity newSceneEntity)
+	void SceneSystem::NewScene()
 	{
 		m_World->DestroyEntitesWith<component::SceneEntityComponent>();
-		m_World->DestroyEntity(newSceneEntity);
 		m_World->CreateMainCamera();
 		UpdateWindowName("");
 	}
 
-	void SceneSystem::LoadScene(Entity loadSceneEntity, const String& scenePath)
+	void SceneSystem::LoadScene(const String& scenePath)
 	{
 		const auto sceneEntityView = m_World->GetAllEntitiesWith<component::SceneEntityComponent>();
 		for (const auto& sceneEntity : sceneEntityView)
@@ -77,19 +75,14 @@ namespace ecs
 		serializer.Deserialize(scenePath);
 		
 		UpdateWindowName(scenePath);
-
-		if (m_World->IsAlive(loadSceneEntity))
-			m_World->DestroyEntity(loadSceneEntity);
 	}
 
-	void SceneSystem::SaveScene(Entity saveSceneEntity, const String& scenePath)
+	void SceneSystem::SaveScene(const String& scenePath)
 	{
 		Saz::SceneSerializer serializer(*m_World);
 		serializer.Serialize(scenePath);
 
 		UpdateWindowName(scenePath);
-
-		m_World->DestroyEntity(saveSceneEntity);
 	}
 
 	void SceneSystem::UpdateWindowName(const String& scenePath)

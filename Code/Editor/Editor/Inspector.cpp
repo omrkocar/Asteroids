@@ -138,11 +138,6 @@ namespace ecs
 		
 	}
 
-	void Inspector::LateUpdate(const Saz::GameTime& gameTime)
-	{
-
-	}
-
 	void Inspector::ImGuiRender()
 	{
 		ImGui::Begin("Inspector");
@@ -192,7 +187,7 @@ namespace ecs
 
 			if (ImGui::MenuItem("Camera Component"))
 			{
-				m_World->AddComponent<component::EditorCameraComponent>(entity);
+				m_World->AddComponent<component::CameraComponent>(entity);
 				ImGui::CloseCurrentPopup();
 			}
 

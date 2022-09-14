@@ -34,15 +34,6 @@ namespace ecs
 	{
 		auto& registry = m_World->m_Registry;
 
-		const auto scrollView = m_World->GetAllEntitiesWith<component::MouseScrollOneFrameComponent>();
-		for (auto& entity : scrollView)
-		{
-			auto& scrollComponent = m_World->GetComponent<component::MouseScrollOneFrameComponent>(entity);
-
-			ImGuiIO& io = ImGui::GetIO();
-			io.MouseWheel += (float)scrollComponent.YOffset;
-		}
-
 		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 		m_MousePrevious = std::move(m_MouseCurrent);
 
@@ -62,14 +53,4 @@ namespace ecs
 			inputComponent.m_MousePosition = mousePos;
 		}
 	}
-
-	void InputSystem::LateUpdate(const Saz::GameTime& gameTime)
-	{
-		const auto scrollView = m_World->GetAllEntitiesWith<component::MouseScrollOneFrameComponent>();
-		for (auto& entity : scrollView)
-		{
-			m_World->DestroyEntity(entity);
-		}
-	}
-
 }

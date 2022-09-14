@@ -28,9 +28,4 @@ namespace component
 		vec2 m_MouseDelta;
 		vec2 m_MousePosition;
 	};
-
-	struct MouseScrollOneFrameComponent
-	{
-		float YOffset = 0.0f;
-	};
 }

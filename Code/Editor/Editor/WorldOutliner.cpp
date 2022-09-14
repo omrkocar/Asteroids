@@ -62,7 +62,7 @@ namespace ecs
 	}
 
 
-	void WorldOutliner::LateUpdate(const Saz::GameTime& gameTime)
+	void WorldOutliner::Update(const Saz::GameTime& gameTime)
 	{
 		if (m_World->IsAlive(m_EntityToDelete))
 		{
