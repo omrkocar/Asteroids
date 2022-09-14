@@ -63,6 +63,12 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
 
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
@@ -184,7 +190,7 @@ namespace ecs
 			if (!m_ViewportFocused)
 				return;
 
-			if (inputComp.IsKeyHeld(Input::KeyCode::S))
+			if (inputComp.IsKeyPressed(Input::KeyCode::S))
 			{
 				if (control)
 				{
@@ -195,7 +201,7 @@ namespace ecs
 				}
 			}
 
-			if (inputComp.IsKeyHeld(Input::KeyCode::N))
+			if (inputComp.IsKeyPressed(Input::KeyCode::N))
 			{
 				if (control)
 				{
@@ -203,7 +209,7 @@ namespace ecs
 				}
 			}
 
-			if (inputComp.IsKeyHeld(Input::KeyCode::O))
+			if (inputComp.IsKeyPressed(Input::KeyCode::O))
 			{
 				if (control)
 				{
@@ -228,13 +234,6 @@ namespace ecs
 
 	void SceneEditor::ImGuiRender()
 	{
-		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
-
 		DrawScene();
 		DrawToolbar();
 		DrawMenuBar();

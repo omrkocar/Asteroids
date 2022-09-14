@@ -89,6 +89,7 @@ workspace "Saz"
 		include "3rdParty/stb_image/premake5.lua"
 		include "3rdParty/yaml-cpp/premake5.lua"
 		include "3rdParty/imguizmo/premake5.lua"
+		include "3rdParty/Box2D/premake5.lua"
 		group ""
 	
 

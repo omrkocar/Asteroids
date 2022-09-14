@@ -26,8 +26,7 @@ namespace ecs
 
 	void InputSystem::Init()
 	{
-		ecs::Entity entity = m_World->CreateEntity();
-		m_World->AddComponent<component::InputComponent>(entity);
+		
 	}
 
 	void InputSystem::Update(const Saz::GameTime& gameTime)
