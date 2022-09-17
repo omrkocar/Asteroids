@@ -11,6 +11,7 @@
 namespace Saz
 {
 	class GameTime;
+	class UUID;
 }
 
 namespace ecs
@@ -41,7 +42,11 @@ namespace ecs
 		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity()->ecs::Entity;
+		ecs::Entity CreateBaseEntity();
+		ecs::Entity CreateBaseEntity(Saz::UUID uuid);
 		void DestroyEntity(const ecs::Entity& entity);
+
+		const Saz::UUID& GetUUID(Entity entity);
 
 		ecs::Entity TryGetEntityWithTag(const String& tag);
 

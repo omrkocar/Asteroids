@@ -32,7 +32,6 @@ namespace ecs
 	private:
 		void DrawEntityNode(Entity entity);
 
-		Entity CreateBaseEntity();
 		void OnSceneLoadRequest(entt::registry& registry, entt::entity entity);
 	};
 }

@@ -9,6 +9,7 @@
 #include "Saz/Utils/PlatformUtils.h"
 
 #include <imgui/imgui.h>
+#include "Saz/Utils/SceneUtils.h"
 
 namespace ecs
 {
@@ -69,7 +70,7 @@ namespace ecs
 			{
 				if (control)
 				{
-					OpenScene();
+					Saz::SceneUtils::OpenScene(*m_World, m_Entity);
 				}
 			}
 		}
@@ -77,21 +78,28 @@ namespace ecs
 
 	void MenuBar::ImGuiRender()
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 4.0f));
 		if (ImGui::BeginMenuBar())
 		{
+			ImGui::PopStyleVar();
 			DrawFileMenu();
-
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Project Settings..."))
-				{
-					m_ProjectSettings.SetVisible(true);
-				}
-
-				ImGui::EndMenu();
-			}
+			DrawEditMenu();
 
 			ImGui::EndMenuBar();
+
+		}
+	}
+
+	void MenuBar::DrawEditMenu()
+	{
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Project Settings..."))
+			{
+				m_ProjectSettings.SetVisible(true);
+			}
+
+			ImGui::EndMenu();
 		}
 	}
 
@@ -108,7 +116,7 @@ namespace ecs
 
 			if (ImGui::MenuItem("Open...", "Ctrl+O"))
 			{
-				OpenScene();
+				Saz::SceneUtils::OpenScene(*m_World, m_Entity);
 			}
 
 			ImGui::Separator();
@@ -148,27 +156,6 @@ namespace ecs
 	void MenuBar::NewScene()
 	{
 		m_World->AddComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
-	}
-
-	void MenuBar::OpenScene()
-	{
-		const String& path = Saz::FileDialogs::OpenFile("Saz Scene (*.saz)\0*.saz\0");
-		if (!path.empty())
-		{
-			auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-			sceneComponent.Path = path;
-		}
-	}
-
-	void MenuBar::OpenScene(const std::filesystem::path& path)
-	{
-		if (path.extension().string() != ".saz")
-			return;
-
-		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-		sceneComponent.Path = path.string();
-
-		//Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 	}
 
 	void MenuBar::SaveScene()

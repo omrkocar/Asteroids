@@ -50,7 +50,7 @@ namespace ecs
 		{
 			if (ImGui::MenuItem("Create Empty Object"))
 			{
-				auto entity = CreateBaseEntity();
+				auto entity = m_World->CreateBaseEntity();
 				m_SelectedEntity = entity;
 			}
 			
@@ -99,15 +99,6 @@ namespace ecs
 
 		if (opened)
 			ImGui::TreePop();
-	}
-
-	ecs::Entity WorldOutliner::CreateBaseEntity()
-	{
-		auto entity = m_World->CreateEntity();
-		m_World->AddComponent<component::NameComponent>(entity, "Empty Object");
-		m_World->AddComponent<component::TransformComponent>(entity);
-		m_World->AddComponent<component::SceneEntityComponent>(entity);
-		return entity;
 	}
 
 	void WorldOutliner::OnSceneLoadRequest(entt::registry& registry, entt::entity entity)

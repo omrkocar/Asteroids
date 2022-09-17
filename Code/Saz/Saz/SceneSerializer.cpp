@@ -117,8 +117,10 @@ namespace Saz
 		if (!world.HasComponent<component::SceneEntityComponent>(entity))
 			return;
 
+		SAZ_CORE_ASSERT(world.HasComponent<component::IDComponent>(entity), "");
+
 		out << YAML::BeginMap; // Entity
-		out << YAML::Key << "Entity" << YAML::Value << "12837192831273";
+		out << YAML::Key << "Entity" << YAML::Value << world.GetUUID(entity);
 
 		if (world.HasComponent<component::NameComponent>(entity))
 		{
@@ -286,22 +288,17 @@ namespace Saz
 		{
 			for (auto entity : entities)
 			{
-				ecs::Entity deserializedEntity = m_World.CreateEntity();
-				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
+				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				ecs::Entity deserializedEntity = m_World.CreateBaseEntity(uuid);
 
 				std::string name;
 				auto nameComponent = entity["NameComponent"];
 				if (nameComponent)
 				{
 					name = nameComponent["Name"].as<std::string>();
-					auto& nameComp = m_World.AddComponent<component::NameComponent>(deserializedEntity);
+					auto& nameComp = m_World.GetComponent<component::NameComponent>(deserializedEntity);
 					nameComp.Name = name;
 				}
-
-				m_World.AddComponent<component::SceneEntityComponent>(deserializedEntity);
-				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
-
-				m_World.AddComponent<component::TransformComponent>(deserializedEntity);
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)
@@ -378,6 +375,8 @@ namespace Saz
 					rb.Restitution = boxCollider2D["Restitution"].as<float>();
 					rb.RestitutionThreshold = boxCollider2D["RestitutionThreshold"].as<float>();
 				}
+
+				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 			}
 		}
 

@@ -46,6 +46,28 @@ namespace ecs
 			entry.m_System->ImGuiRender();
 	}
 
+
+	ecs::Entity EntityWorld::CreateBaseEntity()
+	{
+		return CreateBaseEntity(Saz::UUID());
+	}
+
+	Entity EntityWorld::CreateBaseEntity(Saz::UUID uuid)
+	{
+		auto entity = CreateEntity();
+		AddComponent<component::NameComponent>(entity, "Empty Object");
+		AddComponent<component::TransformComponent>(entity);
+		AddComponent<component::SceneEntityComponent>(entity);
+		auto& idComp = AddComponent<component::IDComponent>(entity);
+		idComp.ID = uuid;
+		return entity;
+	}
+
+	const Saz::UUID& EntityWorld::GetUUID(Entity entity)
+	{
+		return GetComponent<component::IDComponent>(entity).ID;
+	}
+
 	ecs::Entity EntityWorld::TryGetEntityWithTag(const String& tag)
 	{
 		auto entities = GetAllEntitiesWith<component::NameComponent>();

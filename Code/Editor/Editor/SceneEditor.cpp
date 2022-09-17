@@ -21,6 +21,7 @@
 #include <imguizmo/ImGuizmo.h>
 #include <glm/gtc/type_ptr.inl>
 #include <filesystem>
+#include "Saz/Utils/SceneUtils.h"
 
 
 namespace ecs
@@ -67,6 +68,8 @@ namespace ecs
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::SceneStateChangedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::SceneStateChangedOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 
 		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
 		for (const auto& frameBufferEntity : frameBufferView)
@@ -243,7 +246,7 @@ namespace ecs
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
-				//OpenScene(std::filesystem::path(g_DataPath) / path);
+				Saz::SceneUtils::OpenScene(*m_World, m_Entity, std::filesystem::path(g_DataPath) / path);
 			}
 			ImGui::EndDragDropTarget();
 		}

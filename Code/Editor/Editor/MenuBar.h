@@ -17,13 +17,13 @@ namespace ecs
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender();
 
+		void DrawEditMenu();
+
 		void DrawFileMenu();
 
 		void DrawProjectSettingsWindow();
 		void DrawPhysicsSettings();
 		void NewScene();
-		void OpenScene();
-		void OpenScene(const std::filesystem::path& path);
 		void SaveScene();
 		void SaveSceneAs();
 	private:

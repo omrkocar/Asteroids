@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 12837192831273
+  - Entity: 1385925860695106124
     NameComponent:
       Name: Square3
     TransformComponent:
@@ -19,7 +19,7 @@ Entities:
       Friction: 1
       Restitution: 0.75
       RestitutionThreshold: 1
-  - Entity: 12837192831273
+  - Entity: 8253503286192457775
     NameComponent:
       Name: Square2
     TransformComponent:
@@ -38,7 +38,7 @@ Entities:
       Friction: 0.75
       Restitution: 0.400000006
       RestitutionThreshold: 1
-  - Entity: 12837192831273
+  - Entity: 17650017232327025741
     NameComponent:
       Name: Ground
     TransformComponent:
@@ -57,7 +57,7 @@ Entities:
       Friction: 0.75
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 12837192831273
+  - Entity: 1620965192542877240
     NameComponent:
       Name: Square
     TransformComponent:
@@ -76,7 +76,9 @@ Entities:
       Friction: 0.5
       Restitution: 0.400000006
       RestitutionThreshold: 1
-  - Entity: 12837192831273
+  - Entity: 8541737863078658048
+    NameComponent:
+      Name: Empty Object
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
@@ -85,12 +87,12 @@ Entities:
       EditorCamera:
         Pitch: 0.0387996137
         Yaw: -0.0475994311
-        AspectRatio: 1.73021924
+        AspectRatio: 1.81681681
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
         Distance: 15.3866615
-  - Entity: 12837192831273
+  - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
     TransformComponent:
