@@ -1,1 +1,1 @@
-LastOpenScene: ../../Data\Scenes\2DScene.saz
+LastOpenScene: C:\Dev\SazEngine\Data\Scenes\2DScene.saz

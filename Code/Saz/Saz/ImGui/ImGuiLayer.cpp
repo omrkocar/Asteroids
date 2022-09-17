@@ -1,12 +1,13 @@
 #include "SazPCH.h"
 #include "ImGuiLayer.h"
-#include "imgui/backends/imgui_impl_glfw.h"
-#include "imgui/backends/imgui_impl_opengl3.h"
+
+#include "Saz/InputComponent.h"
 #include "Saz/Core/Application.h"
-#include <Saz/ImGui/ImGuiLog.h>
+
+#include <imgui/backends/imgui_impl_glfw.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
 #include <imguizmo/ImGuizmo.h>
-#include "InputComponent.h"
 
 namespace Saz
 {
@@ -150,7 +151,7 @@ namespace Saz
 		colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
 		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.35f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowPadding = ImVec2(8.00f, 8.00f);

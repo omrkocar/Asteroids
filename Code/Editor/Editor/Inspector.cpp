@@ -1,20 +1,21 @@
 #include "EditorPCH.h"
 #include "Inspector.h"
 
-#include "Saz/Core/GameTime.h"
-#include <Saz/Screen.h>
-#include "Saz/TransformComponent.h"
-#include "Saz/NameComponent.h"
-#include "Saz/CameraComponent.h"
 #include "Core/String.h"
-#include "glm/gtc/type_ptr.inl"
+
+#include "Saz/CameraComponent.h"
+#include "Saz/Core/GameTime.h"
+#include "Saz/NameComponent.h"
+#include "Saz/PhysicsComponents.h"
 #include "Saz/RenderComponents.h"
+#include "Saz/Rendering/Texture.h"
 #include "Saz/SceneComponent.h"
+#include "Saz/Screen.h"
+#include "Saz/TransformComponent.h"
 
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui.h>
-#include "Saz/Rendering/Texture.h"
-#include "Saz/PhysicsComponents.h"
+#include <glm/gtc/type_ptr.inl>
 
 namespace
 {
@@ -264,7 +265,7 @@ namespace ecs
 				auto& camera = component.Camera;
 				bool isProjection = component.Camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective;
 
-				ImGui::Checkbox("Primary", &component.Primary);
+				//ImGui::Checkbox("Primary", &component.Primary);
 
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeStrings[(int)component.Camera.GetProjectionType()];

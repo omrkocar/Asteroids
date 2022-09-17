@@ -1,10 +1,10 @@
 #include "SazPCH.h"
 #include "SceneSystem.h"
 
-#include "SceneComponent.h"
-#include "SceneSerializer.h"
-#include "Rendering/Renderer.h"
-#include "Core/Application.h"
+#include "Saz/SceneComponent.h"
+#include "Saz/SceneSerializer.h"
+#include "Saz/Rendering/Renderer.h"
+#include "Saz/Core/Application.h"
 
 namespace ecs
 {	

@@ -87,10 +87,10 @@ namespace ecs
 
 		ImGui::Columns(1);
 
-		ImGui::PushItemWidth(100.0f);
+		/*ImGui::PushItemWidth(100.0f);
 		ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 128, "%.0f");
 		ImGui::SliderFloat("Padding", &padding, 0, 32, "%.0f");
-		ImGui::PopItemWidth();
+		ImGui::PopItemWidth();*/
 
 		ImGui::End();
 	}

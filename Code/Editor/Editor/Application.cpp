@@ -24,6 +24,8 @@
 #include "Saz/Systems/PhysicsSystem.h"
 #include "Saz/Systems/RenderSystem.h"
 #include "Saz/Systems/SceneSystem.h"
+#include "MenuBar.h"
+#include "ProjectSettingsWindow.h"
 
 Application::Application()
 	: Saz::Application("Saz Editor")
@@ -67,8 +69,10 @@ void Application::Register()
 
 	m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
 	m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
-	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
 	m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
+	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
+	m_EntityWorld.RegisterSystem<ecs::ProjectSettingsWindow>();
+	m_EntityWorld.RegisterSystem<ecs::MenuBar>(m_EntityWorld.GetSystem<ecs::ProjectSettingsWindow>());
 	m_EntityWorld.RegisterSystem<ecs::SceneEditor>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
 	m_EntityWorld.RegisterSystem<ecs::PhysicsSystem>();
 	m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window, m_EntityWorld.GetSystem<ecs::CameraSystem>());

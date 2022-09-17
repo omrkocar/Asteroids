@@ -3,24 +3,25 @@
 
 #include "Editor/Application.h"
 
-#include <Saz/Utils/PlatformUtils.h>
-#include <Saz/SceneSerializer.h>
+#include "Saz/InputComponent.h"
+#include "Saz/Rendering/RenderCommand.h"
+#include "Saz/Rendering/Texture.h"
+#include "Saz/SceneComponent.h"
+#include "Saz/TransformComponent.h"
+#include <Saz/CameraComponent.h>
+#include <Saz/RenderComponents.h>
+#include <Saz/Rendering/Framebuffer.h>
 #include <Saz/Rendering/Renderer.h>
 #include <Saz/Rendering/Renderer2D.h>
-#include <Saz/Rendering/Framebuffer.h>
-#include <Saz/RenderComponents.h>
+#include <Saz/SceneSerializer.h>
+#include <Saz/Utils/PlatformUtils.h>
 #include <Saz/WindowResizedOneFrameComponent.h>
-#include <Saz/CameraComponent.h>
-#include "Saz/SceneComponent.h"
-#include "Saz/InputComponent.h"
 
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
-#include "Saz/TransformComponent.h"
-#include "glm/gtc/type_ptr.inl"
+#include <glm/gtc/type_ptr.inl>
 #include <filesystem>
-#include "Saz/Rendering/RenderCommand.h"
-#include "Saz/Rendering/Texture.h"
+
 
 namespace ecs
 {
@@ -45,6 +46,7 @@ namespace ecs
 
 		auto& registry = m_World->m_Registry;
 		registry.on_destroy<component::LoadSceneRequestOneFrameComponent>().connect<&SceneEditor::OnLevelLoaded>(this);
+		registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&SceneEditor::OnLevelLoaded>(this);
 
 		m_PlayIcon = Saz::Texture2D::Create("../../Data/Textures/PlayButton.png");
 		m_StopIcon = Saz::Texture2D::Create("../../Data/Textures/StopButton.png");
@@ -63,12 +65,6 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::SceneStateChangedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::SceneStateChangedOneFrameComponent>(m_Entity);
 
@@ -179,41 +175,11 @@ namespace ecs
 		{
 			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
 
-			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
-			bool shift = inputComp.IsKeyHeld(Input::KeyCode::LeftShift) || inputComp.IsKeyHeld(Input::KeyCode::RightShift);
-
 			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
 			{
 				if (m_ViewPortHovered && !ImGuizmo::IsOver() && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
 				{
 					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
-				}
-			}
-
-			if (inputComp.IsKeyPressed(Input::KeyCode::S))
-			{
-				if (control)
-				{
-					if (shift)
-						SaveSceneAs();
-					else
-						SaveScene();
-				}
-			}
-
-			if (inputComp.IsKeyPressed(Input::KeyCode::N))
-			{
-				if (control)
-				{
-					NewScene();
-				}
-			}
-
-			if (inputComp.IsKeyPressed(Input::KeyCode::O))
-			{
-				if (control)
-				{
-					OpenScene();
 				}
 			}
 
@@ -277,7 +243,7 @@ namespace ecs
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(std::filesystem::path(g_DataPath) / path);
+				//OpenScene(std::filesystem::path(g_DataPath) / path);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -336,7 +302,6 @@ namespace ecs
 
 			}
 		}
-		
 	}
 
 	void SceneEditor::DrawToolbar()
@@ -358,7 +323,6 @@ namespace ecs
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
-			
 			if (m_Scene->SceneState == SceneState::Editor)
 				OnScenePlay();
 			else if (m_Scene->SceneState == SceneState::Play)
@@ -397,121 +361,18 @@ namespace ecs
 
 	void SceneEditor::DrawMenuBar()
 	{
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("New", "Ctrl+N"))
-				{
-					NewScene();
-				}
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-				{
-					OpenScene();
-				}
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
-				{
-					SaveScene();
-				}
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-				{
-					SaveSceneAs();
-				}
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Exit"))
-				{
-					Application::Get().Close();
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
+		
 	}
 
 	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)
 	{
 		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
-	}
-
-	void SceneEditor::NewScene()
-	{
 		if (m_Scene->SceneState != SceneState::Editor)
 		{
 			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
 			m_Scene->SceneState = SceneState::Editor;
 		}
 
-		m_World->AddComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
-
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
-	}
-
-	void SceneEditor::OpenScene()
-	{
-		const String& path = Saz::FileDialogs::OpenFile("Saz Scene (*.saz)\0*.saz\0");
-		if (!path.empty())
-		{
-			if (m_Scene->SceneState != SceneState::Editor)
-			{
-				auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
-				m_Scene->SceneState = SceneState::Editor;
-			}
-
-			auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-			sceneComponent.Path = path;
-			Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
-		}
-	}
-
-	void SceneEditor::OpenScene(const std::filesystem::path& path)
-	{
-		if (path.extension().string() != ".saz")
-			return;
-
-		if (m_Scene->SceneState != SceneState::Editor)
-		{
-			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
-			m_Scene->SceneState = SceneState::Editor;
-		}
-
-		auto& sceneComponent = m_World->AddComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
-		sceneComponent.Path = path.string();
-
-		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
-	}
-
-	void SceneEditor::SaveScene()
-	{
-		String scenePath = m_World->GetSingleComponent<component::LoadedSceneComponent>().Path;
-		if (scenePath.empty())
-		{
-			scenePath = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
-		}
-
-		auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
-		sceneComponent.Path = scenePath;
-	}
-
-	void SceneEditor::SaveSceneAs()
-	{
-		const String& path = Saz::FileDialogs::SaveFile("Saz Scene (*.saz)\0*.saz\0", ".saz");
-		if (!path.empty())
-		{
-			auto& sceneComponent = m_World->AddComponent<component::SaveSceneRequestOneFrameComponent>(m_Entity);
-			sceneComponent.Path = path;
-		}
 	}
 }

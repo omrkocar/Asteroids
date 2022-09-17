@@ -1,10 +1,12 @@
 #include "SazPCH.h"
 #include "PhysicsSystem.h"
 
+#include "Saz/ProjectSettings/PhysicsSettings.h"
+#include "Saz/PhysicsComponents.h"
+#include "Saz/TransformComponent.h"
+#include "Saz/SceneComponent.h"
+
 #include <box2d/box2d.h>
-#include "SceneComponent.h"
-#include "PhysicsComponents.h"
-#include "TransformComponent.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
@@ -84,7 +86,7 @@ namespace ecs
 
 	void PhysicsSystem::OnRuntimeStart()
 	{
-		m_PhysicsWorld = new b2World({ 0.0f, -9.8f });
+		m_PhysicsWorld = new b2World({ PhysicsSettings::Gravity[0], PhysicsSettings::Gravity[1] });
 		auto view = m_World->GetAllEntitiesWith<component::Rigidbody2DComponent>();
 		for (auto entity : view)
 		{

@@ -46,11 +46,6 @@ namespace ecs
  
 	private:
 		void OnLevelLoaded(entt::registry& registry, entt::entity entity);
-		void NewScene();
-		void OpenScene();
-		void OpenScene(const std::filesystem::path& path);
-		void SaveScene();
-		void SaveSceneAs();
 
 		void DrawScene();
 
