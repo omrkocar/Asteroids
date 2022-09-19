@@ -43,6 +43,11 @@ namespace Saz
 
 		static void DrawSprite(const glm::mat4& transform, component::SpriteComponent& src, int entityID);
 
+		static void DrawLine(const glm::vec3& p0, glm::vec3& p1, const glm::vec4& color, int entityID = -1);
+
+		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityID = -1);
+		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID = -1);
+
 		struct Statistics
 		{
 			uint32_t DrawCalls = 0;
@@ -53,7 +58,6 @@ namespace Saz
 		};
 
 		static Statistics GetStats();
-
 		static void ResetStats();
 	};
 }

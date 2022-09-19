@@ -189,6 +189,8 @@ namespace ecs
 				}
 			}
 
+			Saz::Renderer2D::DrawLine(glm::vec3(0.0f), glm::vec3(5.0f), glm::vec4(1, 0, 1, 1));
+
 			Saz::Renderer2D::EndScene();
 		}
 	}

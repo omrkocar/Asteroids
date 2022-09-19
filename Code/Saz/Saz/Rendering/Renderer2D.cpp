@@ -36,6 +36,15 @@ namespace Saz {
 		int EntityID;
 	};
 
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+
+		// Editor-only
+		int EntityID;
+	};
+
 	struct Renderer2DData
 	{
 		static const uint32_t MaxQuads = 20000;
@@ -52,6 +61,10 @@ namespace Saz {
 		Ref<VertexBuffer> CircleVertexBuffer;
 		Ref<Shader> CircleShader;
 
+		Ref<VertexArray> LineVertexArray;
+		Ref<VertexBuffer> LineVertexBuffer;
+		Ref<Shader> LineShader;
+
 		uint32_t QuadIndexCount = 0;
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
@@ -59,6 +72,12 @@ namespace Saz {
 		uint32_t CircleIndexCount = 0;
 		CircleVertex* CircleVertexBufferBase = nullptr;
 		CircleVertex* CircleVertexBufferPtr = nullptr;
+
+		uint32_t LineVertexCount = 0;
+		LineVertex* LineVertexBufferBase = nullptr;
+		LineVertex* LineVertexBufferPtr = nullptr;
+
+		float LineWidth = 2.0f;
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = white texture
@@ -132,6 +151,18 @@ namespace Saz {
 		s_RenderData.CircleVertexArray->SetIndexBuffer(quadIB); // Use quad IB
 		s_RenderData.CircleVertexBufferBase = new CircleVertex[s_RenderData.MaxVertices];
 
+		// Lines
+		s_RenderData.LineVertexArray = VertexArray::Create();
+
+		s_RenderData.LineVertexBuffer = VertexBuffer::Create(s_RenderData.MaxVertices * sizeof(LineVertex));
+		s_RenderData.LineVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color"    },
+			{ ShaderDataType::Int,    "a_EntityID" }
+			});
+		s_RenderData.LineVertexArray->AddVertexBuffer(s_RenderData.LineVertexBuffer);
+		s_RenderData.LineVertexBufferBase = new LineVertex[s_RenderData.MaxVertices];
+
 		s_RenderData.WhiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_RenderData.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
@@ -142,6 +173,7 @@ namespace Saz {
 
 		s_RenderData.QuadShader = Shader::Create("../../Data/Shaders/Texture.glsl");
 		s_RenderData.CircleShader = Shader::Create("../../Data/Shaders/Circle.glsl");
+		s_RenderData.LineShader = Shader::Create("../../Data/Shaders/Line.glsl");
 
 		// Set first texture slot to 0
 		s_RenderData.TextureSlots[0] = s_RenderData.WhiteTexture;
@@ -196,6 +228,9 @@ namespace Saz {
 		s_RenderData.CircleIndexCount = 0;
 		s_RenderData.CircleVertexBufferPtr = s_RenderData.CircleVertexBufferBase;
 
+		s_RenderData.LineVertexCount = 0;
+		s_RenderData.LineVertexBufferPtr = s_RenderData.LineVertexBufferBase;
+
 		s_RenderData.TextureSlotIndex = 1;
 	}
 
@@ -222,6 +257,17 @@ namespace Saz {
 
 			s_RenderData.CircleShader->Bind();
 			RenderCommand::DrawIndexed(s_RenderData.CircleVertexArray, s_RenderData.CircleIndexCount);
+			s_RenderData.Stats.DrawCalls++;
+		}
+
+		if (s_RenderData.LineVertexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_RenderData.LineVertexBufferPtr - (uint8_t*)s_RenderData.LineVertexBufferBase);
+			s_RenderData.LineVertexBuffer->SetData(s_RenderData.LineVertexBufferBase, dataSize);
+
+			s_RenderData.LineShader->Bind();
+			RenderCommand::SetLineWidth(s_RenderData.LineWidth);
+			RenderCommand::DrawLines(s_RenderData.LineVertexArray, s_RenderData.LineVertexCount);
 			s_RenderData.Stats.DrawCalls++;
 		}
 	}
@@ -398,6 +444,46 @@ namespace Saz {
 			DrawQuad(transform, src.Texture, src.TilingFactor, src.Color, entityID);
 		else
 			DrawQuad(transform, src.Color, entityID);
+	}
+
+	void Renderer2D::DrawLine(const glm::vec3& p0, glm::vec3& p1, const glm::vec4& color, int entityID)
+	{
+		s_RenderData.LineVertexBufferPtr->Position = p0;
+		s_RenderData.LineVertexBufferPtr->Color = color;
+		s_RenderData.LineVertexBufferPtr->EntityID = entityID;
+		s_RenderData.LineVertexBufferPtr++;
+
+		s_RenderData.LineVertexBufferPtr->Position = p1;
+		s_RenderData.LineVertexBufferPtr->Color = color;
+		s_RenderData.LineVertexBufferPtr->EntityID = entityID;
+		s_RenderData.LineVertexBufferPtr++;
+
+		s_RenderData.LineVertexCount += 2;
+	}
+
+	void Renderer2D::DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 p0 = glm::vec3(position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p1 = glm::vec3(position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p2 = glm::vec3(position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+		glm::vec3 p3 = glm::vec3(position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+
+		DrawLine(p0, p1, color);
+		DrawLine(p1, p2, color);
+		DrawLine(p2, p3, color);
+		DrawLine(p3, p0, color);
+	}
+
+	void Renderer2D::DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 lineVertices[4];
+		for (size_t i = 0; i < 4; i++)
+			lineVertices[i] = transform * s_RenderData.QuadVertexPositions[i];
+
+		DrawLine(lineVertices[0], lineVertices[1], color);
+		DrawLine(lineVertices[1], lineVertices[2], color);
+		DrawLine(lineVertices[2], lineVertices[3], color);
+		DrawLine(lineVertices[3], lineVertices[0], color);
 	}
 
 	void Renderer2D::ResetStats()
