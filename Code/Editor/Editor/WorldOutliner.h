@@ -32,5 +32,6 @@ namespace ecs
 		void DrawEntityNode(Entity entity);
 
 		void OnSceneLoadRequest(entt::registry& registry, entt::entity entity);
+		void OnSceneStateChanged(entt::registry& registry, entt::entity entity);
 	};
 }

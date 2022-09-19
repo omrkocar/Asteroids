@@ -39,7 +39,6 @@ namespace ecs
 
 		void ImGuiRender();
 
-
 		bool IsViewportFocused() const { return m_ViewportFocused; }
 		bool IsViewportHovered() const { return m_ViewPortHovered; }
  
@@ -70,7 +69,8 @@ namespace ecs
 		bool m_ViewPortHovered = false;
 		glm::vec2 m_SceneSize = { 0.0f, 0.0f };
 		glm::vec2 m_ViewportBounds[2];
-		int m_GizmoType;
+		int m_GizmoType = 0;
+		bool m_IsGizmoVisible = true;
 		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
 		Entity m_Entity = entt::null;
 	};

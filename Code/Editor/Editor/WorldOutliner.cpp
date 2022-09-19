@@ -20,8 +20,10 @@ namespace ecs
 
 	void WorldOutliner::Init()
 	{
-		m_World->m_Registry.on_construct<component::LoadSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
-		m_World->m_Registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
+		auto& registry = m_World->m_Registry;
+		registry.on_construct<component::LoadSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
+		registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
+		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneStateChanged>(this);
 	}
 
 	void WorldOutliner::Update(const Saz::GameTime& gameTime)
@@ -103,4 +105,10 @@ namespace ecs
 	{
 		m_SelectedEntity = entt::null;
 	}
+
+	void WorldOutliner::OnSceneStateChanged(entt::registry& registry, entt::entity entity)
+	{
+		m_SelectedEntity = entt::null;
+	}
+
 }

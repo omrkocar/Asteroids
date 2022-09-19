@@ -180,15 +180,15 @@ namespace ecs
 
 			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
 			{
-				if (m_ViewPortHovered && !ImGuizmo::IsOver() && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
+				if (m_ViewPortHovered && !ImGuizmo::IsOver())
 				{
 					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
 				}
 			}
 
-			if (!m_ViewportFocused)
+			if (!m_ViewportFocused && m_WorldOutliner.m_SelectedEntity == entt::null)
 			{
-				m_GizmoType = -1;
+				m_IsGizmoVisible = false;
 				return;
 			}
 
@@ -205,6 +205,8 @@ namespace ecs
 			if (inputComp.IsKeyPressed(Input::KeyCode::R))
 				if (!ImGuizmo::IsUsing())
 					m_GizmoType = ImGuizmo::OPERATION::SCALE;
+
+			m_IsGizmoVisible = true;
 		}
 	}
 
@@ -290,7 +292,7 @@ namespace ecs
 			ImGuizmo::Manipulate(
 				glm::value_ptr(cameraView),
 				glm::value_ptr(cameraProjection),
-				(ImGuizmo::OPERATION)m_GizmoType,
+				(ImGuizmo::OPERATION)(m_IsGizmoVisible ? m_GizmoType : -1),
 				ImGuizmo::WORLD,
 				glm::value_ptr(transform),
 				nullptr, snap ? snapValues : nullptr);
@@ -302,7 +304,6 @@ namespace ecs
 				tc.Position = position;
 				tc.Rotation = rotation;
 				tc.Scale = scale;
-
 			}
 		}
 	}

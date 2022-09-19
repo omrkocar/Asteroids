@@ -38,7 +38,7 @@ namespace ecs
 	void ProjectSettingsWindow::DrawPhysicsSettings()
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_CollapsingHeader;
-		if (ImGui::TreeNodeEx("Physics Settings", flags))
+		if (ImGui::TreeNodeEx("Physics", flags))
 		{
 			static float a = -9.81f;
 			ImGui::InputFloat2("Gravity", PhysicsSettings::Gravity, "%.2f");

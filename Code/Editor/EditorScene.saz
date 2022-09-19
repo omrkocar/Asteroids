@@ -1,31 +1,32 @@
 Scene: Untitled
 Entities:
-  - Entity: 1327268893086027712
+  - Entity: 1361290673011095473
     NameComponent:
-      Name: Main Camera
+      Name: Camera
     TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Position: [0, 0.602424145, 7.73333359]
+      Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
-    EditorCameraComponent:
-      EditorCamera:
-        Pitch: 0
-        Yaw: 0
-        AspectRatio: 1.81681681
-        FOV: 30
-        NearClip: 0.100000001
-        FarClip: 1000
-        Distance: 15.9109936
-        FocalPoint: [0.0962879881, 1.76010633, 0]
-  - Entity: 1385925860695106124
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.959931076
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 4
+        OrthographicNear: -1
+        OrthographicFar: 104
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 1620965192542877240
     NameComponent:
-      Name: Square3
+      Name: Square
     TransformComponent:
-      Position: [0.5, 2.72415876, 1.16415322e-10]
-      Rotation: [0, -0, -0.831627965]
-      Scale: [0.199999854, 0.199999854, 1]
+      Position: [-1.87942159, 2.82145596, 2.34052e-10]
+      Rotation: [0, -0, 0.00153773534]
+      Scale: [0.5, 0.5, 1]
     SpriteComponent:
-      Color: [1, 1, 1, 1]
+      Color: [0, 0.731914997, 1, 1]
     Rigidbody2DComponent:
       BodyType: 1
       FixedRotation: false
@@ -33,26 +34,7 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
-      Friction: 1
-      Restitution: 0.75
-      RestitutionThreshold: 1
-  - Entity: 8253503286192457775
-    NameComponent:
-      Name: Square2
-    TransformComponent:
-      Position: [-0.631080449, 2.79152346, 0]
-      Rotation: [0, -0, -0.506301999]
-      Scale: [0.299999684, 0.299999684, 1]
-    SpriteComponent:
-      Color: [1, 1, 1, 1]
-    Rigidbody2DComponent:
-      BodyType: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 0.75
+      Friction: 0.5
       Restitution: 0.400000006
       RestitutionThreshold: 1
   - Entity: 17650017232327025741
@@ -74,15 +56,15 @@ Entities:
       Friction: 0.75
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 1620965192542877240
+  - Entity: 8253503286192457775
     NameComponent:
-      Name: Square
+      Name: Square2
     TransformComponent:
-      Position: [-1.87942159, 2.82145596, 2.34052e-10]
-      Rotation: [0, -0, 0.00153773534]
-      Scale: [0.5, 0.5, 1]
+      Position: [-0.631080449, 2.79152346, 0]
+      Rotation: [0, -0, -0.506301999]
+      Scale: [0.299999684, 0.299999684, 1]
     SpriteComponent:
-      Color: [0, 0.731914997, 1, 1]
+      Color: [1, 1, 1, 1]
     Rigidbody2DComponent:
       BodyType: 1
       FixedRotation: false
@@ -90,24 +72,42 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
-      Friction: 0.5
+      Friction: 0.75
       Restitution: 0.400000006
       RestitutionThreshold: 1
-  - Entity: 1361290673011095473
+  - Entity: 1385925860695106124
     NameComponent:
-      Name: Camera
+      Name: Square3
     TransformComponent:
-      Position: [0, 0.602424145, 8.3263731]
-      Rotation: [0, -0, 0]
+      Position: [0.5, 2.72415876, 1.16415322e-10]
+      Rotation: [0, -0, -0.831627965]
+      Scale: [0.199999854, 0.199999854, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 0.75
+      RestitutionThreshold: 1
+  - Entity: 1327268893086027712
+    NameComponent:
+      Name: Main Camera
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 1
-        PerspectiveFOV: 0.959931076
-        PerspectiveNear: 0.00999999978
-        PerspectiveFar: 1000
-        OrthographicSize: 8
-        OrthographicNear: -1
-        OrthographicFar: 104
-      Primary: true
-      FixedAspectRatio: false
+    EditorCameraComponent:
+      EditorCamera:
+        Pitch: 0
+        Yaw: 0
+        AspectRatio: 1.81681681
+        FOV: 30
+        NearClip: 0.100000001
+        FarClip: 1000
+        Distance: 24.6669426
+        FocalPoint: [0.699007511, 1.18737948, 2.71310878]
