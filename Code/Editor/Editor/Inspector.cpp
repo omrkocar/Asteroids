@@ -175,6 +175,7 @@ namespace ecs
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
 		DrawSpriteComponent(entity);
+		DrawCircleRendererComponent(entity);
 		DrawRigidbody2DComponent(entity);
 		DrawBoxCollider2DComponent(entity);
 
@@ -190,7 +191,7 @@ namespace ecs
 		{
 			if (!m_World->HasComponent<component::TransformComponent>(entity))
 			{
-				if (ImGui::MenuItem("Transform Component"))
+				if (ImGui::MenuItem("Transform"))
 				{
 					m_World->AddComponent<component::TransformComponent>(entity);
 					ImGui::CloseCurrentPopup();
@@ -199,7 +200,7 @@ namespace ecs
 
 			if (!m_World->HasComponent<component::CameraComponent>(entity))
 			{
-				if (ImGui::MenuItem("Camera Component"))
+				if (ImGui::MenuItem("Camera"))
 				{
 					m_World->AddComponent<component::CameraComponent>(entity);
 					ImGui::CloseCurrentPopup();
@@ -208,16 +209,25 @@ namespace ecs
 
 			if (!m_World->HasComponent<component::SpriteComponent>(entity))
 			{
-				if (ImGui::MenuItem("Sprite Component"))
+				if (ImGui::MenuItem("Sprite Renderer"))
 				{
 					m_World->AddComponent<component::SpriteComponent>(entity);
 					ImGui::CloseCurrentPopup();
 				}
 			}
 
+			if (!m_World->HasComponent<component::CircleRendererComponent>(entity))
+			{
+				if (ImGui::MenuItem("Circle Renderer"))
+				{
+					m_World->AddComponent<component::CircleRendererComponent>(entity);
+					ImGui::CloseCurrentPopup();
+				}
+			}
+
 			if (!m_World->HasComponent<component::Rigidbody2DComponent>(entity))
 			{
-				if (ImGui::MenuItem("Rigidbody2D Component"))
+				if (ImGui::MenuItem("Rigidbody2D"))
 				{
 					m_World->AddComponent<component::Rigidbody2DComponent>(entity);
 					ImGui::CloseCurrentPopup();
@@ -226,7 +236,7 @@ namespace ecs
 
 			if (!m_World->HasComponent<component::BoxCollider2DComponent>(entity))
 			{
-				if (ImGui::MenuItem("BoxCollider2D Component"))
+				if (ImGui::MenuItem("BoxCollider2D"))
 				{
 					m_World->AddComponent<component::BoxCollider2DComponent>(entity);
 					ImGui::CloseCurrentPopup();
@@ -325,12 +335,10 @@ namespace ecs
 					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
 			});
-
 	}
 
 	void Inspector::DrawSpriteComponent(Entity entity)
 	{
-
 		DrawComponent<component::SpriteComponent>(*m_World, "Sprite Component", entity, [](auto& component)
 			{
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
@@ -350,7 +358,16 @@ namespace ecs
 
 				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
+	}
 
+	void Inspector::DrawCircleRendererComponent(Entity entity)
+	{
+		DrawComponent<component::CircleRendererComponent>(*m_World, "Circle Renderer Component", entity, [](auto& component)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+				ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+				ImGui::DragFloat("Fade", &component.Fade, 0.0025f, 0.0f, 1.0f);
+			});
 	}
 
 	void Inspector::DrawRigidbody2DComponent(Entity entity)

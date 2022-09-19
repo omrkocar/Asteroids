@@ -143,6 +143,17 @@ namespace ecs
 				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 			}
 
+			// Draw circles
+			{
+				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::CircleRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, circle] = view.get<component::TransformComponent, component::CircleRendererComponent>(entity);
+
+					Saz::Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+				}
+			}
+
 			Saz::Renderer2D::EndScene();
 		}
 	}
@@ -165,6 +176,17 @@ namespace ecs
 			{
 				auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
 				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			}
+
+			// Draw circles
+			{
+				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::CircleRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, circle] = view.get<component::TransformComponent, component::CircleRendererComponent>(entity);
+
+					Saz::Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+				}
 			}
 
 			Saz::Renderer2D::EndScene();

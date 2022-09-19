@@ -62,6 +62,7 @@ void Application::Register()
 	m_World.RegisterComponent<component::MovementComponent>();
 	m_World.RegisterComponent<component::NameComponent>();
 	m_World.RegisterComponent<component::SpriteComponent>();
+	m_World.RegisterComponent<component::CircleRendererComponent>();
 	m_World.RegisterComponent<component::Rigidbody2DComponent>();
 	m_World.RegisterComponent<component::BoxCollider2DComponent>();
 	m_World.RegisterComponent<component::TransformComponent>();

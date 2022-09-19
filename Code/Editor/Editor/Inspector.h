@@ -29,6 +29,7 @@ namespace ecs
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);
 		void DrawSpriteComponent(Entity entity);
+		void DrawCircleRendererComponent(Entity entity);
 		void DrawRigidbody2DComponent(Entity entity);
 		void DrawBoxCollider2DComponent(Entity entity);
 
