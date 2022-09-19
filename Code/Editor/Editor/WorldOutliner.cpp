@@ -89,6 +89,10 @@ namespace ecs
 		bool entityDeleted = false;
 		if (ImGui::BeginPopupContextItem())
 		{
+			if (ImGui::MenuItem("Duplicate Object"))
+			{
+				m_World->DuplicateEntity(entity);
+			}
 			if (ImGui::MenuItem("Delete Object"))
 			{
 				m_EntityToDelete = entity;

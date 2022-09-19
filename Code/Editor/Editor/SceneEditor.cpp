@@ -178,7 +178,7 @@ namespace ecs
 		{
 			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
 
-			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft))
+			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft) && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
 			{
 				if (m_ViewPortHovered && !ImGuizmo::IsOver())
 				{

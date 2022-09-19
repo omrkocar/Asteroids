@@ -58,7 +58,7 @@ namespace ecs
 
 		if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonRight))
 			cameraComponent.Camera.MousePan(-delta);
-		else if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonLeft))
+		else if (inputComponent.IsKeyHeld(Input::MouseCode::ButtonLeft) && inputComponent.IsKeyHeld(Input::KeyCode::LeftAlt))
 			cameraComponent.Camera.MouseRotate(-delta);
 		
 		cameraComponent.Camera.UpdateView();

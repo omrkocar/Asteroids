@@ -1,5 +1,22 @@
 Scene: Untitled
 Entities:
+  - Entity: 1327268893086027712
+    NameComponent:
+      Name: Main Camera
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    EditorCameraComponent:
+      EditorCamera:
+        Pitch: 0
+        Yaw: 0
+        AspectRatio: 1.81681681
+        FOV: 30
+        NearClip: 0.100000001
+        FarClip: 1000
+        Distance: 14.1105947
+        FocalPoint: [0.699007511, 1.18737948, 2.71310878]
   - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
@@ -18,6 +35,25 @@ Entities:
         OrthographicFar: 104
       Primary: true
       FixedAspectRatio: false
+  - Entity: 1385925860695106124
+    NameComponent:
+      Name: Square3
+    TransformComponent:
+      Position: [0.5, 2.72415876, 1.16415322e-10]
+      Rotation: [0, -0, -0.831627965]
+      Scale: [0.199999854, 0.199999854, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 0.75
+      RestitutionThreshold: 1
   - Entity: 1620965192542877240
     NameComponent:
       Name: Square
@@ -35,6 +71,25 @@ Entities:
       Offset: [0, 0]
       Density: 1
       Friction: 0.5
+      Restitution: 0.400000006
+      RestitutionThreshold: 1
+  - Entity: 8253503286192457775
+    NameComponent:
+      Name: Square2
+    TransformComponent:
+      Position: [-0.660000026, 2.79152346, 0]
+      Rotation: [0, -0, -0.506301999]
+      Scale: [0.299999684, 0.299999684, 1]
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
       Restitution: 0.400000006
       RestitutionThreshold: 1
   - Entity: 17650017232327025741
@@ -56,58 +111,3 @@ Entities:
       Friction: 0.75
       Restitution: 0
       RestitutionThreshold: 0.5
-  - Entity: 8253503286192457775
-    NameComponent:
-      Name: Square2
-    TransformComponent:
-      Position: [-0.631080449, 2.79152346, 0]
-      Rotation: [0, -0, -0.506301999]
-      Scale: [0.299999684, 0.299999684, 1]
-    SpriteComponent:
-      Color: [1, 1, 1, 1]
-    Rigidbody2DComponent:
-      BodyType: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 0.75
-      Restitution: 0.400000006
-      RestitutionThreshold: 1
-  - Entity: 1385925860695106124
-    NameComponent:
-      Name: Square3
-    TransformComponent:
-      Position: [0.5, 2.72415876, 1.16415322e-10]
-      Rotation: [0, -0, -0.831627965]
-      Scale: [0.199999854, 0.199999854, 1]
-    SpriteComponent:
-      Color: [1, 1, 1, 1]
-    Rigidbody2DComponent:
-      BodyType: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 1
-      Restitution: 0.75
-      RestitutionThreshold: 1
-  - Entity: 1327268893086027712
-    NameComponent:
-      Name: Main Camera
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    EditorCameraComponent:
-      EditorCamera:
-        Pitch: 0
-        Yaw: 0
-        AspectRatio: 1.81681681
-        FOV: 30
-        NearClip: 0.100000001
-        FarClip: 1000
-        Distance: 24.6669426
-        FocalPoint: [0.699007511, 1.18737948, 2.71310878]

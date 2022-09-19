@@ -7,16 +7,18 @@
 
 #include <entt/entt.hpp>
 #include <Saz/Core/Entity.h>
+#include "Saz/Core/UUID.h"
+#include "Saz/ComponentGroup.h"
 
 namespace Saz
 {
 	class GameTime;
-	class UUID;
 }
 
 namespace ecs
 {
 	class System;
+	using EntityMap = std::unordered_map<Saz::UUID, Entity>;
 
 	struct ComponentEntry
 	{
@@ -37,14 +39,14 @@ namespace ecs
 
 		void Update(const Saz::GameTime& gameTime);
 
-		void CopyEntities();
-
 		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity()->ecs::Entity;
-		ecs::Entity CreateBaseEntity();
+		ecs::Entity CreateBaseEntity(const String& name = "Empty Object");
 		ecs::Entity CreateBaseEntity(Saz::UUID uuid, const String& name);
 		void DestroyEntity(const ecs::Entity& entity);
+
+		void DuplicateEntity(Entity entity);
 
 		const Saz::UUID& GetUUID(Entity entity);
 
@@ -61,6 +63,9 @@ namespace ecs
 
 		template<typename... Components>
 		auto GetAllEntitiesWith();
+
+		template<typename Component>
+		void CopyComponentIfExists(ecs::Entity dst, ecs::Entity src);
 
 		template<class TComponent, typename... TArgs>
 		auto TryGetComponent(const ecs::Entity& entity)->TComponent*;
@@ -85,6 +90,8 @@ namespace ecs
 
 		void DestroyAllEntities();
 
+		void SortEntities();
+
 		Entity CreateMainCamera();
 		ecs::Entity GetMainCameraEntity();
 		void SetMainCamera(Entity entity);
@@ -96,6 +103,8 @@ namespace ecs
 		DynamicArray<ComponentEntry> m_ComponentEntries;
 		DynamicArray<SystemEntry> m_SystemEntries;
 		Entity m_MainCamera;
+
+		EntityMap m_EntityIDMap;
 	};
 }
 

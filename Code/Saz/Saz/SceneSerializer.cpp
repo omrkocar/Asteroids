@@ -249,13 +249,14 @@ namespace Saz
 		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
-		m_World.m_Registry.each([&](auto entity)
-		{
-			if (!m_World.IsAlive(entity))
-				return;
+		std::map<UUID, entt::entity> sortedEntityMap;
+		auto idComponentView = m_World.m_Registry.view<component::IDComponent>();
+		for (auto entity : idComponentView)
+			sortedEntityMap[idComponentView.get<component::IDComponent>(entity).ID] = entity;
 
+		// Serialize sorted entities
+		for (auto [id, entity] : sortedEntityMap)
 			SerializeEntity(out, m_World, entity);
-		});
 
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
@@ -380,6 +381,8 @@ namespace Saz
 				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 			}
 		}
+
+		m_World.SortEntities();
 
 		return true;
 	}

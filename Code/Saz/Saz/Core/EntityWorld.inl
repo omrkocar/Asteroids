@@ -13,9 +13,22 @@ inline auto ecs::EntityWorld::CreateEntity()->ecs::Entity
 	return m_Registry.create();
 }
 
+template<typename Component>
+void ecs::EntityWorld::CopyComponentIfExists(ecs::Entity dst, ecs::Entity src)
+{
+	if (m_Registry.has<Component>(src))
+	{
+		auto& srcComponent = m_Registry.get<Component>(src);
+		m_Registry.emplace_or_replace<Component>(dst, srcComponent);
+	}
+}
+
 inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 {
+	Saz::UUID id = GetUUID(entity);
 	m_Registry.destroy(entity);
+	m_EntityIDMap.erase(id);
+	// Sort it here
 }
 
 template<class TComponent>

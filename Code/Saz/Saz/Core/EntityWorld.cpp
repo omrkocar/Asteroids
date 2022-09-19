@@ -1,35 +1,18 @@
 #include "SazPCH.h"
 #include "EntityWorld.h"
 
+#include "Saz/Core/UUID.h"
 #include "Saz/Systems/System.h"
 #include "Saz/NameComponent.h"
-#include "CameraComponent.h"
-#include "InputComponent.h"
-#include "TransformComponent.h"
-#include "SceneComponent.h"
-#include "PhysicsComponents.h"
-#include "RenderComponents.h"
-#include "UUID.h"
+#include "Saz/CameraComponent.h"
+#include "Saz/InputComponent.h"
+#include "Saz/TransformComponent.h"
+#include "Saz/SceneComponent.h"
+#include "Saz/PhysicsComponents.h"
+#include "Saz/RenderComponents.h"
 
 namespace ecs
 {
-	template<typename T>
-	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<Saz::UUID, Entity>& enttMap)
-	{
-		auto components = srcRegistry.view<T>();
-		for (auto srcEntity : components)
-		{
-			entt::entity destEntity = enttMap.at(srcRegistry.get<component::IDComponent>(srcEntity).ID);
-
-			auto& srcComponent = srcRegistry.get<T>(srcEntity);
-			if (!srcRegistry.valid(destEntity))
-			{
-				int bp = 1;
-			}
-			auto& destComponent = dstRegistry.emplace_or_replace<T>(destEntity, srcComponent);
-		}
-	}
-
 	void EntityWorld::Init()
 	{
 		for (ecs::SystemEntry& entry : m_SystemEntries)
@@ -54,24 +37,38 @@ namespace ecs
 			entry.m_System->Update(gameTime);
 	}
 
-	void EntityWorld::CopyEntities()
+	ecs::Entity EntityWorld::CreateBaseEntity(const String& name)
 	{
-	}
-
-	ecs::Entity EntityWorld::CreateBaseEntity()
-	{
-		return CreateBaseEntity(Saz::UUID(), "Empty Object");
+		return CreateBaseEntity(Saz::UUID(), name);
 	}
 
 	Entity EntityWorld::CreateBaseEntity(Saz::UUID uuid, const String& name)
 	{
 		auto entity = CreateEntity();
-		AddComponent<component::NameComponent>(entity, name);
+		auto& nameComp = AddComponent<component::NameComponent>(entity);
+		nameComp.Name = name;
 		AddComponent<component::TransformComponent>(entity);
 		AddComponent<component::SceneEntityComponent>(entity);
 		auto& idComp = AddComponent<component::IDComponent>(entity);
 		idComp.ID = uuid;
+		m_EntityIDMap[uuid] = entity;
+		SortEntities();
 		return entity;
+	}
+
+	void EntityWorld::DuplicateEntity(Entity entity)
+	{
+		Entity newEntity = CreateBaseEntity();
+		CopyComponentIfExists<component::SpriteComponent>(newEntity, entity);
+		CopyComponentIfExists<component::Rigidbody2DComponent>(newEntity, entity);
+		CopyComponentIfExists<component::BoxCollider2DComponent>(newEntity, entity);
+		CopyComponentIfExists<component::NameComponent>(newEntity, entity);
+		CopyComponentIfExists<component::CameraComponent>(newEntity, entity);
+		CopyComponentIfExists<component::CircleRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<component::SceneEntityComponent>(newEntity, entity);
+		CopyComponentIfExists<component::TransformComponent>(newEntity, entity);
+
+		GetComponent<component::NameComponent>(newEntity).Name += "_D";
 	}
 
 	const Saz::UUID& EntityWorld::GetUUID(Entity entity)
@@ -96,6 +93,16 @@ namespace ecs
 		m_Registry.each([this](auto entity) {
 			m_Registry.destroy(entity);
 		});
+	}
+
+	void EntityWorld::SortEntities()
+	{
+		m_Registry.sort<component::IDComponent>([&](const auto lhs, const auto rhs)
+			{
+				auto lhsEntity = m_EntityIDMap.find(lhs.ID);
+				auto rhsEntity = m_EntityIDMap.find(rhs.ID);
+				return static_cast<uint32_t>(lhsEntity->second) < static_cast<uint32_t>(rhsEntity->second);
+			});
 	}
 
 	ecs::Entity EntityWorld::CreateMainCamera()

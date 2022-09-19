@@ -44,5 +44,4 @@ namespace ecs
 			ImGui::InputFloat2("Gravity", PhysicsSettings::Gravity, "%.2f");
 		}
 	}
-
 }

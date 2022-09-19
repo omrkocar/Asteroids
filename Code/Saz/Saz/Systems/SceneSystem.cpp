@@ -20,6 +20,7 @@ namespace ecs
 		const String& scenePath = serializer.DeserializeLastOpenScene(strLastOpenScene);
 		m_Scene->Path = scenePath;
 		UpdateWindowName(scenePath);
+		m_World->SortEntities();
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&SceneSystem::OnSceneStateChangeRequest>(this);
@@ -82,13 +83,6 @@ namespace ecs
 
 	void SceneSystem::SaveScene(const String& scenePath)
 	{
-		int num = 0;
-		const auto sceneEntityView = m_World->GetAllEntitiesWith<component::EditorCameraComponent>();
-		for (const auto& sceneEntity : sceneEntityView)
-		{
-			num++;
-		}
-
 		Saz::SceneSerializer serializer(*m_World);
 		serializer.Serialize(scenePath);
 
