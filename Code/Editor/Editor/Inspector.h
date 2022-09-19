@@ -16,9 +16,11 @@ namespace ecs
 		
 		Inspector(WorldOutliner& worldOutliner);
 
-		virtual void ImGuiRender() override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
 
 	private:
+		void ImGuiRender();
+
 		void DrawComponents(Entity entity);
 
 		void DrawAddComponentPopup(Entity entity);

@@ -8,9 +8,9 @@ public:
 	Application();
 	virtual ~Application() override;
 
-	virtual void Init() override;
-	virtual void Destroy() override;
-	virtual void Register() override;
-	virtual void Update(const Saz::GameTime& gameTime) override;
+	virtual void Init();
+	virtual void Register();
+	virtual void Destroy();
+	virtual void Update(const Saz::GameTime& gameTime);
 };
 

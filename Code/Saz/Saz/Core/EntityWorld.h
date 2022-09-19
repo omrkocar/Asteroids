@@ -33,17 +33,17 @@ namespace ecs
 	{
 	public:
 		void Init();
-		void PostInit();
 		void Destroy();
 
 		void Update(const Saz::GameTime& gameTime);
-		void ImGuiRender();
+
+		void CopyEntities();
 
 		bool IsAlive(const ecs::Entity& entity) const;
 
 		auto CreateEntity()->ecs::Entity;
 		ecs::Entity CreateBaseEntity();
-		ecs::Entity CreateBaseEntity(Saz::UUID uuid);
+		ecs::Entity CreateBaseEntity(Saz::UUID uuid, const String& name);
 		void DestroyEntity(const ecs::Entity& entity);
 
 		const Saz::UUID& GetUUID(Entity entity);

@@ -25,7 +25,7 @@ namespace ecs
 
 	void ContentBrowser::Update(const Saz::GameTime& gameTime)
 	{
-
+		ImGuiRender();
 	}
 
 	void ContentBrowser::ImGuiRender()

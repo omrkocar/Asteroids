@@ -5,6 +5,7 @@
 #include "Saz/SceneSerializer.h"
 #include "Saz/Rendering/Renderer.h"
 #include "Saz/Core/Application.h"
+#include "CameraComponent.h"
 
 namespace ecs
 {	
@@ -12,18 +13,16 @@ namespace ecs
 
 	void SceneSystem::Init()
 	{
-		auto sceneEntity = m_World->CreateEntity();
-		auto& sceneComp = m_World->AddComponent<component::LoadedSceneComponent>(sceneEntity);
+		auto entity = m_World->CreateEntity();
+		m_Scene = &m_World->AddComponent<component::LoadedSceneComponent>(entity);
 
 		Saz::SceneSerializer serializer(*m_World);
 		const String& scenePath = serializer.DeserializeLastOpenScene(strLastOpenScene);
-		sceneComp.Path = scenePath;
+		m_Scene->Path = scenePath;
 		UpdateWindowName(scenePath);
-	}
 
-	void SceneSystem::PostInit()
-	{
-		
+		auto& registry = m_World->m_Registry;
+		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&SceneSystem::OnSceneStateChangeRequest>(this);
 	}
 
 	void SceneSystem::Destroy()
@@ -83,6 +82,13 @@ namespace ecs
 
 	void SceneSystem::SaveScene(const String& scenePath)
 	{
+		int num = 0;
+		const auto sceneEntityView = m_World->GetAllEntitiesWith<component::EditorCameraComponent>();
+		for (const auto& sceneEntity : sceneEntityView)
+		{
+			num++;
+		}
+
 		Saz::SceneSerializer serializer(*m_World);
 		serializer.Serialize(scenePath);
 
@@ -103,5 +109,30 @@ namespace ecs
 		scene.Name = name;
 		auto& window = Saz::Application::Get().GetWindow();
 		window.SetTitle(String("Saz Editor") + " - " + scene.Name);
+	}
+
+	void SceneSystem::OnSceneStateChangeRequest(entt::registry& registry, entt::entity entity)
+	{
+		auto& sceneStateRequest = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
+
+		if (sceneStateRequest.SceneState == SceneState::Play)
+		{
+			Saz::SceneSerializer serializer(*m_World);
+			serializer.Serialize("EditorScene.saz");
+
+			m_Scene->SceneState = SceneState::Play;
+		}
+		else if (sceneStateRequest.SceneState == SceneState::Editor)
+		{
+			const auto sceneEntityView = m_World->GetAllEntitiesWith<component::SceneEntityComponent>();
+			for (const auto& sceneEntity : sceneEntityView)
+			{
+				m_World->DestroyEntity(sceneEntity);
+			}
+
+			Saz::SceneSerializer serializer(*m_World);
+			serializer.Deserialize("EditorScene.saz");
+			m_Scene->SceneState = SceneState::Editor;
+		}
 	}
 }

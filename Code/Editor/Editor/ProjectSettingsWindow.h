@@ -16,7 +16,8 @@ namespace ecs
 		ProjectSettingsWindow();
 
 		virtual void Init() override;
-		virtual void ImGuiRender() override;
+		virtual void Update(const Saz::GameTime& gameTime) override;
+		void ImGuiRender();
 
 		bool IsVisible() { return m_IsActive; }
 		void SetVisible(bool active) { m_IsActive = active; }

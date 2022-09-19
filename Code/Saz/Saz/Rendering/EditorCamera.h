@@ -45,6 +45,8 @@ namespace Saz {
 		float GetAspectRatio() { return m_AspectRatio; }
 		float GetNearClip() { return m_NearClip; }
 		float GetFarClip() { return m_FarClip; }
+		const glm::vec3& GetFocalPoint() { return m_FocalPoint; }
+		void SetFocalPoint(const glm::vec3& focalPoint) { m_FocalPoint = focalPoint; }
 
 		bool OnMouseScroll(float YOffset);
 	public:

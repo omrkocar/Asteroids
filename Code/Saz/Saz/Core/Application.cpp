@@ -46,7 +46,6 @@ namespace Saz
 
 	void Application::Init()
 	{
-		m_EntityWorld.Init();
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -58,7 +57,6 @@ namespace Saz
 		SAZ_PROFILE_FUNCTION();
 
 		m_Window->PostInit();
-		m_EntityWorld.PostInit();
 	}
 
 	void Application::Register()
@@ -70,22 +68,12 @@ namespace Saz
 	{
 		SAZ_PROFILE_FUNCTION();
 
-		m_EntityWorld.Destroy();
 		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		SAZ_PROFILE_FUNCTION();
-
-		if (!m_Minimized)
-		{
-			m_EntityWorld.Update(gameTime);
-		}
-
-		m_ImGuiLayer->Begin();
-		m_EntityWorld.ImGuiRender();
-		m_ImGuiLayer->End();
 
 		m_Window->OnUpdate(gameTime);
 	}
@@ -107,11 +95,6 @@ namespace Saz
 
 			Update(gameTime);
 		}
-	}
-
-	ecs::EntityWorld& Application::GetWorld()
-	{
-		return m_EntityWorld;
 	}
 
 	void Application::Close()

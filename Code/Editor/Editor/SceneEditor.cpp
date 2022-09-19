@@ -22,6 +22,8 @@
 #include <glm/gtc/type_ptr.inl>
 #include <filesystem>
 #include "Saz/Utils/SceneUtils.h"
+#include "Saz/NameComponent.h"
+#include "Saz/ComponentGroup.h"
 
 
 namespace ecs
@@ -53,10 +55,7 @@ namespace ecs
 		m_StopIcon = Saz::Texture2D::Create("../../Data/Textures/StopButton.png");
 
 		m_Entity = m_World->CreateEntity();
-	}
 
-	void SceneEditor::PostInit()
-	{
 		m_Scene = &m_World->GetSingleComponent<component::LoadedSceneComponent>();
 	}
 
@@ -66,8 +65,8 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::SceneStateChangedOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::SceneStateChangedOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 
@@ -104,6 +103,7 @@ namespace ecs
 		}
 
 		ProcessInput();
+		ImGuiRender();
 	}
 
 	void SceneEditor::ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer)
@@ -133,7 +133,7 @@ namespace ecs
 
 			SAZ_PROFILE_SCOPE("Renderer Draw");
 
-			glm::mat4 transform = cameraTransformComp.GetTransform();
+			const glm::mat4& transform = cameraTransformComp.GetTransform();
 			Saz::Renderer2D::BeginScene(cameraComponent.Camera);
 
 			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
@@ -157,7 +157,7 @@ namespace ecs
 
 			SAZ_PROFILE_SCOPE("Renderer Draw");
 
-			glm::mat4 cameraTransform = cameraTransformComp.GetTransform();
+			const glm::mat4& cameraTransform = cameraTransformComp.GetTransform();
 			Saz::Renderer2D::BeginScene(cameraComponent.Camera, cameraTransform);
 
 			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
@@ -309,7 +309,6 @@ namespace ecs
 
 	void SceneEditor::DrawToolbar()
 	{
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1));
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
@@ -339,14 +338,12 @@ namespace ecs
 
 	void SceneEditor::OnScenePlay()
 	{
-		auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Play);
-		m_Scene->SceneState = SceneState::Play;
+		m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Play);
 	}
 
 	void SceneEditor::OnSceneStop()
 	{
-		auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
-		m_Scene->SceneState = SceneState::Editor;
+		m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Editor);
 	}
 
 	void SceneEditor::DrawProfiler()
@@ -372,8 +369,7 @@ namespace ecs
 		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 		if (m_Scene->SceneState != SceneState::Editor)
 		{
-			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangedOneFrameComponent>(m_Entity, SceneState::Editor);
-			m_Scene->SceneState = SceneState::Editor;
+			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Editor);
 		}
 
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);

@@ -14,11 +14,7 @@ namespace ecs
 	class PhysicsSystem final : public System
 	{
 	public:
-		
-		PhysicsSystem();
-		~PhysicsSystem();
-
-		virtual void Init() override;
+		virtual void Init();
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 		void OnRuntimeStart();

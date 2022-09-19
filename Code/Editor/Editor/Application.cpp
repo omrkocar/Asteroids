@@ -26,6 +26,7 @@
 #include "Saz/Systems/SceneSystem.h"
 #include "MenuBar.h"
 #include "ProjectSettingsWindow.h"
+#include "Saz/WindowResizedOneFrameComponent.h"
 
 Application::Application()
 	: Saz::Application("Saz Editor")
@@ -41,49 +42,61 @@ Application::~Application()
 void Application::Init()
 {
 	Saz::Application::Init();
+
+	m_World.Init();
 }
 
 void Application::Destroy()
 {
 	Saz::Application::Destroy();
+
+	m_World.Destroy();
 }
  
 void Application::Register()
 {
 	Saz::Application::Register();
 
-	m_EntityWorld.RegisterComponent<component::EditorCameraComponent>();
-	m_EntityWorld.RegisterComponent<component::InputComponent>();
-	m_EntityWorld.RegisterComponent<component::MovementComponent>();
-	m_EntityWorld.RegisterComponent<component::NameComponent>();
-	m_EntityWorld.RegisterComponent<component::SpriteComponent>();
-	m_EntityWorld.RegisterComponent<component::Rigidbody2DComponent>();
-	m_EntityWorld.RegisterComponent<component::BoxCollider2DComponent>();
-	m_EntityWorld.RegisterComponent<component::TransformComponent>();
-	m_EntityWorld.RegisterComponent<component::LoadedSceneComponent>();
-	m_EntityWorld.RegisterComponent<component::SceneEntityComponent>();
-	m_EntityWorld.RegisterComponent<component::LoadSceneRequestOneFrameComponent>();
-	m_EntityWorld.RegisterComponent<component::SaveSceneRequestOneFrameComponent>();
-	m_EntityWorld.RegisterComponent<component::NewSceneRequestOneFrameComponent>();
-	m_EntityWorld.RegisterComponent<component::SceneStateChangedOneFrameComponent>();
+	m_World.RegisterComponent<component::EditorCameraComponent>();
+	m_World.RegisterComponent<component::InputComponent>();
+	m_World.RegisterComponent<component::MovementComponent>();
+	m_World.RegisterComponent<component::NameComponent>();
+	m_World.RegisterComponent<component::SpriteComponent>();
+	m_World.RegisterComponent<component::Rigidbody2DComponent>();
+	m_World.RegisterComponent<component::BoxCollider2DComponent>();
+	m_World.RegisterComponent<component::TransformComponent>();
+	m_World.RegisterComponent<component::LoadedSceneComponent>();
+	m_World.RegisterComponent<component::SceneEntityComponent>();
+	m_World.RegisterComponent<component::LoadSceneRequestOneFrameComponent>();
+	m_World.RegisterComponent<component::SaveSceneRequestOneFrameComponent>();
+	m_World.RegisterComponent<component::NewSceneRequestOneFrameComponent>();
+	m_World.RegisterComponent<component::SceneStateChangeRequestOneFrameComponent>();
+	m_World.RegisterComponent<component::WindowResizedOneFrameComponent>();
 
-	m_EntityWorld.RegisterSystem<ecs::InputSystem>(*m_Window);
-	m_EntityWorld.RegisterSystem<ecs::CameraSystem>();
-	m_EntityWorld.RegisterSystem<ecs::SceneSystem>();
-	m_EntityWorld.RegisterSystem<ecs::WorldOutliner>();
-	m_EntityWorld.RegisterSystem<ecs::ProjectSettingsWindow>();
-	m_EntityWorld.RegisterSystem<ecs::MenuBar>(m_EntityWorld.GetSystem<ecs::ProjectSettingsWindow>());
-	m_EntityWorld.RegisterSystem<ecs::SceneEditor>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
-	m_EntityWorld.RegisterSystem<ecs::PhysicsSystem>();
-	m_EntityWorld.RegisterSystem<ecs::RenderSystem>(*m_Window, m_EntityWorld.GetSystem<ecs::CameraSystem>());
+	m_World.RegisterSystem<ecs::InputSystem>(*m_Window);
+	m_World.RegisterSystem<ecs::CameraSystem>();
+	m_World.RegisterSystem<ecs::SceneSystem>();
+	m_World.RegisterSystem<ecs::WorldOutliner>();
+	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
+	m_World.RegisterSystem<ecs::MenuBar>(m_World.GetSystem<ecs::ProjectSettingsWindow>());
+	m_World.RegisterSystem<ecs::SceneEditor>(m_World.GetSystem<ecs::WorldOutliner>());
+	m_World.RegisterSystem<ecs::PhysicsSystem>();
+	m_World.RegisterSystem<ecs::RenderSystem>(*m_Window, m_World.GetSystem<ecs::CameraSystem>());
 
-	m_EntityWorld.RegisterSystem<ecs::Inspector>(m_EntityWorld.GetSystem<ecs::WorldOutliner>());
-	m_EntityWorld.RegisterSystem<ecs::ContentBrowser>();
+	m_World.RegisterSystem<ecs::Inspector>(m_World.GetSystem<ecs::WorldOutliner>());
+	m_World.RegisterSystem<ecs::ContentBrowser>();
 }
 
 void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
+
+	if (!m_Minimized)
+	{
+		m_ImGuiLayer->Begin();
+		m_World.Update(gameTime);
+		m_ImGuiLayer->End();
+	}
 }
 
 Saz::Application* Saz::CreateApplication()

@@ -140,6 +140,11 @@ namespace ecs
 		
 	}
 
+	void Inspector::Update(const Saz::GameTime& gameTime)
+	{
+		ImGuiRender();
+	}
+
 	void Inspector::ImGuiRender()
 	{
 		ImGui::Begin("Inspector");

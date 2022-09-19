@@ -2,6 +2,11 @@
 
 #include <Saz/Systems/System.h>
 
+namespace component 
+{ 
+	struct LoadedSceneComponent; 
+}
+
 namespace Saz
 {
 	class GameTime;
@@ -13,13 +18,19 @@ namespace ecs
 	{
 	public:
 		virtual void Init();
-		virtual void PostInit();
 		virtual void Destroy();
 
 		virtual void Update(const Saz::GameTime& gameTime);
+
+	private:
 		void NewScene();
 		void LoadScene(const String& scenePath);
 		void SaveScene(const String& scenePath);
 		void UpdateWindowName(const String& scenePath);
+
+		component::LoadedSceneComponent* m_Scene;
+
+	private:
+		void OnSceneStateChangeRequest(entt::registry& registry, entt::entity entity);
 	};
 }

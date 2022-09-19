@@ -74,6 +74,8 @@ namespace ecs
 				}
 			}
 		}
+
+		ImGuiRender();
 	}
 
 	void MenuBar::ImGuiRender()

@@ -7,19 +7,33 @@
 #include "InputComponent.h"
 #include "TransformComponent.h"
 #include "SceneComponent.h"
+#include "PhysicsComponents.h"
+#include "RenderComponents.h"
+#include "UUID.h"
 
 namespace ecs
 {
+	template<typename T>
+	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<Saz::UUID, Entity>& enttMap)
+	{
+		auto components = srcRegistry.view<T>();
+		for (auto srcEntity : components)
+		{
+			entt::entity destEntity = enttMap.at(srcRegistry.get<component::IDComponent>(srcEntity).ID);
+
+			auto& srcComponent = srcRegistry.get<T>(srcEntity);
+			if (!srcRegistry.valid(destEntity))
+			{
+				int bp = 1;
+			}
+			auto& destComponent = dstRegistry.emplace_or_replace<T>(destEntity, srcComponent);
+		}
+	}
+
 	void EntityWorld::Init()
 	{
 		for (ecs::SystemEntry& entry : m_SystemEntries)
 			entry.m_System->Init();
-	}
-
-	void EntityWorld::PostInit()
-	{
-		for (ecs::SystemEntry& entry : m_SystemEntries)
-			entry.m_System->PostInit();
 	}
 
 	void EntityWorld::Destroy()
@@ -40,22 +54,19 @@ namespace ecs
 			entry.m_System->Update(gameTime);
 	}
 
-	void EntityWorld::ImGuiRender()
+	void EntityWorld::CopyEntities()
 	{
-		for (ecs::SystemEntry& entry : m_SystemEntries)
-			entry.m_System->ImGuiRender();
 	}
-
 
 	ecs::Entity EntityWorld::CreateBaseEntity()
 	{
-		return CreateBaseEntity(Saz::UUID());
+		return CreateBaseEntity(Saz::UUID(), "Empty Object");
 	}
 
-	Entity EntityWorld::CreateBaseEntity(Saz::UUID uuid)
+	Entity EntityWorld::CreateBaseEntity(Saz::UUID uuid, const String& name)
 	{
 		auto entity = CreateEntity();
-		AddComponent<component::NameComponent>(entity, "Empty Object");
+		AddComponent<component::NameComponent>(entity, name);
 		AddComponent<component::TransformComponent>(entity);
 		AddComponent<component::SceneEntityComponent>(entity);
 		auto& idComp = AddComponent<component::IDComponent>(entity);
@@ -89,12 +100,11 @@ namespace ecs
 
 	ecs::Entity EntityWorld::CreateMainCamera()
 	{
-		auto mainCamera = CreateEntity();
+		auto mainCamera = CreateBaseEntity(Saz::UUID(), "Main Camera");
 		auto& cameraComp = AddComponent<component::EditorCameraComponent>(mainCamera);
 		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f, 0.01f, 0.01f);
 		AddComponent<component::InputComponent>(mainCamera);
-		AddComponent<component::TransformComponent>(mainCamera);
-		AddComponent<component::SceneEntityComponent>(mainCamera);
+		
 		SetMainCamera(mainCamera);
 		return mainCamera;
 	}

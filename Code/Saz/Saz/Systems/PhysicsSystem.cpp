@@ -35,30 +35,19 @@ namespace
 
 namespace ecs
 {
-
-	PhysicsSystem::PhysicsSystem()
-	{
-
-	}
-
-	PhysicsSystem::~PhysicsSystem()
-	{
-		
-	}
-
 	void PhysicsSystem::Init()
 	{
-		m_World->m_Registry.on_construct<component::SceneStateChangedOneFrameComponent>().connect<&PhysicsSystem::OnSceneStateChanged>(this);
+		m_World->m_Registry.on_update<component::SceneStateChangeRequestOneFrameComponent>().connect<&PhysicsSystem::OnSceneStateChanged>(this);
 	}
 
 	void PhysicsSystem::Update(const Saz::GameTime& gameTime)
 	{
 		auto& registry = m_World->m_Registry;
 
-		auto sceneStateChangeView = m_World->GetAllEntitiesWith<component::SceneStateChangedOneFrameComponent>();
+		auto sceneStateChangeView = m_World->GetAllEntitiesWith<component::SceneStateChangeRequestOneFrameComponent>();
 		for (auto& entity : sceneStateChangeView)
 		{
-			auto& sceneStateChangedComp = m_World->GetComponent<component::SceneStateChangedOneFrameComponent>(entity);
+			auto& sceneStateChangedComp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
 			if (sceneStateChangedComp.SceneState == SceneState::Play)
 				OnRuntimeStart();
 			else if (sceneStateChangedComp.SceneState == SceneState::Editor)
@@ -127,13 +116,10 @@ namespace ecs
 
 	void PhysicsSystem::OnSceneStateChanged(entt::registry& registry, entt::entity entity)
 	{
-		component::SceneStateChangedOneFrameComponent& comp = m_World->GetComponent<component::SceneStateChangedOneFrameComponent>(entity);
+		component::SceneStateChangeRequestOneFrameComponent& comp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
 		if (comp.SceneState == SceneState::Play)
-		{
 			OnRuntimeStart();
-		}
 		else if (comp.SceneState == SceneState::Editor)
 			OnRuntimeStop();
 	}
-
 }

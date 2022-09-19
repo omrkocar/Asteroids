@@ -28,7 +28,6 @@ namespace ecs
 		SceneEditor(WorldOutliner& worldOutliner);
 
 		virtual void Init() override;
-		virtual void PostInit() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
 		void ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer);
@@ -38,7 +37,7 @@ namespace ecs
 
 		void ProcessInput();
 
-		virtual void ImGuiRender() override;
+		void ImGuiRender();
 
 
 		bool IsViewportFocused() const { return m_ViewportFocused; }

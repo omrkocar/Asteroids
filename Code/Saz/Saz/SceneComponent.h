@@ -8,7 +8,6 @@ enum class SceneState
 	Editor,
 	Play,
 	Simulate,
-
 };
 
 namespace component
@@ -38,7 +37,7 @@ namespace component
 		String Path = {};
 	};
 
-	struct SceneStateChangedOneFrameComponent
+	struct SceneStateChangeRequestOneFrameComponent
 	{
 		SceneState SceneState;
 	};

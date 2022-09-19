@@ -18,6 +18,11 @@ namespace ecs
 
 	}
 
+	void ProjectSettingsWindow::Update(const Saz::GameTime& gameTime)
+	{
+		ImGuiRender();
+	}
+
 	void ProjectSettingsWindow::ImGuiRender()
 	{
 		if (!m_IsActive)

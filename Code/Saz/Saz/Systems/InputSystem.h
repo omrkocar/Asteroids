@@ -17,7 +17,6 @@ namespace Saz
 
 namespace ecs 
 {
-
 	class InputSystem final : public System
 	{
 	public:

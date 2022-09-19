@@ -24,10 +24,21 @@ namespace ecs
 		m_World->m_Registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&WorldOutliner::OnSceneLoadRequest>(this);
 	}
 
-	void WorldOutliner::DrawWorldOutliner()
+	void WorldOutliner::Update(const Saz::GameTime& gameTime)
 	{
-		
+		if (m_World->IsAlive(m_EntityToDelete))
+		{
+			m_World->DestroyEntity(m_EntityToDelete);
+
+			if (m_SelectedEntity == m_EntityToDelete)
+				m_SelectedEntity = entt::null;
+
+			m_EntityToDelete = entt::null;
+		}
+
+		ImGuiRender();
 	}
+
 
 	void WorldOutliner::ImGuiRender()
 	{
@@ -37,7 +48,7 @@ namespace ecs
 		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
 
 		auto& registry = m_World->m_Registry;
-		const auto view = m_World->GetAllEntitiesWith<component::NameComponent, component::SceneEntityComponent>();
+		const auto view = m_World->m_Registry.view<component::IDComponent, component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
 		for (const ecs::Entity& entity : view)
 		{
 			DrawEntityNode(entity);
@@ -53,26 +64,13 @@ namespace ecs
 				auto entity = m_World->CreateBaseEntity();
 				m_SelectedEntity = entity;
 			}
-			
+
 			ImGui::EndPopup();
 		}
 
 		ImGui::End();
 	}
 
-
-	void WorldOutliner::Update(const Saz::GameTime& gameTime)
-	{
-		if (m_World->IsAlive(m_EntityToDelete))
-		{
-			m_World->DestroyEntity(m_EntityToDelete);
-
-			if (m_SelectedEntity == m_EntityToDelete)
-				m_SelectedEntity = entt::null;
-
-			m_EntityToDelete = entt::null;
-		}
-	}
 
 	void WorldOutliner::DrawEntityNode(Entity entity)
 	{
