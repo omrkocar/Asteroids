@@ -41,6 +41,8 @@ namespace ecs
 		fbSpec.Height = 720;
 		frameBufferComp.FrameBuffer = Saz::FrameBuffer::Create(fbSpec);
 		m_FrameBuffer = frameBufferComp.FrameBuffer;
+
+		m_World->m_Registry.on_construct<component::CameraComponent>().connect<&GameViewport::OnCameraComponentAdded>(this);
 	}
 
 	void GameViewport::Update(const Saz::GameTime& gameTime)
@@ -155,4 +157,8 @@ namespace ecs
 
 	}
 
+	void GameViewport::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)
+	{
+		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y, WindowType::GameViewport);
+	}
 }

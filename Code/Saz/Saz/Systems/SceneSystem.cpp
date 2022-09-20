@@ -18,9 +18,16 @@ namespace ecs
 
 		Saz::SceneSerializer serializer(*m_World);
 		const String& scenePath = serializer.DeserializeLastOpenScene(strLastOpenScene);
-		m_Scene->Path = scenePath;
-		UpdateWindowName(scenePath);
-		m_World->SortEntities();
+		if (!scenePath.empty())
+		{
+			m_Scene->Path = scenePath;
+			UpdateWindowName(scenePath);
+			m_World->SortEntities();
+		}
+		else
+		{
+			NewScene();
+		}
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&SceneSystem::OnSceneStateChangeRequest>(this);

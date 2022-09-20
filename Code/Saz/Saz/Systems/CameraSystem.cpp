@@ -87,8 +87,12 @@ namespace ecs
 		}
 		else
 		{
-			if (auto* cameraComp = &m_World->GetSingleComponent<component::CameraComponent>())
-				cameraComp->Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
+			const auto cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
+			for (const auto& camera : cameraView)
+			{
+				auto& cameraComp = m_World->m_Registry.get<component::CameraComponent>(camera);
+				cameraComp.Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
+			}
 		}
 	}
 }

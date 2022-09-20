@@ -33,5 +33,8 @@ namespace ecs
 		glm::vec2 m_ViewportBounds[2];
 
 		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
+
+	private:
+		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
 	};
 }
