@@ -12,6 +12,7 @@
 #include "SceneComponent.h"
 #include "InputComponent.h"
 #include "PhysicsComponents.h"
+#include "Rendering/Texture.h"
 
 namespace YAML {
 
@@ -116,6 +117,8 @@ namespace Saz
 	{
 		if (!world.HasComponent<component::SceneEntityComponent>(entity))
 			return;
+		if (world.HasComponent<component::EditorCameraComponent>(entity))
+			return;
 
 		SAZ_CORE_ASSERT(world.HasComponent<component::IDComponent>(entity), "");
 
@@ -172,29 +175,6 @@ namespace Saz
 			out << YAML::EndMap; // CameraComponent
 		}
 
-		if (world.HasComponent<component::EditorCameraComponent>(entity))
-		{
-			out << YAML::Key << "EditorCameraComponent";
-			out << YAML::BeginMap; // EditorCameraComponent
-
-			auto& cameraComponent = world.GetComponent<component::EditorCameraComponent>(entity);
-			auto& camera = cameraComponent.Camera;
-
-			out << YAML::Key << "EditorCamera" << YAML::Value;
-			out << YAML::BeginMap; // Camera
-			out << YAML::Key << "Pitch" << YAML::Value << camera.GetPitch();
-			out << YAML::Key << "Yaw" << YAML::Value << camera.GetYaw();
-			out << YAML::Key << "AspectRatio" << YAML::Value << camera.GetAspectRatio();
-			out << YAML::Key << "FOV" << YAML::Value << camera.GetFOV();
-			out << YAML::Key << "NearClip" << YAML::Value << camera.GetNearClip();
-			out << YAML::Key << "FarClip" << YAML::Value << camera.GetFarClip();
-			out << YAML::Key << "Distance" << YAML::Value << camera.GetDistance();
-			out << YAML::Key << "FocalPoint" << YAML::Value << camera.GetFocalPoint();
-			out << YAML::EndMap; // Camera
-
-			out << YAML::EndMap; // EditorCameraComponent
-		}
-
 		if (world.HasComponent<component::SpriteComponent>(entity))
 		{
 			out << YAML::Key << "SpriteComponent";
@@ -202,6 +182,9 @@ namespace Saz
 
 			auto& spriteComponent = world.GetComponent<component::SpriteComponent>(entity);
 			out << YAML::Key << "Color" << YAML::Value << spriteComponent.Color;
+			if (spriteComponent.Texture)
+				out << YAML::Key << "TexturePath" << YAML::Value << spriteComponent.Texture->GetPath();
+			out << YAML::Key << "TilingFactor" << YAML::Value << spriteComponent.TilingFactor;
 
 			out << YAML::EndMap; // SpriteComponent
 		}
@@ -341,26 +324,6 @@ namespace Saz
 					tc.Scale = transformComponent["Scale"].as<glm::vec3>();
 				}
 
-				auto editorCameraComponent = entity["EditorCameraComponent"];
-				if (editorCameraComponent)
-				{
-					auto& cc = m_World.AddComponent<component::EditorCameraComponent>(deserializedEntity);
-					m_World.AddComponent<component::InputComponent>(deserializedEntity);
-
-					auto& cameraProps = editorCameraComponent["EditorCamera"];
-
-					float fov = cameraProps["FOV"].as<float>();
-					float aspectRatio = cameraProps["AspectRatio"].as<float>();
-					float nearClip = cameraProps["NearClip"].as<float>();
-					float farClip = cameraProps["FarClip"].as<float>();
-					float yaw = cameraProps["Yaw"].as<float>();
-					float pitch = cameraProps["Pitch"].as<float>();
-					float distance = cameraProps["Distance"].as<float>();
-					cc.Camera.SetFocalPoint(cameraProps["FocalPoint"].as<glm::vec3>());
-					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch, distance);
-					m_World.SetMainCamera(deserializedEntity);
-				}
-
 				auto cameraComponent = entity["CameraComponent"];
 				if (cameraComponent)
 				{
@@ -387,6 +350,11 @@ namespace Saz
 				{
 					auto& src = m_World.AddComponent<component::SpriteComponent>(deserializedEntity);
 					src.Color = spriteComponent["Color"].as<glm::vec4>();
+					if (spriteComponent["TexturePath"])
+						src.Texture = Texture2D::Create(spriteComponent["TexturePath"].as<std::string>());
+
+					if (spriteComponent["TilingFactor"])
+						src.TilingFactor = spriteComponent["TilingFactor"].as<float>();
 				}
 
 				auto circleRendererComponent = entity["CircleRendererComponent"];

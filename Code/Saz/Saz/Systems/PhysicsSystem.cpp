@@ -97,6 +97,7 @@ namespace ecs
 
 				b2PolygonShape boxShape;
 				boxShape.SetAsBox(transform.Scale.x * boxCollider.Size.x, transform.Scale.y * boxCollider.Size.y);
+				bodyDef.angle = transform.Rotation.z;
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &boxShape;
@@ -114,6 +115,7 @@ namespace ecs
 				b2CircleShape circleShape;
 				circleShape.m_p.Set(circleCollider.Offset.x, circleCollider.Offset.y);
 				circleShape.m_radius = transform.Scale.x * circleCollider.Radius;
+				bodyDef.angle = transform.Rotation.z;
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &circleShape;

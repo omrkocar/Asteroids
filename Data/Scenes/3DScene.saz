@@ -1,22 +1,5 @@
 Scene: Untitled
 Entities:
-  - Entity: 221679860271254317
-    NameComponent:
-      Name: Main Camera
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    EditorCameraComponent:
-      EditorCamera:
-        Pitch: 0.436800361
-        Yaw: 0.220800102
-        AspectRatio: 1.778
-        FOV: 30
-        NearClip: 0.100000001
-        FarClip: 1000
-        Distance: 6.86582804
-        FocalPoint: [0, 0, 0]
   - Entity: 1684448263694352888
     NameComponent:
       Name: Top
@@ -26,6 +9,7 @@ Entities:
       Scale: [0.999980271, 0.99999541, 0.999976575]
     SpriteComponent:
       Color: [0.749019623, 0.501960814, 0.0588235296, 1]
+      TilingFactor: 1
   - Entity: 2112187057890034672
     NameComponent:
       Name: Right
@@ -35,9 +19,17 @@ Entities:
       Scale: [1, 1, 1]
     SpriteComponent:
       Color: [0.847058833, 0.541176498, 0, 1]
+      TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 1
       FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 3907972785362261350
     NameComponent:
       Name: Left
@@ -47,6 +39,17 @@ Entities:
       Scale: [1, 1, 1]
     SpriteComponent:
       Color: [0.411764711, 0.286274523, 0.0313725509, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 13589021571275563727
     NameComponent:
       Name: Camera
@@ -63,5 +66,6 @@ Entities:
         OrthographicSize: 10
         OrthographicNear: -1
         OrthographicFar: 1
+        AspectRatio: 0.6965909
       Primary: true
       FixedAspectRatio: false

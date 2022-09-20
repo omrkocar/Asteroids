@@ -76,7 +76,7 @@ namespace ecs
 
 	void SceneSystem::LoadScene(const String& scenePath)
 	{
-		const auto sceneEntityView = m_World->GetAllEntitiesWith<component::SceneEntityComponent>();
+		const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
 		for (const auto& sceneEntity : sceneEntityView)
 		{
 			m_World->DestroyEntity(sceneEntity);
@@ -125,7 +125,7 @@ namespace ecs
 		}
 		else if (sceneStateRequest.SceneState == SceneState::Editor)
 		{
-			const auto sceneEntityView = m_World->GetAllEntitiesWith<component::SceneEntityComponent>();
+			const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
 			for (const auto& sceneEntity : sceneEntityView)
 			{
 				m_World->DestroyEntity(sceneEntity);

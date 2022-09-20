@@ -1,22 +1,5 @@
 Scene: Untitled
 Entities:
-  - Entity: 1327268893086027712
-    NameComponent:
-      Name: Main Camera
-    TransformComponent:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    EditorCameraComponent:
-      EditorCamera:
-        Pitch: 0.288000137
-        Yaw: 0.921600163
-        AspectRatio: 1.06951344
-        FOV: 30
-        NearClip: 0.100000001
-        FarClip: 1000
-        Distance: 13.8183012
-        FocalPoint: [-1.74124217, 4.93393993, -0.0149258766]
   - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
@@ -33,7 +16,7 @@ Entities:
         OrthographicSize: 21
         OrthographicNear: -1
         OrthographicFar: 104
-        AspectRatio: 0.641509414
+        AspectRatio: 0.606330395
       Primary: true
       FixedAspectRatio: false
   - Entity: 1620965192542877240
@@ -45,6 +28,7 @@ Entities:
       Scale: [0.99999702, 0.99999702, 1]
     SpriteComponent:
       Color: [0, 0.731914997, 1, 1]
+      TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 1
       FixedRotation: false
@@ -64,6 +48,7 @@ Entities:
       Scale: [9.90847588, 0.434313297, 1]
     SpriteComponent:
       Color: [0.795744658, 0.334248811, 0.104970589, 1]
+      TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
       FixedRotation: true
@@ -104,6 +89,7 @@ Entities:
       Scale: [9.90847301, 0.434313178, 1]
     SpriteComponent:
       Color: [0.795744658, 0.334248811, 0.104970589, 1]
+      TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
       FixedRotation: true

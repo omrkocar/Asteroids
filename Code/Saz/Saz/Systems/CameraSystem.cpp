@@ -29,6 +29,11 @@ namespace ecs
 	void CameraSystem::Init()
 	{
 		m_World->m_Registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
+
+		if (!m_World->IsAlive(m_World->GetMainCameraEntity()))
+		{
+			m_World->CreateMainCamera();
+		}
 	}
 
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
