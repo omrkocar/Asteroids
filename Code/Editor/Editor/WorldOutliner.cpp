@@ -10,6 +10,7 @@
 
 #include <entt/entt.hpp>
 #include <imgui/imgui.h>
+#include "Saz/InputComponent.h"
 
 namespace ecs
 {	
@@ -36,6 +37,29 @@ namespace ecs
 				m_SelectedEntity = entt::null;
 
 			m_EntityToDelete = entt::null;
+		}
+
+		const auto inputView = m_World->GetAllEntitiesWith<component::InputComponent>();
+		for (const auto& inputEntity : inputView)
+		{
+			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
+
+			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
+
+			if (inputComp.IsKeyPressed(Input::KeyCode::D))
+			{
+				if (control)
+				{
+					if (m_SelectedEntity != entt::null)
+						m_World->DuplicateEntity(m_SelectedEntity);
+				}
+			}
+
+			if (inputComp.IsKeyPressed(Input::KeyCode::Delete))
+			{
+				if (m_SelectedEntity != entt::null)
+					m_EntityToDelete = m_SelectedEntity;
+			}
 		}
 
 		ImGuiRender();

@@ -62,6 +62,7 @@ namespace ecs
 		CopyComponentIfExists<component::SpriteComponent>(newEntity, entity);
 		CopyComponentIfExists<component::Rigidbody2DComponent>(newEntity, entity);
 		CopyComponentIfExists<component::BoxCollider2DComponent>(newEntity, entity);
+		CopyComponentIfExists<component::CircleCollider2DComponent>(newEntity, entity);
 		CopyComponentIfExists<component::NameComponent>(newEntity, entity);
 		CopyComponentIfExists<component::CameraComponent>(newEntity, entity);
 		CopyComponentIfExists<component::CircleRendererComponent>(newEntity, entity);

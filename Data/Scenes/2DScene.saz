@@ -15,13 +15,13 @@ Entities:
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
-        Distance: 17.7705307
-        FocalPoint: [0.724140882, 2.61542726, 2.71310878]
+        Distance: 21.4898853
+        FocalPoint: [-0.0961616114, 3.79025412, 2.71310878]
   - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
     TransformComponent:
-      Position: [0, 0.602424145, 7.73333359]
+      Position: [0, 3.10687327, 11.7061329]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -35,32 +35,13 @@ Entities:
         OrthographicFar: 104
       Primary: true
       FixedAspectRatio: false
-  - Entity: 1385925860695106124
-    NameComponent:
-      Name: Square3
-    TransformComponent:
-      Position: [0.5, 2.72415876, 1.16415322e-10]
-      Rotation: [0, -0, -0.831627965]
-      Scale: [0.199999854, 0.199999854, 1]
-    SpriteComponent:
-      Color: [1, 1, 1, 1]
-    Rigidbody2DComponent:
-      BodyType: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 1
-      Restitution: 0.75
-      RestitutionThreshold: 1
   - Entity: 1620965192542877240
     NameComponent:
       Name: Square
     TransformComponent:
-      Position: [-1.87942159, 2.82145596, 2.34052e-10]
-      Rotation: [0, -0, 0.00153773534]
-      Scale: [0.5, 0.5, 1]
+      Position: [-5.54870033, 6.88462734, 2.34051944e-10]
+      Rotation: [0, -0, -1.42898107]
+      Scale: [0.99999702, 0.99999702, 1]
     SpriteComponent:
       Color: [0, 0.731914997, 1, 1]
     Rigidbody2DComponent:
@@ -71,36 +52,55 @@ Entities:
       Offset: [0, 0]
       Density: 1
       Friction: 0.5
-      Restitution: 0.400000006
+      Restitution: 0.75
       RestitutionThreshold: 1
-  - Entity: 8253503286192457775
+  - Entity: 4603455019628027460
     NameComponent:
-      Name: Circle
+      Name: Ground_Left
     TransformComponent:
-      Position: [-0.660000026, 2.79152346, 0]
-      Rotation: [0, -0, -0.506301999]
-      Scale: [0.299999684, 0.299999684, 1]
-    CircleRendererComponent:
-      Color: [1, 0, 0, 1]
-      Thickness: 0.400000006
-      Fade: 0.0469999984
+      Position: [-2.72071695, 1.75712883, 0]
+      Rotation: [0, -0, -0.689376593]
+      Scale: [9.90847588, 0.434313297, 1]
+    SpriteComponent:
+      Color: [0.795744658, 0.334248811, 0.104970589, 1]
     Rigidbody2DComponent:
-      BodyType: 1
-      FixedRotation: false
+      BodyType: 0
+      FixedRotation: true
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
       Friction: 0.75
-      Restitution: 0.400000006
-      RestitutionThreshold: 1
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 8253503286192457775
+    NameComponent:
+      Name: Circle
+    TransformComponent:
+      Position: [5.30284595, 7.86645603, 0]
+      Rotation: [0, -0, -0.506301999]
+      Scale: [0.999999762, 0.999999762, 1]
+    CircleRendererComponent:
+      Color: [1, 0, 0, 1]
+      Thickness: 0.100000001
+      Fade: 0.0469999984
+    Rigidbody2DComponent:
+      BodyType: 1
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Radius: 0.5
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 0.5
+      RestitutionThreshold: 0.5
   - Entity: 17650017232327025741
     NameComponent:
-      Name: Ground
+      Name: Ground_Right
     TransformComponent:
-      Position: [0, -1.10424829, 0]
-      Rotation: [0, -0, 0]
-      Scale: [11.7905731, 0.200000003, 1]
+      Position: [2.04054093, 2.09722328, 0]
+      Rotation: [0, -0, 0.768886447]
+      Scale: [9.90847301, 0.434313178, 1]
     SpriteComponent:
       Color: [0.795744658, 0.334248811, 0.104970589, 1]
     Rigidbody2DComponent:

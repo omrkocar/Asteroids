@@ -32,6 +32,7 @@ namespace ecs
 		void DrawCircleRendererComponent(Entity entity);
 		void DrawRigidbody2DComponent(Entity entity);
 		void DrawBoxCollider2DComponent(Entity entity);
+		void DrawCircleCollider2DComponent(Entity entity);
 
 	private:
 		WorldOutliner& m_WorldOutliner;

@@ -24,6 +24,8 @@
 #include "Saz/Utils/SceneUtils.h"
 #include "Saz/NameComponent.h"
 #include "Saz/ComponentGroup.h"
+#include "Saz/ProjectSettings/PhysicsSettings.h"
+#include "Saz/PhysicsComponents.h"
 
 
 namespace ecs
@@ -96,6 +98,8 @@ namespace ecs
 				RenderScene();
 			else
 				RenderRuntime();
+
+			RenderOverlay();
 
 			ProcessMousePicking(frameBuffer);
 
@@ -189,7 +193,62 @@ namespace ecs
 				}
 			}
 
-			Saz::Renderer2D::DrawLine(glm::vec3(0.0f), glm::vec3(5.0f), glm::vec4(1, 0, 1, 1));
+			Saz::Renderer2D::EndScene();
+		}
+	}
+
+	void SceneEditor::RenderOverlay()
+	{
+		if (PhysicsSettings::ShowColliders)
+		{
+			ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
+			if (m_World->IsAlive(mainCameraEntity))
+			{
+				auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(mainCameraEntity);
+				auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
+				Saz::Renderer2D::BeginScene(cameraComponent.Camera);
+				// Box Colliders
+				{
+					auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::BoxCollider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, bc2d] = view.get<component::TransformComponent, component::BoxCollider2DComponent>(entity);
+
+						glm::vec3 translation = tc.Position + glm::vec3(bc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Saz::Renderer2D::DrawRect(transform, glm::vec4(0, 1, 0, 1));
+					}
+				}
+
+				// Circle Colliders
+				{
+					auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::CircleCollider2DComponent>();
+					for (auto entity : view)
+					{
+						auto [tc, cc2d] = view.get<component::TransformComponent, component::CircleCollider2DComponent>(entity);
+
+						glm::vec3 translation = tc.Position + glm::vec3(cc2d.Offset, 0.001f);
+						glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+
+						glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+							* glm::scale(glm::mat4(1.0f), scale);
+
+						Saz::Renderer2D::DrawCircle(transform, glm::vec4(0, 1, 0, 1), 0.01f);
+					}
+				}
+			}
+
+			// Draw selected entity outline 
+			if (m_WorldOutliner.m_SelectedEntity != entt::null)
+			{
+				const component::TransformComponent& transform = m_World->GetComponent<component::TransformComponent>(m_WorldOutliner.m_SelectedEntity);
+				Saz::Renderer2D::DrawRect(transform.GetTransform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+			}
 
 			Saz::Renderer2D::EndScene();
 		}

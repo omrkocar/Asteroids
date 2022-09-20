@@ -246,6 +246,22 @@ namespace Saz
 			out << YAML::EndMap; // BoxCollider2DComponent
 		}
 
+		if (world.HasComponent<component::CircleCollider2DComponent>(entity))
+		{
+			out << YAML::Key << "CircleCollider2DComponent";
+			out << YAML::BeginMap; // CircleCollider2DComponent
+
+			auto& boxCollider2D = world.GetComponent<component::CircleCollider2DComponent>(entity);
+			out << YAML::Key << "Radius" << YAML::Value << boxCollider2D.Radius;
+			out << YAML::Key << "Offset" << YAML::Value << boxCollider2D.Offset;
+			out << YAML::Key << "Density" << YAML::Value << boxCollider2D.Density;
+			out << YAML::Key << "Friction" << YAML::Value << boxCollider2D.Friction;
+			out << YAML::Key << "Restitution" << YAML::Value << boxCollider2D.Restitution;
+			out << YAML::Key << "RestitutionThreshold" << YAML::Value << boxCollider2D.RestitutionThreshold;
+
+			out << YAML::EndMap; // CircleCollider2DComponent
+		}
+
 		out << YAML::EndMap; // Entity
 	}
 
@@ -391,13 +407,25 @@ namespace Saz
 				auto boxCollider2D = entity["BoxCollider2DComponent"];
 				if (boxCollider2D)
 				{
-					auto& rb = m_World.AddComponent<component::BoxCollider2DComponent>(deserializedEntity);
-					rb.Size = boxCollider2D["Size"].as<glm::vec2>();
-					rb.Offset = boxCollider2D["Offset"].as<glm::vec2>();
-					rb.Density = boxCollider2D["Density"].as<float>();
-					rb.Friction = boxCollider2D["Friction"].as<float>();
-					rb.Restitution = boxCollider2D["Restitution"].as<float>();
-					rb.RestitutionThreshold = boxCollider2D["RestitutionThreshold"].as<float>();
+					auto& bc = m_World.AddComponent<component::BoxCollider2DComponent>(deserializedEntity);
+					bc.Size = boxCollider2D["Size"].as<glm::vec2>();
+					bc.Offset = boxCollider2D["Offset"].as<glm::vec2>();
+					bc.Density = boxCollider2D["Density"].as<float>();
+					bc.Friction = boxCollider2D["Friction"].as<float>();
+					bc.Restitution = boxCollider2D["Restitution"].as<float>();
+					bc.RestitutionThreshold = boxCollider2D["RestitutionThreshold"].as<float>();
+				}
+
+				auto circleCollider2D = entity["CircleCollider2DComponent"];
+				if (circleCollider2D)
+				{
+					auto& cc = m_World.AddComponent<component::CircleCollider2DComponent>(deserializedEntity);
+					cc.Radius = circleCollider2D["Radius"].as<float>();
+					cc.Offset = circleCollider2D["Offset"].as<glm::vec2>();
+					cc.Density = circleCollider2D["Density"].as<float>();
+					cc.Friction = circleCollider2D["Friction"].as<float>();
+					cc.Restitution = circleCollider2D["Restitution"].as<float>();
+					cc.RestitutionThreshold = circleCollider2D["RestitutionThreshold"].as<float>();
 				}
 
 				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);

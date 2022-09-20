@@ -37,11 +37,12 @@ namespace ecs
 
 	void ProjectSettingsWindow::DrawPhysicsSettings()
 	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_CollapsingHeader;
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_CollapsingHeader | ImGuiTreeNodeFlags_DefaultOpen;
 		if (ImGui::TreeNodeEx("Physics", flags))
 		{
 			static float a = -9.81f;
 			ImGui::InputFloat2("Gravity", PhysicsSettings::Gravity, "%.2f");
+			ImGui::Checkbox("Show Colliders", &PhysicsSettings::ShowColliders);
 		}
 	}
 }

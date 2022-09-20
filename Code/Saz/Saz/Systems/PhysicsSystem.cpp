@@ -10,6 +10,7 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
+#include "box2d/b2_circle_shape.h"
 
 namespace
 {
@@ -103,6 +104,23 @@ namespace ecs
 				fixtureDef.friction = boxCollider.Friction;
 				fixtureDef.restitution = boxCollider.Restitution;
 				fixtureDef.restitutionThreshold = boxCollider.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+
+			if (m_World->HasComponent<component::CircleCollider2DComponent>(entity))
+			{
+				auto& circleCollider = m_World->GetComponent<component::CircleCollider2DComponent>(entity);
+
+				b2CircleShape circleShape;
+				circleShape.m_p.Set(circleCollider.Offset.x, circleCollider.Offset.y);
+				circleShape.m_radius = transform.Scale.x * circleCollider.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = circleCollider.Density;
+				fixtureDef.friction = circleCollider.Friction;
+				fixtureDef.restitution = circleCollider.Restitution;
+				fixtureDef.restitutionThreshold = circleCollider.RestitutionThreshold;
 				body->CreateFixture(&fixtureDef);
 			}
 		}

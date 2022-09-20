@@ -34,6 +34,7 @@ namespace ecs
 
 		void RenderScene();
 		void RenderRuntime();
+		void RenderOverlay();
 
 		void ProcessInput();
 
