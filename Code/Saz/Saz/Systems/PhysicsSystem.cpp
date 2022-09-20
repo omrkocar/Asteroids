@@ -55,7 +55,7 @@ namespace ecs
 				OnRuntimeStop();
 		}
 
-		if (m_World->GetSingleComponent<component::LoadedSceneComponent>().SceneState != SceneState::Play)
+		if (!m_IsActive)
 			return;
 
 		m_PhysicsWorld->Step(gameTime.GetDeltaTime(), velocityIterations, positionIterations);
@@ -124,12 +124,15 @@ namespace ecs
 				body->CreateFixture(&fixtureDef);
 			}
 		}
+
+		m_IsActive = true;
 	}
 
 	void PhysicsSystem::OnRuntimeStop()
 	{
 		delete m_PhysicsWorld;
 		m_PhysicsWorld = nullptr;
+		m_IsActive = false;
 	}
 
 	void PhysicsSystem::OnSceneStateChanged(entt::registry& registry, entt::entity entity)

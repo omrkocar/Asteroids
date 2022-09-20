@@ -24,5 +24,6 @@ namespace ecs
 	private:
 		Entity m_Entity;
 		b2World* m_PhysicsWorld = nullptr;
+		bool m_IsActive = false;
 	};
 }

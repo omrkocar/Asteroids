@@ -15,6 +15,7 @@ namespace ecs
 	class CameraSystem final : public System
 	{
 	public:
+		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		virtual void ImGuiRender();
 

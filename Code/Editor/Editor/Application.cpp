@@ -5,7 +5,11 @@
 #include "Editor/WorldOutliner.h"
 #include "Editor/Inspector.h"
 #include "SceneEditor.h"
-#include "ContentBrowser.h"
+#include "Editor/MenuBar.h"
+#include "Editor/ProjectSettingsWindow.h"
+#include "Editor/Toolbar.h"
+#include "Editor/GameViewport.h"
+#include "Editor/ContentBrowser.h"
 
 #include "Saz/CameraComponent.h"
 #include "Saz/Core/EntityWorld.h"
@@ -24,8 +28,6 @@
 #include "Saz/Systems/PhysicsSystem.h"
 #include "Saz/Systems/RenderSystem.h"
 #include "Saz/Systems/SceneSystem.h"
-#include "MenuBar.h"
-#include "ProjectSettingsWindow.h"
 #include "Saz/WindowResizedOneFrameComponent.h"
 
 Application::Application()
@@ -78,8 +80,10 @@ void Application::Register()
 	m_World.RegisterSystem<ecs::CameraSystem>();
 	m_World.RegisterSystem<ecs::SceneSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
+	m_World.RegisterSystem<ecs::Toolbar>();
 	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
 	m_World.RegisterSystem<ecs::MenuBar>(m_World.GetSystem<ecs::ProjectSettingsWindow>());
+	m_World.RegisterSystem<ecs::GameViewport>();
 	m_World.RegisterSystem<ecs::SceneEditor>(m_World.GetSystem<ecs::WorldOutliner>());
 	m_World.RegisterSystem<ecs::PhysicsSystem>();
 	m_World.RegisterSystem<ecs::RenderSystem>(*m_Window, m_World.GetSystem<ecs::CameraSystem>());

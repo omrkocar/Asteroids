@@ -29,10 +29,10 @@ namespace Saz {
 		RecalculateProjection();
 	}
 
-	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
+	void SceneCamera::SetViewportSize(float width, float height)
 	{
 		SAZ_CORE_ASSERT(width > 0 && height > 0, "");
-		m_AspectRatio = 1.7f;
+		m_AspectRatio = width / height;
 		RecalculateProjection();
 	}
 

@@ -26,6 +26,11 @@ namespace
 
 namespace ecs
 {
+	void CameraSystem::Init()
+	{
+		m_World->m_Registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
+	}
+
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
 	{		
 		auto& registry = m_World->m_Registry;
@@ -33,7 +38,7 @@ namespace ecs
 		const auto& cameraEntity = m_World->GetMainCameraEntity();
 		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 
-		if (scene.SceneState != SceneState::Editor || !scene.IsHovered)
+		if (!scene.IsHovered)
 			return;
 
 		if (!m_World->IsAlive(cameraEntity))
@@ -75,7 +80,15 @@ namespace ecs
 
 		auto& windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
 
-		auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
-		cameraComp.Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
+		if (windowResizeComp.WindowType == WindowType::EditorViewport)
+		{
+			auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
+			cameraComp.Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
+		}
+		else
+		{
+			if (auto* cameraComp = &m_World->GetSingleComponent<component::CameraComponent>())
+				cameraComp->Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
+		}
 	}
 }

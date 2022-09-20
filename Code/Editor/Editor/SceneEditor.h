@@ -30,10 +30,9 @@ namespace ecs
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
-		void ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer);
+		void ProcessMousePicking();
 
 		void RenderScene();
-		void RenderRuntime();
 		void RenderOverlay();
 
 		void ProcessInput();
@@ -47,15 +46,8 @@ namespace ecs
 		void OnLevelLoaded(entt::registry& registry, entt::entity entity);
 
 		void DrawScene();
-
 		void DrawGizmos();
-
 		void DrawProfiler();
-		void DrawMenuBar();
-		void DrawToolbar();
-
-		void OnScenePlay();
-		void OnSceneStop();
 
 		Entity m_HoveredEntity = entt::null;
 
@@ -63,8 +55,7 @@ namespace ecs
 		WorldOutliner& m_WorldOutliner;
 		component::LoadedSceneComponent* m_Scene;
 
-		Saz::Ref<Saz::Texture2D> m_PlayIcon;
-		Saz::Ref<Saz::Texture2D> m_StopIcon;
+		Entity m_FrameBufferEntity;
 
 		bool m_ViewportFocused = false;
 		bool m_ViewPortHovered = false;

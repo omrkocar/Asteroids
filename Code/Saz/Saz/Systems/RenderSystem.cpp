@@ -34,7 +34,17 @@ namespace ecs
 
 	void RenderSystem::Update(const Saz::GameTime& gameTime)
 	{
-		auto& registry = m_World->m_Registry;
-
+		
 	}
+
+	void RenderSystem::RenderScene()
+	{
+		
+	}
+
+	void RenderSystem::RenderRuntime()
+	{
+		
+	}
+
 }

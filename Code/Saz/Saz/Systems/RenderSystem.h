@@ -27,11 +27,10 @@ namespace ecs
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-
+		void RenderScene();
+		void RenderRuntime();
 	private:
 		Saz::WindowBase& m_Window;
 		CameraSystem& m_CameraSystem;
-
-		Entity m_SquareEntity = entt::null;
 	};
 }

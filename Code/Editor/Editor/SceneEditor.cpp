@@ -40,7 +40,7 @@ namespace ecs
 
 	void SceneEditor::Init()
 	{
-		Entity m_FrameBufferEntity = m_World->CreateEntity();
+		m_FrameBufferEntity = m_World->CreateEntity();
 		auto& frameBufferComp = m_World->AddComponent<component::FrameBufferComponent>(m_FrameBufferEntity);
 		Saz::FrameBufferSpecification fbSpec;
 		fbSpec.Attachments = { Saz::FrameBufferTextureFormat::RGBA8, Saz::FrameBufferTextureFormat::RED_INTEGER, Saz::FrameBufferTextureFormat::Depth };
@@ -53,9 +53,6 @@ namespace ecs
 		registry.on_destroy<component::LoadSceneRequestOneFrameComponent>().connect<&SceneEditor::OnLevelLoaded>(this);
 		registry.on_construct<component::NewSceneRequestOneFrameComponent>().connect<&SceneEditor::OnLevelLoaded>(this);
 
-		m_PlayIcon = Saz::Texture2D::Create("../../Data/Textures/PlayButton.png");
-		m_StopIcon = Saz::Texture2D::Create("../../Data/Textures/StopButton.png");
-
 		m_Entity = m_World->CreateEntity();
 
 		m_Scene = &m_World->GetSingleComponent<component::LoadedSceneComponent>();
@@ -67,50 +64,40 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
-		if (m_World->HasComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity))
-			m_World->RemoveComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 
-		const auto frameBufferView = m_World->GetAllEntitiesWith<component::FrameBufferComponent>();
-		for (const auto& frameBufferEntity : frameBufferView)
+		if (m_World->IsAlive(m_FrameBufferEntity) == false)
+			return;
+
+		const Saz::FrameBufferSpecification& spec = m_FrameBuffer->GetSpecification();
+		if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
 		{
-			const auto& frameBuffer = m_World->m_Registry.get<component::FrameBufferComponent>(frameBufferEntity).FrameBuffer;
+			uint32_t width = (uint32_t)m_SceneSize.x;
+			uint32_t height = (uint32_t)m_SceneSize.y;
+			m_FrameBuffer->Resize(width, height);
 
-			const Saz::FrameBufferSpecification& spec = frameBuffer->GetSpecification();
-			if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
-				(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
-			{
-				uint32_t width = (uint32_t)m_SceneSize.x;
-				uint32_t height = (uint32_t)m_SceneSize.y;
-				frameBuffer->Resize(width, height);
-
-				m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)width, (uint32_t)height);
-			}
-
-			Saz::Renderer2D::ResetStats();
-			frameBuffer->Bind();
-			Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
-			Saz::RenderCommand::Clear();
-			frameBuffer->ClearColorAttachment(1, -1);
-
-			if (m_Scene->SceneState == SceneState::Editor)
-				RenderScene();
-			else
-				RenderRuntime();
-
-			RenderOverlay();
-
-			ProcessMousePicking(frameBuffer);
-
-			frameBuffer->Unbind();
+			m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)width, (uint32_t)height, WindowType::EditorViewport);
 		}
 
+		Saz::Renderer2D::ResetStats();
+		m_FrameBuffer->Bind();
+		Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+		Saz::RenderCommand::Clear();
+		m_FrameBuffer->ClearColorAttachment(1, -1);
+
+		RenderScene();
+		RenderOverlay();
+		ProcessMousePicking();
+
+		m_FrameBuffer->Unbind();
+		
 		ProcessInput();
 		ImGuiRender();
 	}
 
-	void SceneEditor::ProcessMousePicking(Saz::Ref<Saz::FrameBuffer> frameBuffer)
+	void SceneEditor::ProcessMousePicking()
 	{
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
@@ -122,7 +109,7 @@ namespace ecs
 
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
-			int pixelData = frameBuffer->ReadPixel(1, mouseX, mouseY);
+			int pixelData = m_FrameBuffer->ReadPixel(1, mouseX, mouseY);
 			m_HoveredEntity = pixelData != -1 ? (entt::entity)pixelData : entt::null;
 		}
 	}
@@ -142,41 +129,6 @@ namespace ecs
 
 			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
 			for (auto entity : view)
-			{
-				auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
-				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
-			}
-
-			// Draw circles
-			{
-				auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::CircleRendererComponent>();
-				for (auto entity : view)
-				{
-					auto [transform, circle] = view.get<component::TransformComponent, component::CircleRendererComponent>(entity);
-
-					Saz::Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
-				}
-			}
-
-			Saz::Renderer2D::EndScene();
-		}
-	}
-
-	void SceneEditor::RenderRuntime()
-	{
-		auto& cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
-		for (auto& cameraEntity : cameraView)
-		{
-			auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(cameraEntity);
-			auto& cameraComponent = m_World->GetComponent<component::CameraComponent>(cameraEntity);
-
-			SAZ_PROFILE_SCOPE("Renderer Draw");
-
-			const glm::mat4& cameraTransform = cameraTransformComp.GetTransform();
-			Saz::Renderer2D::BeginScene(cameraComponent.Camera, cameraTransform);
-
-			auto view = m_World->GetAllEntitiesWith<component::TransformComponent, component::SpriteComponent>();
-			for (auto& entity : view)
 			{
 				auto& [transform, sprite] = view.get<component::TransformComponent, component::SpriteComponent>(entity);
 				Saz::Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
@@ -296,8 +248,6 @@ namespace ecs
 	void SceneEditor::ImGuiRender()
 	{
 		DrawScene();
-		DrawToolbar();
-		DrawMenuBar();
 		DrawProfiler();
 	}
 
@@ -391,45 +341,6 @@ namespace ecs
 		}
 	}
 
-	void SceneEditor::DrawToolbar()
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1));
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-		auto& colors = ImGui::GetStyle().Colors;
-		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
-		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
-
-		ImGui::Begin("##Toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-		float size = ImGui::GetWindowHeight() - 4.0f;
-		Saz::Ref<Saz::Texture2D> icon = m_Scene->SceneState == SceneState::Editor ? m_PlayIcon : m_StopIcon;
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
-		{
-			if (m_Scene->SceneState == SceneState::Editor)
-				OnScenePlay();
-			else if (m_Scene->SceneState == SceneState::Play)
-				OnSceneStop();
-		}
-
-		ImGui::End();
-		ImGui::PopStyleVar(2);
-		ImGui::PopStyleColor(3);
-	}
-
-	void SceneEditor::OnScenePlay()
-	{
-		m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Play);
-	}
-
-	void SceneEditor::OnSceneStop()
-	{
-		m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Editor);
-	}
-
 	void SceneEditor::DrawProfiler()
 	{
 		ImGui::Begin("Profiler");
@@ -441,11 +352,6 @@ namespace ecs
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 		ImGui::End();
-	}
-
-	void SceneEditor::DrawMenuBar()
-	{
-		
 	}
 
 	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)

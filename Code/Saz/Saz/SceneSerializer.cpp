@@ -163,6 +163,7 @@ namespace Saz
 			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.GetOrthographicSize();
 			out << YAML::Key << "OrthographicNear" << YAML::Value << camera.GetOrthographicNearClip();
 			out << YAML::Key << "OrthographicFar" << YAML::Value << camera.GetOrthographicFarClip();
+			out << YAML::Key << "AspectRatio" << YAML::Value << camera.GetAspectRatio();
 			out << YAML::EndMap; // Camera
 
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
@@ -352,8 +353,8 @@ namespace Saz
 					float aspectRatio = cameraProps["AspectRatio"].as<float>();
 					float nearClip = cameraProps["NearClip"].as<float>();
 					float farClip = cameraProps["FarClip"].as<float>();
-					float yaw = 0.0f;
-					float pitch = 0.0f;
+					float yaw = cameraProps["Yaw"].as<float>();
+					float pitch = cameraProps["Pitch"].as<float>();
 					float distance = cameraProps["Distance"].as<float>();
 					cc.Camera.SetFocalPoint(cameraProps["FocalPoint"].as<glm::vec3>());
 					cc.Camera.Setup(fov, aspectRatio, nearClip, farClip, yaw, pitch, distance);
@@ -375,6 +376,7 @@ namespace Saz
 					cc.Camera.SetOrthographicSize(cameraProps["OrthographicSize"].as<float>());
 					cc.Camera.SetOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
 					cc.Camera.SetOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
+					cc.Camera.SetAspectRatio(cameraProps["AspectRatio"].as<float>());
 
 					cc.Primary = cameraComponent["Primary"].as<bool>();
 					cc.FixedAspectRatio = cameraComponent["FixedAspectRatio"].as<bool>();

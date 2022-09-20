@@ -15,7 +15,7 @@ namespace Saz {
 		void SetPerspective(float verticalFOV, float nearClip, float farClip);
 		void SetOrthographic(float size, float nearClip, float farClip);
 
-		void SetViewportSize(uint32_t width, uint32_t height);
+		void SetViewportSize(float width, float height);
 
 		float GetPerspectiveVerticalFOV() const { return m_PerspectiveFOV; }
 		void SetPerspectiveVerticalFOV(float verticalFov) { m_PerspectiveFOV = verticalFov; RecalculateProjection(); }
@@ -33,6 +33,10 @@ namespace Saz {
 
 		ProjectionType GetProjectionType() const { return m_ProjectionType; }
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateProjection(); }
+
+		float GetAspectRatio() const { return m_AspectRatio; }
+		void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; RecalculateProjection();
+		}
 	private:
 		void RecalculateProjection();
 	private:

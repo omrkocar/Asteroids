@@ -9,30 +9,31 @@ Entities:
       Scale: [1, 1, 1]
     EditorCameraComponent:
       EditorCamera:
-        Pitch: 0
-        Yaw: 0
-        AspectRatio: 1.81681681
+        Pitch: 0.288000137
+        Yaw: 0.921600163
+        AspectRatio: 1.06951344
         FOV: 30
         NearClip: 0.100000001
         FarClip: 1000
-        Distance: 21.4898853
-        FocalPoint: [-0.0961616114, 3.79025412, 2.71310878]
+        Distance: 13.8183012
+        FocalPoint: [-1.74124217, 4.93393993, -0.0149258766]
   - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
     TransformComponent:
-      Position: [0, 3.10687327, 11.7061329]
+      Position: [0, 3.10687327, 12.6599998]
       Rotation: [0, -0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
       Camera:
-        ProjectionType: 0
+        ProjectionType: 1
         PerspectiveFOV: 0.959931076
         PerspectiveNear: 0.00999999978
         PerspectiveFar: 1000
-        OrthographicSize: 4
+        OrthographicSize: 21
         OrthographicNear: -1
         OrthographicFar: 104
+        AspectRatio: 0.641509414
       Primary: true
       FixedAspectRatio: false
   - Entity: 1620965192542877240
