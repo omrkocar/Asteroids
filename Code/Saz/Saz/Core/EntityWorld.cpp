@@ -110,7 +110,7 @@ namespace ecs
 	{
 		auto mainCamera = CreateBaseEntity(Saz::UUID(), "Main Camera");
 		auto& cameraComp = AddComponent<component::EditorCameraComponent>(mainCamera);
-		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f, 0.01f, 0.01f);
+		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f, 0.01f, 0.05f, 30.0f);
 		AddComponent<component::InputComponent>(mainCamera);
 		
 		SetMainCamera(mainCamera);

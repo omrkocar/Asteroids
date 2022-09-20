@@ -3,18 +3,20 @@
 
 #include "Editor/Application.h"
 #include "Editor/ProjectSettingsWindow.h"
+#include "Editor/ProfilerPanel.h"
 
 #include "Saz/InputComponent.h"
 #include "Saz/SceneComponent.h"
 #include "Saz/Utils/PlatformUtils.h"
+#include "Saz/Utils/SceneUtils.h"
 
 #include <imgui/imgui.h>
-#include "Saz/Utils/SceneUtils.h"
 
 namespace ecs
 {
-	MenuBar::MenuBar(ProjectSettingsWindow& projectSettings)
+	MenuBar::MenuBar(ProjectSettingsWindow& projectSettings, ProfilerPanel& profilerPanel)
 		: m_ProjectSettings(projectSettings)
+		, m_ProfilerPanel(profilerPanel)
 	{
 
 	}
@@ -88,7 +90,6 @@ namespace ecs
 			DrawEditMenu();
 
 			ImGui::EndMenuBar();
-
 		}
 	}
 
@@ -99,6 +100,11 @@ namespace ecs
 			if (ImGui::MenuItem("Project Settings..."))
 			{
 				m_ProjectSettings.SetVisible(true);
+			}
+
+			if (ImGui::MenuItem("Profiler Panel..."))
+			{
+				m_ProfilerPanel.SetVisible(true);
 			}
 
 			ImGui::EndMenu();

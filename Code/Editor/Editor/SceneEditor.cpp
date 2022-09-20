@@ -248,7 +248,6 @@ namespace ecs
 	void SceneEditor::ImGuiRender()
 	{
 		DrawScene();
-		DrawProfiler();
 	}
 
 	void SceneEditor::DrawScene()
@@ -339,19 +338,6 @@ namespace ecs
 				tc.Scale = scale;
 			}
 		}
-	}
-
-	void SceneEditor::DrawProfiler()
-	{
-		ImGui::Begin("Profiler");
-		auto stats = Saz::Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats: ");
-		ImGui::Text("DrawCalls: %d ", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		ImGui::End();
 	}
 
 	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)

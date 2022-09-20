@@ -20,9 +20,12 @@ namespace ecs
 		virtual void Init() override;
 
 		virtual void Update(const Saz::GameTime& gameTime) override;
+
+	private:
 		void ImGuiRender();
 		void RenderRuntime();
 		void DrawViewport();
+		void DrawOptions();
 	private:
 		Entity m_FrameBufferEntity;
 		Entity m_Entity;

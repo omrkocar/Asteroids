@@ -124,6 +124,7 @@ namespace ecs
 
 		// Scene
 		ImGui::Begin("Game");
+		DrawOptions();
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
 		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
@@ -155,6 +156,11 @@ namespace ecs
 		ImGui::End();
 		ImGui::PopStyleVar();
 
+	}
+
+	void GameViewport::DrawOptions()
+	{
+		
 	}
 
 	void GameViewport::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)

@@ -47,7 +47,6 @@ namespace ecs
 
 		void DrawScene();
 		void DrawGizmos();
-		void DrawProfiler();
 
 		Entity m_HoveredEntity = entt::null;
 

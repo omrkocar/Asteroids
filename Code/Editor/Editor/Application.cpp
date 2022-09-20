@@ -9,6 +9,7 @@
 #include "Editor/ProjectSettingsWindow.h"
 #include "Editor/Toolbar.h"
 #include "Editor/GameViewport.h"
+#include "Editor/ProfilerPanel.h"
 #include "Editor/ContentBrowser.h"
 
 #include "Saz/CameraComponent.h"
@@ -81,8 +82,9 @@ void Application::Register()
 	m_World.RegisterSystem<ecs::SceneSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
 	m_World.RegisterSystem<ecs::Toolbar>();
+	m_World.RegisterSystem<ecs::ProfilerPanel>();
 	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
-	m_World.RegisterSystem<ecs::MenuBar>(m_World.GetSystem<ecs::ProjectSettingsWindow>());
+	m_World.RegisterSystem<ecs::MenuBar>(m_World.GetSystem<ecs::ProjectSettingsWindow>(), m_World.GetSystem<ecs::ProfilerPanel>());
 	m_World.RegisterSystem<ecs::GameViewport>();
 	m_World.RegisterSystem<ecs::SceneEditor>(m_World.GetSystem<ecs::WorldOutliner>());
 	m_World.RegisterSystem<ecs::PhysicsSystem>();
