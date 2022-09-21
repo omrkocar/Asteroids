@@ -234,7 +234,7 @@ namespace ecs
 			}
 
 			if (inputComp.IsKeyPressed(Input::KeyCode::Q))
-				m_GizmoType = -1;
+				m_GizmoType = -1; 
 			if (inputComp.IsKeyPressed(Input::KeyCode::W))
 				if (!ImGuizmo::IsUsing())
 					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
