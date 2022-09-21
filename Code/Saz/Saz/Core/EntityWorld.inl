@@ -2,6 +2,7 @@
 
 #include <Saz/TypeId.h>
 #include <Saz/Core/Log.h>
+#include <Saz/NameComponent.h>
 
 inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 {
@@ -25,10 +26,13 @@ void ecs::EntityWorld::CopyComponentIfExists(ecs::Entity dst, ecs::Entity src)
 
 inline void ecs::EntityWorld::DestroyEntity(const ecs::Entity& entity)
 {
-	Saz::UUID id = GetUUID(entity);
+	if (HasComponent<component::IDComponent>(entity))
+	{
+		Saz::UUID id = GetUUID(entity);
+		m_EntityIDMap.erase(id);
+	}
+
 	m_Registry.destroy(entity);
-	m_EntityIDMap.erase(id);
-	// Sort it here
 }
 
 template<class TComponent>

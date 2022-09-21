@@ -1,35 +1,26 @@
 #include "SazPCH.h"
 #include "CameraSystem.h"
 
-#include "Saz/Core/GameTime.h"
 #include "Saz/CameraComponent.h"
+#include "Saz/Core/Application.h"
+#include "Saz/Core/GameTime.h"
 #include "Saz/InputComponent.h"
 #include "Saz/MovementComponent.h"
+#include "Saz/NameComponent.h"
+#include "Saz/SceneComponent.h"
+#include "Saz/Screen.h"
+#include "Saz/Systems/RenderSystem.h"
 #include "Saz/TransformComponent.h"
+#include "Saz/WindowResizedOneFrameComponent.h"
 
 #include <entt/entt.hpp>
-#include "NameComponent.h"
-#include "WindowResizedOneFrameComponent.h"
-#include "Screen.h"
-#include "imgui.h"
-#include "glm/gtc/type_ptr.inl"
-#include "RenderSystem.h"
-#include "Core/Application.h"
-#include "SceneComponent.h"
-#include "imguizmo/ImGuizmo.h"
-
-namespace
-{
-	float s_TranslateSpeed = 10000.0f;
-	constexpr float s_RotateSpeed = 5.0f;
-}
+#include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
 
 namespace ecs
 {
 	void CameraSystem::Init()
 	{
-		m_World->m_Registry.on_construct<component::WindowResizedOneFrameComponent>().connect<&CameraSystem::OnWindowResized>(this);
-
 		if (!m_World->IsAlive(m_World->GetMainCameraEntity()))
 		{
 			m_World->CreateMainCamera();
@@ -39,6 +30,12 @@ namespace ecs
 	void CameraSystem::Update(const Saz::GameTime& gameTime)
 	{		
 		auto& registry = m_World->m_Registry;
+
+		auto view = m_World->GetAllEntitiesWith<component::WindowResizedOneFrameComponent>();
+		for (auto& entity : view)
+		{
+			OnWindowResized(entity);
+		}
 
 		const auto& cameraEntity = m_World->GetMainCameraEntity();
 		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
@@ -67,7 +64,7 @@ namespace ecs
 		cameraComponent.Camera.UpdateView();
 	}
 
-	void CameraSystem::OnWindowResized(entt::registry& registry, entt::entity entity)
+	void CameraSystem::OnWindowResized(Entity entity)
 	{
 		auto& windowResizeComp = m_World->GetComponent<component::WindowResizedOneFrameComponent>(entity);
 

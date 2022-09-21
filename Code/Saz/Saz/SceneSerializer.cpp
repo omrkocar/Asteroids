@@ -209,7 +209,7 @@ namespace Saz
 
 			auto& rigidbody2D = world.GetComponent<component::Rigidbody2DComponent>(entity);
 			out << YAML::Key << "BodyType" << YAML::Value << (int)rigidbody2D.Type;
-			out << YAML::Key << "GravityScale" << YAML::Value << (int)rigidbody2D.GravityScale;
+			out << YAML::Key << "GravityScale" << YAML::Value << rigidbody2D.GravityScale;
 			out << YAML::Key << "FixedRotation" << YAML::Value << rigidbody2D.FixedRotation;
 
 			out << YAML::EndMap; // Rigidbody2DComponent
@@ -260,7 +260,7 @@ namespace Saz
 	{
 		YAML::Emitter out;
 		out << YAML::BeginMap;
-		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+		out << YAML::Key << "Scene" << YAML::Value << filepath;
 		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 		std::map<UUID, entt::entity> sortedEntityMap;
@@ -296,7 +296,6 @@ namespace Saz
 			return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();
-		SAZ_CORE_TRACE("Deserializing scene '{0}'", sceneName);
 
 		auto entities = data["Entities"];
 		if (entities)
@@ -399,11 +398,10 @@ namespace Saz
 					cc.Restitution = circleCollider2D["Restitution"].as<float>();
 					cc.RestitutionThreshold = circleCollider2D["RestitutionThreshold"].as<float>();
 				}
-
-				SAZ_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 			}
 		}
 
+		SAZ_CORE_TRACE("Deserialized {0}", sceneName);
 		m_World.SortEntities();
 
 		return true;

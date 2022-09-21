@@ -36,13 +36,24 @@ namespace
 
 namespace ecs
 {
-	void PhysicsSystem::Init()
+
+	PhysicsSystem::~PhysicsSystem()
 	{
-		m_World->m_Registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&PhysicsSystem::OnSceneStateChanged>(this);
+		if (m_PhysicsWorld != nullptr)
+		{
+			delete m_PhysicsWorld;
+			m_PhysicsWorld = nullptr;
+		}
 	}
 
 	void PhysicsSystem::Update(const Saz::GameTime& gameTime)
 	{
+		auto sceneStateView = m_World->GetAllEntitiesWith<component::SceneStateChangeRequestOneFrameComponent>();
+		for (auto& entity : sceneStateView)
+		{
+			OnSceneStateChanged(entity);
+		}
+
 		if (!m_IsActive)
 			return;
 
@@ -60,6 +71,16 @@ namespace ecs
 			transform.Position.y = position.y;
 			transform.Rotation.z = body->GetAngle();
 		}
+	}
+
+	void PhysicsSystem::OnRuntimeStart_UNIT_TEST()
+	{
+		OnRuntimeStart();
+	}
+
+	void PhysicsSystem::OnRuntimeStop_UNIT_TEST()
+	{
+		OnRuntimeStop();
 	}
 
 	void PhysicsSystem::OnRuntimeStart()
@@ -126,7 +147,7 @@ namespace ecs
 		m_IsActive = false;
 	}
 
-	void PhysicsSystem::OnSceneStateChanged(entt::registry& registry, entt::entity entity)
+	void PhysicsSystem::OnSceneStateChanged(Entity entity)
 	{
 		auto& sceneStateChangedComp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
 

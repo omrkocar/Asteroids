@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/Core/Core.h>
+#include "Core/String.h"
 #include <Saz/TypeId.h>
 
 #include <Core/DynamicArray.h>

@@ -22,6 +22,6 @@ namespace ecs
 		Entity m_SecondCamera;
 
 	private:
-		void OnWindowResized(entt::registry& registry, entt::entity entity);
+		void OnWindowResized(Entity entity);
 	};
 }

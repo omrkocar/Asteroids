@@ -19,6 +19,8 @@ project "Saz_ut"
 		"%{wks.location}/3rdParty/spdlog/include/",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Box2D}",
 	}
 
 	libdirs

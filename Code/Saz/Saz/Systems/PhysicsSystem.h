@@ -14,13 +14,18 @@ namespace ecs
 	class PhysicsSystem final : public System
 	{
 	public:
-		virtual void Init();
+		~PhysicsSystem();
 		virtual void Update(const Saz::GameTime& gameTime) override;
 
+		void OnRuntimeStart_UNIT_TEST();
+		void OnRuntimeStop_UNIT_TEST();
+
+		b2World* GetPhysicsWorld() const { return m_PhysicsWorld; }
+		bool IsActive() { return m_IsActive; }
+	private:
+		void OnSceneStateChanged(Entity entity);
 		void OnRuntimeStart();
 		void OnRuntimeStop();
-	private:
-		void OnSceneStateChanged(entt::registry& registry, entt::entity entity);
 	private:
 		Entity m_Entity;
 		b2World* m_PhysicsWorld = nullptr;
