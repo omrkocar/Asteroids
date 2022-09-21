@@ -88,6 +88,7 @@ namespace ecs
 			ImGui::PopStyleVar();
 			DrawFileMenu();
 			DrawEditMenu();
+			DrawWindowsMenu();
 
 			ImGui::EndMenuBar();
 		}
@@ -152,13 +153,22 @@ namespace ecs
 		}
 	}
 
-	void MenuBar::DrawProjectSettingsWindow()
+	void MenuBar::DrawWindowsMenu()
 	{
-		
-	}
+		if (ImGui::BeginMenu("Window"))
+		{
+			if (ImGui::Button("Scene"))
+			{
 
-	void MenuBar::DrawPhysicsSettings()
-	{
+			}
+			
+			if (ImGui::Button("Game"))
+			{
+
+			}
+
+			ImGui::EndMenu();
+		}
 	}
 
 	void MenuBar::NewScene()

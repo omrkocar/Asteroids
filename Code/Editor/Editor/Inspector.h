@@ -25,6 +25,7 @@ namespace ecs
 
 		void DrawAddComponentPopup(Entity entity);
 
+		template<typename T> void DisplayAddComponentEntry(const std::string& entryName);
 		void DrawNameComponent(Entity entity);
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);

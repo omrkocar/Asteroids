@@ -70,28 +70,22 @@ namespace ecs
 		Saz::RenderCommand::Clear();
 		m_FrameBuffer->ClearColorAttachment(1, -1);
 
-		RenderRuntime();
+		RenderScene();
 
 		m_FrameBuffer->Unbind();
 
 		ImGuiRender();
 	}
 
-
-	void GameViewport::ImGuiRender()
+	void GameViewport::RenderScene()
 	{
-		DrawViewport();
-	}
+		SAZ_PROFILE_FUNCTION();
 
-	void GameViewport::RenderRuntime()
-	{
 		auto& cameraView = m_World->GetAllEntitiesWith<component::CameraComponent>();
 		for (auto& cameraEntity : cameraView)
 		{
 			auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(cameraEntity);
 			auto& cameraComponent = m_World->GetComponent<component::CameraComponent>(cameraEntity);
-
-			SAZ_PROFILE_SCOPE("Renderer Draw");
 
 			const glm::mat4& cameraTransform = cameraTransformComp.GetTransform();
 			Saz::Renderer2D::BeginScene(cameraComponent.Camera, cameraTransform);
@@ -116,6 +110,12 @@ namespace ecs
 
 			Saz::Renderer2D::EndScene();
 		}
+	}
+
+
+	void GameViewport::ImGuiRender()
+	{
+		DrawViewport();
 	}
 
 	void GameViewport::DrawViewport()
@@ -160,7 +160,8 @@ namespace ecs
 
 	void GameViewport::DrawOptions()
 	{
-		
+		ImGui::SameLine(ImGui::GetWindowWidth() - 50);
+		ImGui::Text("Name");
 	}
 
 	void GameViewport::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)

@@ -23,7 +23,7 @@ namespace ecs
 
 	private:
 		void ImGuiRender();
-		void RenderRuntime();
+		void RenderScene();
 		void DrawViewport();
 		void DrawOptions();
 	private:

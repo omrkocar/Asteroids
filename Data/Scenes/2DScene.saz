@@ -16,18 +16,18 @@ Entities:
         OrthographicSize: 21
         OrthographicNear: -1
         OrthographicFar: 104
-        AspectRatio: 0.746062994
+        AspectRatio: 0.368525892
       Primary: true
       FixedAspectRatio: false
   - Entity: 1620965192542877240
     NameComponent:
       Name: Square
     TransformComponent:
-      Position: [-5.54870033, 6.88462734, 2.34051944e-10]
+      Position: [-5.54870033, 6.88462734, 0]
       Rotation: [0, -0, -1.42898107]
       Scale: [0.99999702, 0.99999702, 1]
     SpriteComponent:
-      Color: [0, 0.731914997, 1, 1]
+      Color: [1, 0.58723402, 0, 1]
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 1
@@ -47,7 +47,8 @@ Entities:
       Rotation: [0, -0, -0.689376593]
       Scale: [9.90847588, 0.434313297, 1]
     SpriteComponent:
-      Color: [0.795744658, 0.334248811, 0.104970589, 1]
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: ../../Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -63,11 +64,11 @@ Entities:
     NameComponent:
       Name: Circle
     TransformComponent:
-      Position: [5.30284595, 7.86645603, 0]
+      Position: [4.48971462, 7.11337566, 0]
       Rotation: [0, -0, -0.506301999]
       Scale: [0.999999762, 0.999999762, 1]
     CircleRendererComponent:
-      Color: [1, 0, 0, 1]
+      Color: [1, 0.35744679, 0, 1]
       Thickness: 0.100000001
       Fade: 0.0469999984
     Rigidbody2DComponent:
@@ -88,7 +89,8 @@ Entities:
       Rotation: [0, -0, 0.768886447]
       Scale: [9.90847301, 0.434313178, 1]
     SpriteComponent:
-      Color: [0.795744658, 0.334248811, 0.104970589, 1]
+      Color: [0.442553043, 0, 1, 1]
+      TexturePath: ../../Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0

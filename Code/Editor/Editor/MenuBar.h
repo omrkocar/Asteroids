@@ -25,11 +25,9 @@ namespace ecs
 		virtual void ImGuiRender();
 
 		void DrawEditMenu();
-
 		void DrawFileMenu();
+		void DrawWindowsMenu();
 
-		void DrawProjectSettingsWindow();
-		void DrawPhysicsSettings();
 		void NewScene();
 		void SaveScene();
 		void SaveSceneAs();

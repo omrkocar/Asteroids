@@ -54,8 +54,7 @@ namespace ecs
 		for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
 		{
 			const auto& path = directoryEntry.path();
-			auto relativePath = std::filesystem::relative(directoryEntry.path(), g_DataPath);
-			String filenameString = relativePath.filename().string();
+			std::string filenameString = path.filename().string();
 			filenameString = filenameString.substr(filenameString.find_last_of("/\\") + 1);
 
 			ImGui::PushID(filenameString.c_str());

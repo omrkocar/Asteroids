@@ -190,70 +190,26 @@ namespace ecs
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (!m_World->HasComponent<component::TransformComponent>(entity))
-			{
-				if (ImGui::MenuItem("Transform"))
-				{
-					m_World->AddComponent<component::TransformComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::CameraComponent>(entity))
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_World->AddComponent<component::CameraComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::SpriteComponent>(entity))
-			{
-				if (ImGui::MenuItem("Sprite Renderer"))
-				{
-					m_World->AddComponent<component::SpriteComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::CircleRendererComponent>(entity))
-			{
-				if (ImGui::MenuItem("Circle Renderer"))
-				{
-					m_World->AddComponent<component::CircleRendererComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::Rigidbody2DComponent>(entity))
-			{
-				if (ImGui::MenuItem("Rigidbody2D"))
-				{
-					m_World->AddComponent<component::Rigidbody2DComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::BoxCollider2DComponent>(entity))
-			{
-				if (ImGui::MenuItem("Box Collider 2D"))
-				{
-					m_World->AddComponent<component::BoxCollider2DComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			if (!m_World->HasComponent<component::CircleCollider2DComponent>(entity))
-			{
-				if (ImGui::MenuItem("Circle Collider 2D"))
-				{
-					m_World->AddComponent<component::CircleCollider2DComponent>(entity);
-					ImGui::CloseCurrentPopup();
-				}
-			}
+			DisplayAddComponentEntry<component::CameraComponent>("Camera");
+			DisplayAddComponentEntry<component::SpriteComponent>("Sprite Renderer");
+			DisplayAddComponentEntry<component::CircleRendererComponent>("Circle Renderer");
+			DisplayAddComponentEntry<component::Rigidbody2DComponent>("Rigidbody 2D");
+			DisplayAddComponentEntry<component::BoxCollider2DComponent>("Box Collider 2D");
+			DisplayAddComponentEntry<component::CircleCollider2DComponent>("Circle Collider 2D");
 
 			ImGui::EndPopup();
+		}
+	}
+
+	template<typename T>
+	void Inspector::DisplayAddComponentEntry(const std::string& entryName) {
+		if (!m_World->HasComponent<T>(m_WorldOutliner.m_SelectedEntity))
+		{
+			if (ImGui::MenuItem(entryName.c_str()))
+			{
+				m_World->AddComponent<T>(m_WorldOutliner.m_SelectedEntity);
+				ImGui::CloseCurrentPopup();
+			}
 		}
 	}
 
