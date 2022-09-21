@@ -23,5 +23,4 @@ namespace Saz
 		auto& sceneComponent = world.AddComponent<component::LoadSceneRequestOneFrameComponent>(entity);
 		sceneComponent.Path = path.string();
 	}
-
 }

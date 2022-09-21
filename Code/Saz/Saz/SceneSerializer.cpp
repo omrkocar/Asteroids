@@ -209,6 +209,7 @@ namespace Saz
 
 			auto& rigidbody2D = world.GetComponent<component::Rigidbody2DComponent>(entity);
 			out << YAML::Key << "BodyType" << YAML::Value << (int)rigidbody2D.Type;
+			out << YAML::Key << "GravityScale" << YAML::Value << (int)rigidbody2D.GravityScale;
 			out << YAML::Key << "FixedRotation" << YAML::Value << rigidbody2D.FixedRotation;
 
 			out << YAML::EndMap; // Rigidbody2DComponent
@@ -371,6 +372,7 @@ namespace Saz
 				{
 					auto& rb = m_World.AddComponent<component::Rigidbody2DComponent>(deserializedEntity);
 					rb.Type = (component::Rigidbody2DComponent::BodyType)rigidbody2D["BodyType"].as<int>();
+					rb.GravityScale = rigidbody2D["GravityScale"].as<float>();
 					rb.FixedRotation = rigidbody2D["FixedRotation"].as<bool>();
 				}
 

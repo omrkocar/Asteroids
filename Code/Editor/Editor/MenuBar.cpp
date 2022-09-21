@@ -4,6 +4,11 @@
 #include "Editor/Application.h"
 #include "Editor/ProjectSettingsWindow.h"
 #include "Editor/ProfilerPanel.h"
+#include "Editor/SceneEditor.h"
+#include "Editor/GameViewport.h"
+#include "Editor/Inspector.h"
+#include "Editor/WorldOutliner.h"
+#include "Editor/ContentBrowser.h"
 
 #include "Saz/InputComponent.h"
 #include "Saz/SceneComponent.h"
@@ -14,9 +19,21 @@
 
 namespace ecs
 {
-	MenuBar::MenuBar(ProjectSettingsWindow& projectSettings, ProfilerPanel& profilerPanel)
+	MenuBar::MenuBar(
+		ProjectSettingsWindow& projectSettings,
+		ProfilerPanel& profilerPanel,
+		SceneEditor& sceneEditor,
+		GameViewport& gameViewport,
+		Inspector& inspector,
+		WorldOutliner& worldOutliner,
+		ContentBrowser& contentBrowser)
 		: m_ProjectSettings(projectSettings)
 		, m_ProfilerPanel(profilerPanel)
+		, m_SceneEditor(sceneEditor)
+		, m_GameViewport(gameViewport)
+		, m_Inspector(inspector)
+		, m_WorldOutliner(worldOutliner)
+		, m_ContentBrowser(contentBrowser)
 	{
 
 	}
@@ -64,6 +81,10 @@ namespace ecs
 			{
 				if (control)
 				{
+					if (m_Scene->SceneState != SceneState::Editor)
+					{
+						m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::ForceStop);
+					}
 					NewScene();
 				}
 			}
@@ -72,6 +93,10 @@ namespace ecs
 			{
 				if (control)
 				{
+					if (m_Scene->SceneState != SceneState::Editor)
+					{
+						m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::ForceStop);
+					}
 					Saz::SceneUtils::OpenScene(*m_World, m_Entity);
 				}
 			}
@@ -82,10 +107,8 @@ namespace ecs
 
 	void MenuBar::ImGuiRender()
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 4.0f));
 		if (ImGui::BeginMenuBar())
 		{
-			ImGui::PopStyleVar();
 			DrawFileMenu();
 			DrawEditMenu();
 			DrawWindowsMenu();
@@ -102,6 +125,8 @@ namespace ecs
 			{
 				m_ProjectSettings.SetVisible(true);
 			}
+
+			ImGui::Separator();
 
 			if (ImGui::MenuItem("Profiler Panel..."))
 			{
@@ -159,12 +184,32 @@ namespace ecs
 		{
 			if (ImGui::Button("Scene"))
 			{
-
+				m_SceneEditor.SetVisible(true);
+				ImGui::CloseCurrentPopup();
 			}
+
+			ImGui::Separator();
 			
 			if (ImGui::Button("Game"))
 			{
+				m_GameViewport.SetVisible(true);
+				ImGui::CloseCurrentPopup();
+			}
 
+			ImGui::Separator();
+
+			if (ImGui::Button("Inspector"))
+			{
+				m_Inspector.SetVisible(true);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("World Outliner"))
+			{
+				m_WorldOutliner.SetVisible(true);
+				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::EndMenu();

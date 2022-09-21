@@ -68,14 +68,15 @@ namespace Saz
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		DockingBegin();
 		ImGuizmo::BeginFrame();
+		DockingBegin();
 	}
 
 	void ImGuiLayer::End()
 	{
 		SAZ_PROFILE_FUNCTION();
 
+		// Docking
 		ImGui::End();
 
 		ImGuiIO& io = ImGui::GetIO();
@@ -167,7 +168,6 @@ namespace Saz
 
 		static bool opt_fullscreen = true;
 		static bool opt_padding = false;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		if (opt_fullscreen)
 		{
@@ -182,6 +182,7 @@ namespace Saz
 		}
 
 
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
 

@@ -9,6 +9,7 @@ namespace component
 		enum class BodyType { Static = 0, Dynamic, Kinematic };
 		BodyType Type = BodyType::Static;
 		bool FixedRotation = false;
+		float GravityScale = 1.0f;
 
 		// Storage for runtime
 		void* RuntimeBody = nullptr;

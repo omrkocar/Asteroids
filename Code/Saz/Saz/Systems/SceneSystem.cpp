@@ -48,33 +48,41 @@ namespace ecs
 		const auto newSceneView = m_World->GetAllEntitiesWith<component::NewSceneRequestOneFrameComponent>();
 		for (const auto& newSceneEntity : newSceneView)
 		{
-			auto& sceneRequestComp = m_World->m_Registry.get<component::NewSceneRequestOneFrameComponent>(newSceneEntity);
+			auto& sceneRequestComp = m_World->GetComponent<component::NewSceneRequestOneFrameComponent>(newSceneEntity);
 			NewScene();
 		}
 
 		const auto loadSceneView = m_World->GetAllEntitiesWith<component::LoadSceneRequestOneFrameComponent>();
 		for (const auto& loadSceneEntity : loadSceneView)
 		{
-			auto& sceneRequestComp = m_World->m_Registry.get<component::LoadSceneRequestOneFrameComponent>(loadSceneEntity);
+			auto& sceneRequestComp = m_World->GetComponent<component::LoadSceneRequestOneFrameComponent>(loadSceneEntity);
 			LoadScene(sceneRequestComp.Path);
 		}
 
 		const auto saveSceneView = m_World->GetAllEntitiesWith<component::SaveSceneRequestOneFrameComponent>();
 		for (const auto& saveSceneEntity : saveSceneView)
 		{
-			auto& sceneRequestComp = m_World->m_Registry.get<component::SaveSceneRequestOneFrameComponent>(saveSceneEntity);
+			auto& sceneRequestComp = m_World->GetComponent<component::SaveSceneRequestOneFrameComponent>(saveSceneEntity);
 			SaveScene(sceneRequestComp.Path);
 		}
 	}
 
 	void SceneSystem::NewScene()
 	{
+		if (m_Scene->SceneState != SceneState::Editor)
+		{
+			m_Scene->SceneState = SceneState::Editor;
+		}
 		DestroySceneEntities();
 		UpdateWindowName("");
 	}
 
 	void SceneSystem::LoadScene(const String& scenePath)
 	{
+		if (m_Scene->SceneState != SceneState::Editor)
+		{
+			m_Scene->SceneState = SceneState::Editor;
+		}
 		DestroySceneEntities();
 
 		Saz::SceneSerializer serializer(*m_World);
@@ -109,7 +117,7 @@ namespace ecs
 
 	void SceneSystem::DestroySceneEntities()
 	{
-		const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
+		const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>();
 		for (const auto& sceneEntity : sceneEntityView)
 		{
 			m_World->DestroyEntity(sceneEntity);
@@ -129,7 +137,7 @@ namespace ecs
 		}
 		else if (sceneStateRequest.SceneState == SceneState::Editor)
 		{
-			const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
+			const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>();
 			for (const auto& sceneEntity : sceneEntityView)
 			{
 				m_World->DestroyEntity(sceneEntity);
@@ -137,6 +145,10 @@ namespace ecs
 
 			Saz::SceneSerializer serializer(*m_World);
 			serializer.Deserialize("EditorScene.saz");
+			m_Scene->SceneState = SceneState::Editor;
+		}
+		else if (sceneStateRequest.SceneState == SceneState::ForceStop)
+		{
 			m_Scene->SceneState = SceneState::Editor;
 		}
 	}

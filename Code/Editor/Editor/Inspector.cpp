@@ -142,12 +142,15 @@ namespace ecs
 
 	void Inspector::Update(const Saz::GameTime& gameTime)
 	{
+		if (!m_IsActive)
+			return;
+
 		ImGuiRender();
 	}
 
 	void Inspector::ImGuiRender()
 	{
-		ImGui::Begin("Inspector");
+		ImGui::Begin("Inspector", &m_IsActive);
 
 		if (m_WorldOutliner.m_SelectedEntity != entt::null)
 		{
@@ -361,6 +364,7 @@ namespace ecs
 					ImGui::EndCombo();
 				}
 
+				ImGui::InputFloat("Gravity Scale", &component.GravityScale);
 				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
 			});
 	}
