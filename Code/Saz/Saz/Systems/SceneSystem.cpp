@@ -16,7 +16,8 @@ namespace ecs
 		auto entity = m_World->CreateEntity();
 		m_Scene = &m_World->AddComponent<component::LoadedSceneComponent>(entity);
 
-		Saz::SceneSerializer serializer(*m_World);
+		// #todo: Plug this back once you've figured out system ordering
+		/*Saz::SceneSerializer serializer(*m_World);
 		const String& scenePath = serializer.DeserializeLastOpenScene(strLastOpenScene);
 		if (!scenePath.empty())
 		{
@@ -27,7 +28,7 @@ namespace ecs
 		else
 		{
 			NewScene();
-		}
+		}*/
 
 		auto& registry = m_World->m_Registry;
 		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&SceneSystem::OnSceneStateChangeRequest>(this);

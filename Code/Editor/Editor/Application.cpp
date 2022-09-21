@@ -78,8 +78,8 @@ void Application::Register()
 	m_World.RegisterComponent<component::WindowResizedOneFrameComponent>();
 
 	m_World.RegisterSystem<ecs::InputSystem>(*m_Window);
-	m_World.RegisterSystem<ecs::CameraSystem>();
 	m_World.RegisterSystem<ecs::SceneSystem>();
+	m_World.RegisterSystem<ecs::CameraSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
 	m_World.RegisterSystem<ecs::Toolbar>();
 	m_World.RegisterSystem<ecs::ProfilerPanel>();
