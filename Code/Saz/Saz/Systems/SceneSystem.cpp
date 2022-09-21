@@ -69,18 +69,13 @@ namespace ecs
 
 	void SceneSystem::NewScene()
 	{
-		m_World->DestroyEntitesWith<component::SceneEntityComponent>();
-		m_World->CreateMainCamera();
+		DestroySceneEntities();
 		UpdateWindowName("");
 	}
 
 	void SceneSystem::LoadScene(const String& scenePath)
 	{
-		const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
-		for (const auto& sceneEntity : sceneEntityView)
-		{
-			m_World->DestroyEntity(sceneEntity);
-		}
+		DestroySceneEntities();
 
 		Saz::SceneSerializer serializer(*m_World);
 		serializer.Deserialize(scenePath);
@@ -110,6 +105,15 @@ namespace ecs
 		scene.Name = name;
 		auto& window = Saz::Application::Get().GetWindow();
 		window.SetTitle(String("Saz Editor") + " - " + scene.Name);
+	}
+
+	void SceneSystem::DestroySceneEntities()
+	{
+		const auto sceneEntityView = m_World->m_Registry.view<component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
+		for (const auto& sceneEntity : sceneEntityView)
+		{
+			m_World->DestroyEntity(sceneEntity);
+		}
 	}
 
 	void SceneSystem::OnSceneStateChangeRequest(entt::registry& registry, entt::entity entity)

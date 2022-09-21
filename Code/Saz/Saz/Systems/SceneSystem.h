@@ -27,6 +27,7 @@ namespace ecs
 		void LoadScene(const String& scenePath);
 		void SaveScene(const String& scenePath);
 		void UpdateWindowName(const String& scenePath);
+		void DestroySceneEntities();
 
 		component::LoadedSceneComponent* m_Scene;
 

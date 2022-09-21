@@ -16,7 +16,7 @@ Entities:
         OrthographicSize: 21
         OrthographicNear: -1
         OrthographicFar: 104
-        AspectRatio: 0.368525892
+        AspectRatio: 0.797418058
       Primary: true
       FixedAspectRatio: false
   - Entity: 1620965192542877240

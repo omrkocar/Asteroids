@@ -17,7 +17,6 @@ namespace ecs
 	public:
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-		virtual void ImGuiRender();
 
 		Entity m_CameraEntity;
 		Entity m_SecondCamera;

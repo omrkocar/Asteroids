@@ -60,25 +60,22 @@ namespace ecs
 
 	void SceneEditor::Update(const Saz::GameTime& gameTime)
 	{
-		auto& registry = m_World->m_Registry;
+		SAZ_PROFILE_FUNCTION();
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 
-		if (m_World->IsAlive(m_FrameBufferEntity) == false)
-			return;
-
 		const Saz::FrameBufferSpecification& spec = m_FrameBuffer->GetSpecification();
 		if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
 			(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
 		{
-			uint32_t width = (uint32_t)m_SceneSize.x;
-			uint32_t height = (uint32_t)m_SceneSize.y;
-			m_FrameBuffer->Resize(width, height);
+			float width = m_SceneSize.x;
+			float height = m_SceneSize.y;
+			m_FrameBuffer->Resize((uint32_t)width, (uint32_t)height);
 
-			m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)width, (uint32_t)height, WindowType::EditorViewport);
+			m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, width, height, WindowType::EditorViewport);
 		}
 
 		Saz::Renderer2D::ResetStats();
@@ -99,6 +96,8 @@ namespace ecs
 
 	void SceneEditor::ProcessMousePicking()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
 		my -= m_ViewportBounds[0].y;
@@ -116,13 +115,13 @@ namespace ecs
 
 	void SceneEditor::RenderScene()
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
 		if (m_World->IsAlive(mainCameraEntity))
 		{
 			auto& cameraComponent = m_World->GetComponent<component::EditorCameraComponent>(mainCameraEntity);
 			auto& cameraTransformComp = m_World->GetComponent<component::TransformComponent>(mainCameraEntity);
-
-			SAZ_PROFILE_SCOPE("Renderer Draw");
 
 			const glm::mat4& transform = cameraTransformComp.GetTransform();
 			Saz::Renderer2D::BeginScene(cameraComponent.Camera);
@@ -153,6 +152,7 @@ namespace ecs
 	{
 		if (PhysicsSettings::ShowColliders)
 		{
+			SAZ_PROFILE_SCOPE("SceneEditor::RenderOverlay");
 			ecs::Entity mainCameraEntity = m_World->GetMainCameraEntity();
 			if (m_World->IsAlive(mainCameraEntity))
 			{
@@ -342,12 +342,11 @@ namespace ecs
 
 	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)
 	{
-		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
+		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, m_SceneSize.x, m_SceneSize.y, WindowType::EditorViewport);
 		if (m_Scene->SceneState != SceneState::Editor)
 		{
 			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Editor);
 		}
-
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 	}
 }

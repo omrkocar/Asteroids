@@ -70,9 +70,6 @@ namespace Saz
 		ImGui::NewFrame();
 		DockingBegin();
 		ImGuizmo::BeginFrame();
-
-		static bool a = true;
-		ImGui::ShowDemoWindow(&a);
 	}
 
 	void ImGuiLayer::End()

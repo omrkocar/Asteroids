@@ -29,8 +29,6 @@ namespace ecs
 
 	void GameViewport::Init()
 	{
-		auto& registry = m_World->m_Registry;
-
 		m_Entity = m_World->CreateEntity();
 		
 		m_FrameBufferEntity = m_World->CreateEntity();
@@ -47,26 +45,25 @@ namespace ecs
 
 	void GameViewport::Update(const Saz::GameTime& gameTime)
 	{
+		SAZ_PROFILE_FUNCTION();
+
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
-
-		if (m_World->IsAlive(m_FrameBufferEntity) == false)
-			return;
 
 		const Saz::FrameBufferSpecification& spec = m_FrameBuffer->GetSpecification();
 		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
-			uint32_t width = (uint32_t)m_ViewportSize.x;
-			uint32_t height = (uint32_t)m_ViewportSize.y;
-			m_FrameBuffer->Resize(width, height);
+			float width = m_ViewportSize.x;
+			float height = m_ViewportSize.y;
+			m_FrameBuffer->Resize((uint32_t)width, (uint32_t)height);
 
-			m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)width, (uint32_t)height, WindowType::GameViewport);
+			m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, width, height, WindowType::GameViewport);
 		}
 
 		Saz::Renderer2D::ResetStats();
 		m_FrameBuffer->Bind();
-		Saz::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+		Saz::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 		Saz::RenderCommand::Clear();
 		m_FrameBuffer->ClearColorAttachment(1, -1);
 
@@ -155,7 +152,6 @@ namespace ecs
 
 		ImGui::End();
 		ImGui::PopStyleVar();
-
 	}
 
 	void GameViewport::DrawOptions()
@@ -166,6 +162,6 @@ namespace ecs
 
 	void GameViewport::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)
 	{
-		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y, WindowType::GameViewport);
+		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, m_ViewportSize.x, m_ViewportSize.y, WindowType::GameViewport);
 	}
 }
