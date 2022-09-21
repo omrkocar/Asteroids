@@ -74,7 +74,7 @@ namespace ecs
 		ImGui::Begin("World Outliner", &m_IsActive, ImGuiWindowFlags_MenuBar);
 
 		auto& registry = m_World->m_Registry;
-		const auto view = m_World->m_Registry.view<component::IDComponent, component::SceneEntityComponent>(entt::exclude<component::EditorCameraComponent>);
+		const auto view = m_World->m_Registry.view<component::IDComponent, component::SceneEntityComponent>();
 		for (const ecs::Entity& entity : view)
 		{
 			DrawEntityNode(entity);

@@ -5,6 +5,11 @@ namespace ecs
 {
 	class ProjectSettingsWindow; 
 	class ProfilerPanel;
+	class SceneEditor;
+	class GameViewport;
+	class Inspector;
+	class WorldOutliner;
+	class ContentBrowser;
 }
 
 namespace component 
@@ -17,7 +22,14 @@ namespace ecs
 	class MenuBar : public ecs::System
 	{
 	public:
-		MenuBar(ProjectSettingsWindow& projectSettings, ProfilerPanel& profilerPanel);
+		MenuBar(
+			ProjectSettingsWindow& projectSettings, 
+			ProfilerPanel& profilerPanel, 
+			SceneEditor& sceneEditor,
+			GameViewport& gameViewport,
+			Inspector& inspector,
+			WorldOutliner& worldOutliner,
+			ContentBrowser& contentBrowser);
 		~MenuBar();
 
 		virtual void Init() override;
@@ -33,10 +45,15 @@ namespace ecs
 		void SaveSceneAs();
 	private:
 		ProfilerPanel& m_ProfilerPanel;
+		ProjectSettingsWindow& m_ProjectSettings;
+		SceneEditor& m_SceneEditor;
+		GameViewport& m_GameViewport;
+		Inspector& m_Inspector;
+		WorldOutliner& m_WorldOutliner;
+		ContentBrowser& m_ContentBrowser;
 
 		Entity m_Entity;
 		component::LoadedSceneComponent* m_Scene;
-		ProjectSettingsWindow& m_ProjectSettings;
 
 		bool m_isProjectSettingsWindowOpen = false;
 	};

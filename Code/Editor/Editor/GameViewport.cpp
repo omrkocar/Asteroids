@@ -49,6 +49,11 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
+
+		if (!m_IsActive)
+			return;
 
 		const Saz::FrameBufferSpecification& spec = m_FrameBuffer->GetSpecification();
 		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
@@ -120,7 +125,7 @@ namespace ecs
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 
 		// Scene
-		ImGui::Begin("Game");
+		ImGui::Begin("Game", &m_IsActive);
 		DrawOptions();
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();

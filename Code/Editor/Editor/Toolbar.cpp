@@ -57,9 +57,9 @@ namespace ecs
 
 		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		Saz::Ref<Saz::Texture2D> icon = scene.SceneState == SceneState::Editor ? m_PlayIcon : m_StopIcon;
+		m_Icon = scene.SceneState == SceneState::Editor ? m_PlayIcon : m_StopIcon;
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		if (ImGui::ImageButton((ImTextureID)m_Icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
 			if (scene.SceneState == SceneState::Editor)
 				OnScenePlay();

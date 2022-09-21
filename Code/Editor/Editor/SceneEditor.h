@@ -41,6 +41,8 @@ namespace ecs
 
 		bool IsViewportFocused() const { return m_ViewportFocused; }
 		bool IsViewportHovered() const { return m_ViewPortHovered; }
+
+		void SetVisible(bool visible) { m_IsVisible = visible; }
  
 	private:
 		void OnLevelLoaded(entt::registry& registry, entt::entity entity);
@@ -64,5 +66,7 @@ namespace ecs
 		bool m_IsGizmoVisible = true;
 		Saz::Ref<Saz::FrameBuffer> m_FrameBuffer = nullptr;
 		Entity m_Entity = entt::null;
+
+		bool m_IsVisible = true;
 	};
 }

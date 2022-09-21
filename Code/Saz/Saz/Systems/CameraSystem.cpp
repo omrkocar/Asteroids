@@ -75,7 +75,6 @@ namespace ecs
 		{
 			auto& cameraComp = m_World->GetComponent<component::EditorCameraComponent>(m_World->GetMainCameraEntity());
 			cameraComp.Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
-			SAZ_CORE_TRACE("EditorCamera AspectRatio is: {0}", cameraComp.Camera.GetAspectRatio());
 		}
 		else
 		{
@@ -84,7 +83,6 @@ namespace ecs
 			{
 				auto& cameraComp = m_World->m_Registry.get<component::CameraComponent>(camera);
 				cameraComp.Camera.SetViewportSize((float)windowResizeComp.Width, (float)windowResizeComp.Height);
-				SAZ_CORE_TRACE("GameCamera AspectRatio is: {0}", cameraComp.Camera.GetAspectRatio());
 			}
 		}
 	}

@@ -38,23 +38,11 @@ namespace ecs
 {
 	void PhysicsSystem::Init()
 	{
-		m_World->m_Registry.on_update<component::SceneStateChangeRequestOneFrameComponent>().connect<&PhysicsSystem::OnSceneStateChanged>(this);
+		m_World->m_Registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&PhysicsSystem::OnSceneStateChanged>(this);
 	}
 
 	void PhysicsSystem::Update(const Saz::GameTime& gameTime)
 	{
-		auto& registry = m_World->m_Registry;
-
-		auto sceneStateChangeView = m_World->GetAllEntitiesWith<component::SceneStateChangeRequestOneFrameComponent>();
-		for (auto& entity : sceneStateChangeView)
-		{
-			auto& sceneStateChangedComp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
-			if (sceneStateChangedComp.SceneState == SceneState::Play)
-				OnRuntimeStart();
-			else if (sceneStateChangedComp.SceneState == SceneState::Editor)
-				OnRuntimeStop();
-		}
-
 		if (!m_IsActive)
 			return;
 
@@ -87,6 +75,7 @@ namespace ecs
 			bodyDef.type = ConvertSazPhysicsTypeToBox2D(rigidbody2D.Type);
 			bodyDef.position.Set(transform.Position.x, transform.Position.y);
 			bodyDef.angle = transform.Rotation.z;
+			bodyDef.gravityScale = rigidbody2D.GravityScale;
 			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
 			body->SetFixedRotation(rigidbody2D.FixedRotation);
 			rigidbody2D.RuntimeBody = body;
@@ -139,10 +128,11 @@ namespace ecs
 
 	void PhysicsSystem::OnSceneStateChanged(entt::registry& registry, entt::entity entity)
 	{
-		component::SceneStateChangeRequestOneFrameComponent& comp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
-		if (comp.SceneState == SceneState::Play)
+		auto& sceneStateChangedComp = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
+
+		if (sceneStateChangedComp.SceneState == SceneState::Play)
 			OnRuntimeStart();
-		else if (comp.SceneState == SceneState::Editor)
+		else if (sceneStateChangedComp.SceneState == SceneState::Editor || sceneStateChangedComp.SceneState == SceneState::ForceStop)
 			OnRuntimeStop();
 	}
 }

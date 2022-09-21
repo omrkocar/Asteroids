@@ -29,6 +29,7 @@ namespace ecs
 	private:
 		Saz::Ref<Saz::Texture2D> m_PlayIcon;
 		Saz::Ref<Saz::Texture2D> m_StopIcon;
+		Saz::Ref<Saz::Texture2D> m_Icon;
 
 		Entity m_Entity;
 	};

@@ -64,9 +64,14 @@ namespace ecs
 
 		if (m_World->HasComponent<component::WindowResizedOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::WindowResizedOneFrameComponent>(m_Entity);
+		if (m_World->HasComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity))
+			m_World->RemoveComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity);
 		if (m_World->HasComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::LoadSceneRequestOneFrameComponent>(m_Entity);
 
+		if (!m_IsVisible)
+			return;
+		
 		const Saz::FrameBufferSpecification& spec = m_FrameBuffer->GetSpecification();
 		if (m_SceneSize.x > 0.0f && m_SceneSize.y > 0.0f && // zero sized framebuffer is invalid
 			(spec.Width != m_SceneSize.x || spec.Height != m_SceneSize.y))
@@ -213,13 +218,14 @@ namespace ecs
 		{
 			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
 
-			if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft) && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
+			if (m_ViewPortHovered && !ImGuizmo::IsOver())
 			{
-				if (m_ViewPortHovered && !ImGuizmo::IsOver())
+				if (inputComp.IsKeyPressed(Input::MouseCode::ButtonLeft) && !inputComp.IsKeyHeld(Input::KeyCode::LeftAlt))
 				{
 					m_WorldOutliner.m_SelectedEntity = m_HoveredEntity;
 				}
 			}
+			
 
 			if (!m_ViewportFocused && m_WorldOutliner.m_SelectedEntity == entt::null)
 			{
@@ -255,7 +261,7 @@ namespace ecs
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 
 		// Scene
-		ImGui::Begin("Scene");
+		ImGui::Begin("Scene", &m_IsVisible);
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewPortHovered = ImGui::IsWindowHovered();
 		auto& scene = m_World->GetSingleComponent<component::LoadedSceneComponent>();
@@ -279,6 +285,10 @@ namespace ecs
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
+				if (m_Scene->SceneState != SceneState::Editor)
+				{
+					m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::ForceStop);
+				}
 				const wchar_t* path = (const wchar_t*)payload->Data;
 				Saz::SceneUtils::OpenScene(*m_World, m_Entity, std::filesystem::path(g_DataPath) / path);
 			}
@@ -298,7 +308,6 @@ namespace ecs
 		if (!m_World->IsAlive(selectedEntity))
 			return;
 
-		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
@@ -321,11 +330,12 @@ namespace ecs
 
 			float snapValues[3] = { snapValue, snapValue, snapValue };
 
+			ImGuizmo::SetOrthographic(true);
 			ImGuizmo::Manipulate(
 				glm::value_ptr(cameraView),
 				glm::value_ptr(cameraProjection),
 				(ImGuizmo::OPERATION)(m_IsGizmoVisible ? m_GizmoType : -1),
-				ImGuizmo::WORLD,
+				ImGuizmo::LOCAL,
 				glm::value_ptr(transform),
 				nullptr, snap ? snapValues : nullptr);
 
@@ -343,10 +353,6 @@ namespace ecs
 	void SceneEditor::OnLevelLoaded(entt::registry& registry, entt::entity entity)
 	{
 		m_World->AddComponent<component::WindowResizedOneFrameComponent>(m_Entity, m_SceneSize.x, m_SceneSize.y, WindowType::EditorViewport);
-		if (m_Scene->SceneState != SceneState::Editor)
-		{
-			auto& sceneStateComp = m_World->AddComponent<component::SceneStateChangeRequestOneFrameComponent>(m_Entity, SceneState::Editor);
-		}
 		Saz::Renderer::OnWindowResize((uint32_t)m_SceneSize.x, (uint32_t)m_SceneSize.y);
 	}
 }
