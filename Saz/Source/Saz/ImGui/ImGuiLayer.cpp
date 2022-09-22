@@ -31,8 +31,9 @@ namespace Saz
 		SetupImGuiStyle();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 16.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 15.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 15.0f);
+		
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -44,7 +45,7 @@ namespace Saz
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		io.IniFilename = "../../3rdParty/imgui/imgui.ini";
+		io.IniFilename = "../3rdParty/imgui/imgui.ini";
 
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());

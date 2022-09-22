@@ -5,9 +5,8 @@
 project "Saz"
 	kind		"StaticLib"
 	dependson { "Core", "Imgui", "GLFW", "GLAD", "glm" }
-	location	"%{wks.location}/Projects/Saz"
 	pchheader "SazPCH.h"
-	pchsource "Saz/SazPCH.cpp"
+	pchsource "Source/Saz/SazPCH.cpp"
 	staticruntime "on"
 
 	defines 
@@ -19,9 +18,9 @@ project "Saz"
 	vpaths 
 	{ 
 		{ ["Source/*"] = {  
-			"Saz/**.h", 
-			"Saz/**.cpp", 
-			"Saz/**.inl" } },
+			"Source/Saz/**.h", 
+			"Source/Saz/**.cpp", 
+			"Source/Saz/**.inl" } },
 	}
 
 	flags
@@ -30,9 +29,8 @@ project "Saz"
 	}
 
 	includedirs {
-		"%{wks.location}/Code/Core/",
-		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/Code/Saz/Saz/",
+		"%{wks.location}/Core/Source",
+		"%{wks.location}/Saz/Source",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{IncludeDir.ImGui}",

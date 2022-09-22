@@ -40,15 +40,10 @@ workspace "Saz"
 
 	files 
 	{ 
-		"%{wks.location}/Code/%{prj.name}/%{prj.name}/**.h",
-		"%{wks.location}/Code/%{prj.name}/%{prj.name}/**.cpp",
-		"%{wks.location}/Code/%{prj.name}/%{prj.name}/**.inl",
-		"%{wks.location}/Code/%{prj.name}/premake5.*",
-	}
-
-	vpaths 
-	{ 
-		{ ["/"] = { "**premake5.lua" } },
+		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.h",
+		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.cpp",
+		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.inl",
+		"%{wks.location}/%{prj.name}/premake5.*",
 	}
 
 	filter "system:windows"
@@ -83,15 +78,15 @@ workspace "Saz"
 	Library["WinVersion"] = "Version.lib"
 	Library["BCrypt"] = "Bcrypt.lib"
 
-	include "Code/Saz/premake5.lua"
-	include "Code/Core/premake5.lua"
-	include "Code/Editor/premake5.lua"
-	include "Code/Game/premake5.lua"
-	include "Code/ScriptCore/premake5.lua"
+	include "Saz/premake5.lua"
+	include "Core/premake5.lua"
+	include "Editor/premake5.lua"
+	include "Game/premake5.lua"
+	include "ZERO_CHECK/premake5.lua"
 
 	group "UnitTest"
-		include "Code/Core_ut/premake5.lua"
-		include "Code/Saz_ut/premake5.lua"
+		include "UnitTests/Core_ut/premake5.lua"
+		include "UnitTests/Saz_ut/premake5.lua"
 	group ""
 
 	group "3rdParty"
@@ -104,13 +99,3 @@ workspace "Saz"
 		include "3rdParty/imguizmo/premake5.lua"
 		include "3rdParty/Box2D/premake5.lua"
 		group ""
-	
-
-project "ZERO_CHECK"
-	kind "ConsoleApp"
-	language "C++"
-	location "%{wks.location}/Projects/ZERO_CHECK"
-	files { "%{wks.location}/premake5.lua" }
-
-	buildcommands { "cd %{wks.location}/Scripts & call Win-GenProjects.bat" }
-	buildoutputs { "unused.txt" }

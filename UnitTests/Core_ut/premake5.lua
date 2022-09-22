@@ -1,7 +1,6 @@
 project "Core_ut"
 	kind "ConsoleApp"
 	dependson { "Core" }
-	location "%{wks.location}/Projects/Core_ut"
 
 	defines { "T_UNIT_TEST" }
 
@@ -13,10 +12,15 @@ project "Core_ut"
 			"Core_ut/**.inl" } },
 	}
 
+	files
+	{
+		"%{wks.location}/UnitTests/Core_ut/Core_ut/**.cpp"
+	}
+
 	includedirs 
 	{
 		"%{wks.location}/3rdParty/",
-		"%{wks.location}/Code/Core/",
+		"%{wks.location}/Core/Source",
 		"%{IncludeDir.glm}",
 	}
 	
