@@ -31,8 +31,8 @@ namespace Saz
 		SetupImGuiStyle();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 18.0f);
+		io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Bold.ttf", 15.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("../../Data/Fonts/Comic_neue/ComicNeue-Regular.ttf", 15.0f);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -196,7 +196,7 @@ namespace Saz
 		// Submit the DockSpace
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuiStyle& style = ImGui::GetStyle();
-		style.WindowMinSize.x = 370.0f;
+		style.WindowMinSize.x = 200.0f;
 
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{

@@ -17,15 +17,15 @@ namespace
 	constexpr int32_t velocityIterations = 6;
 	constexpr int32_t positionIterations = 2;
 
-	b2BodyType ConvertSazPhysicsTypeToBox2D(component::Rigidbody2DComponent::BodyType bodyType)
+	b2BodyType ConvertSazPhysicsTypeToBox2D(Physics::BodyType bodyType)
 	{
 		switch (bodyType)
 		{
-		case component::Rigidbody2DComponent::BodyType::Static:
+		case Physics::BodyType::Static:
 			return b2_staticBody;
-		case component::Rigidbody2DComponent::BodyType::Dynamic:
+		case Physics::BodyType::Dynamic:
 			return b2_dynamicBody;
-		case component::Rigidbody2DComponent::BodyType::Kinematic:
+		case Physics::BodyType::Kinematic:
 			return b2_kinematicBody;
 		}
 

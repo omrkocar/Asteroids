@@ -14,8 +14,11 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
 
+#define IMGUI_LEFT_LABEL(func, label, ...) (ImGui::TextUnformatted(label), ImGui::SameLine(150.0f), func("##" label, __VA_ARGS__))
+
 namespace
 {
+
 
 	constexpr ImGuiTreeNodeFlags treeNodeFlags =
 		ImGuiTreeNodeFlags_DefaultOpen |
@@ -147,7 +150,7 @@ namespace ecs
 
 	void Inspector::ImGuiRender()
 	{
-		ImGui::Begin("Inspector", &m_IsActive);
+		ImGui::Begin("Inspector", &m_IsActive, ImGuiWindowFlags_AlwaysAutoResize);
 
 		if (m_WorldOutliner.m_SelectedEntity != entt::null)
 		{
@@ -170,7 +173,6 @@ namespace ecs
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 		DrawAddComponentPopup(entity);
-		ImGui::PopItemWidth();
 
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
@@ -179,6 +181,7 @@ namespace ecs
 		DrawRigidbody2DComponent(entity);
 		DrawBoxCollider2DComponent(entity);
 		DrawCircleCollider2DComponent(entity);
+		ImGui::PopItemWidth();
 
 		ImGui::PopFont();
 	}
@@ -246,12 +249,10 @@ namespace ecs
 				auto& camera = component.Camera;
 				bool isProjection = component.Camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective;
 
-				//ImGui::Checkbox("Primary", &component.Primary);
-
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeStrings[(int)component.Camera.GetProjectionType()];
 
-				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+				if (IMGUI_LEFT_LABEL(ImGui::BeginCombo, "Projection", currentProjectionTypeString))
 				{
 					for (int i = 0; i < 2; i++)
 					{
@@ -272,33 +273,33 @@ namespace ecs
 				if (camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective)
 				{
 					float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
-					if (ImGui::DragFloat("Vertical FOV", &verticalFov))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat,"Vertical FOV", &verticalFov))
 						camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
 
 					float orthoNear = camera.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat, "Near", &orthoNear))
 						camera.SetPerspectiveNearClip(orthoNear);
 
 					float orthoFar = camera.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat, "Far", &orthoFar))
 						camera.SetPerspectiveFarClip(orthoFar);
 				}
 
 				if (camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Orthographic)
 				{
 					float orthoSize = camera.GetOrthographicSize();
-					if (ImGui::DragFloat("Size", &orthoSize))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat, "Size", &orthoSize))
 						camera.SetOrthographicSize(orthoSize);
 
 					float orthoNear = camera.GetOrthographicNearClip();
-					if (ImGui::DragFloat("Near", &orthoNear))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat, "Near", &orthoNear))
 						camera.SetOrthographicNearClip(orthoNear);
 
 					float orthoFar = camera.GetOrthographicFarClip();
-					if (ImGui::DragFloat("Far", &orthoFar))
+					if (IMGUI_LEFT_LABEL(ImGui::DragFloat, "Far", &orthoFar))
 						camera.SetOrthographicFarClip(orthoFar);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
+					IMGUI_LEFT_LABEL(ImGui::Checkbox, "Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
 			});
 	}
@@ -307,9 +308,9 @@ namespace ecs
 	{
 		DrawComponent<component::SpriteComponent>(*m_World, "Sprite Component", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+				IMGUI_LEFT_LABEL(ImGui::ColorEdit4, "Color", glm::value_ptr(component.Color));
 				
-				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+				IMGUI_LEFT_LABEL(ImGui::Button,"Texture", ImVec2(100.0f, 0.0f));
 
 				if (ImGui::BeginDragDropTarget())
 				{
@@ -322,7 +323,7 @@ namespace ecs
 					ImGui::EndDragDropTarget();
 				}
 
-				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 	}
 
@@ -330,9 +331,9 @@ namespace ecs
 	{
 		DrawComponent<component::CircleRendererComponent>(*m_World, "Circle Renderer Component", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
-				ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
-				ImGui::DragFloat("Fade", &component.Fade, 0.0025f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::ColorEdit4, "Color", glm::value_ptr(component.Color));
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Fade", &component.Fade, 0.0025f, 0.0f, 1.0f);
 			});
 	}
 
@@ -343,7 +344,7 @@ namespace ecs
 				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
 				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
 
-				if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+				if (IMGUI_LEFT_LABEL(ImGui::BeginCombo, "Body Type", currentBodyTypeString))
 				{
 					for (int i = 0; i < 3; i++)
 					{
@@ -351,7 +352,7 @@ namespace ecs
 						if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
 						{
 							currentBodyTypeString = bodyTypeStrings[i];
-							component.Type = (component::Rigidbody2DComponent::BodyType)i;
+							component.Type = (Physics::BodyType)i;
 						}
 
 						if (isSelected)
@@ -361,8 +362,8 @@ namespace ecs
 					ImGui::EndCombo();
 				}
 
-				ImGui::InputFloat("Gravity Scale", &component.GravityScale);
-				ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
+				IMGUI_LEFT_LABEL(ImGui::InputFloat, "Gravity Scale", &component.GravityScale);
+				IMGUI_LEFT_LABEL(ImGui::Checkbox, "Fixed Rotation", &component.FixedRotation);
 			});
 	}
 
@@ -370,12 +371,12 @@ namespace ecs
 	{
 		DrawComponent<component::BoxCollider2DComponent>(*m_World, "BoxCollider2D Component", entity, [](auto& component)
 			{
-				ImGui::DragFloat2("Size", glm::value_ptr(component.Size));
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat2, "Size", glm::value_ptr(component.Size));
+				IMGUI_LEFT_LABEL(ImGui::DragFloat2,"Offset", glm::value_ptr(component.Offset));
+				IMGUI_LEFT_LABEL(ImGui::DragFloat,"Density", &component.Density, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat,"Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat,"Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat,"RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 
 	}
@@ -384,13 +385,12 @@ namespace ecs
 	{
 		DrawComponent<component::CircleCollider2DComponent>(*m_World, "CircleCollider2D Component", entity, [](auto& component)
 			{
-				ImGui::DragFloat("Radius", &component.Radius);
-				ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
-				ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Radius", &component.Radius);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat2, "Offset", glm::value_ptr(component.Offset));
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Density", &component.Density, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+				IMGUI_LEFT_LABEL(ImGui::DragFloat, "RestitutionThreshold", &component.RestitutionThreshold, 0.01f, 0.0f);
 			});
 	}
-
 }

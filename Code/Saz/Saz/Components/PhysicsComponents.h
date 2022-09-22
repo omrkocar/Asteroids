@@ -1,12 +1,17 @@
 #pragma once
 #include <glm/ext/vector_float2.hpp>
 
+namespace Physics
+{
+	enum class BodyType { Static = 0, Dynamic, Kinematic };
+}
+
 namespace component
 {
 	struct Rigidbody2DComponent
 	{
-		enum class BodyType { Static = 0, Dynamic, Kinematic };
-		BodyType Type = BodyType::Static;
+
+		Physics::BodyType Type = Physics::BodyType::Static;
 		bool FixedRotation = false;
 		float GravityScale = 1.0f;
 

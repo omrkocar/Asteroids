@@ -371,7 +371,7 @@ namespace Saz
 				if (rigidbody2D)
 				{
 					auto& rb = m_World.AddComponent<component::Rigidbody2DComponent>(deserializedEntity);
-					rb.Type = (component::Rigidbody2DComponent::BodyType)rigidbody2D["BodyType"].as<int>();
+					rb.Type = (Physics::BodyType)rigidbody2D["BodyType"].as<int>();
 					rb.GravityScale = rigidbody2D["GravityScale"].as<float>();
 					rb.FixedRotation = rigidbody2D["FixedRotation"].as<bool>();
 				}
