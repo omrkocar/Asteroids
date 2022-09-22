@@ -1,6 +1,5 @@
 project "stb_image"
 	kind "StaticLib"
-    location	"%{wks.location}/Projects/stb_image"
 	files
 	{
 		"*.cpp",

@@ -1,7 +1,6 @@
 project "Saz_ut"
 	kind "ConsoleApp"
 	dependson { "Core", "Saz" }
-	location "%{wks.location}/Projects/Saz_ut"
 
 	defines { "SAZ_UNIT_TEST" }
 
@@ -13,12 +12,17 @@ project "Saz_ut"
 			"Saz_ut/**.inl" } },
 	}
 
+	files
+	{
+		"%{wks.location}/UnitTests/Saz_ut/Saz_ut/**.cpp"
+	}
+
 	includedirs 
 	{
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include/",
-		"%{wks.location}/Code/Core/",
-		"%{wks.location}/Code/Saz/",
+		"%{wks.location}/Core/Source",
+		"%{wks.location}/Saz/Source",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Box2D}",
 	}

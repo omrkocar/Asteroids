@@ -1,4 +1,4 @@
-Scene: ../../Data\Scenes\3DScene.saz
+Scene: Data\Scenes\3DScene.saz
 Entities:
   - Entity: 1684448263694352888
     NameComponent:

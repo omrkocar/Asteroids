@@ -24,8 +24,8 @@ namespace ecs
 		auto& registry = m_World->m_Registry;
 		m_Entity = m_World->CreateEntity();
 
-		m_PlayIcon = Saz::Texture2D::Create("../../Data/Textures/PlayButton.png");
-		m_StopIcon = Saz::Texture2D::Create("../../Data/Textures/StopButton.png");
+		m_PlayIcon = Saz::Texture2D::Create("Data/Textures/PlayButton.png");
+		m_StopIcon = Saz::Texture2D::Create("Data/Textures/StopButton.png");
 	}
 
 	void Toolbar::Update(const Saz::GameTime& gameTime)

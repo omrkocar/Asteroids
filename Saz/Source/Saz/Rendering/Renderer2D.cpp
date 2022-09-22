@@ -172,9 +172,9 @@ namespace Saz {
 		for (uint32_t i = 0; i < s_RenderData.MaxTextureSlots; i++)
 			samplers[i] = i;
 
-		s_RenderData.QuadShader = Shader::Create("../../Data/Shaders/Texture.glsl");
-		s_RenderData.CircleShader = Shader::Create("../../Data/Shaders/Circle.glsl");
-		s_RenderData.LineShader = Shader::Create("../../Data/Shaders/Line.glsl");
+		s_RenderData.QuadShader = Shader::Create("Data/Shaders/Texture.glsl");
+		s_RenderData.CircleShader = Shader::Create("Data/Shaders/Circle.glsl");
+		s_RenderData.LineShader = Shader::Create("Data/Shaders/Line.glsl");
 
 		// Set first texture slot to 0
 		s_RenderData.TextureSlots[0] = s_RenderData.WhiteTexture;
