@@ -3,7 +3,6 @@
 -- Editor
 -----------------------------------------------------
 project "Editor"
-	location "%{wks.location}/Projects/Editor"
 	kind		"ConsoleApp"
 	dependson { "Saz" }
 	pchheader "EditorPCH.h"

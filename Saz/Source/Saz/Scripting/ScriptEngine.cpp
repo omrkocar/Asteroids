@@ -103,7 +103,7 @@ namespace Saz
 		s_Data = new ScriptEngineData();
 
 		InitMono();
-		LoadAssembly("../../Code/Editor/Resources/Scripts/ScriptCore.dll");
+		LoadAssembly("Resources/Scripts/ScriptCore.dll");
 
 		ScriptGlue::RegisterFunctions();
 
@@ -138,7 +138,7 @@ namespace Saz
 		void* stringParam = monoString;
 		s_Data->EntityClass.InvokeMethod(instance, printCustomMessageFunc, &stringParam);
 
-		SAZ_CORE_ASSERT(false);
+		//SAZ_CORE_ASSERT(false);
 	}
 
 	void ScriptEngine::Shutdown()
@@ -150,7 +150,7 @@ namespace Saz
 
 	void ScriptEngine::InitMono()
 	{
-		mono_set_assemblies_path("../../Code/Editor/mono/lib");
+		mono_set_assemblies_path("mono/lib");
 
 		MonoDomain* rootDomain = mono_jit_init("SazJitRuntime");
 		SAZ_CORE_ASSERT(rootDomain);

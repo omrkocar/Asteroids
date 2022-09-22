@@ -82,6 +82,7 @@ workspace "Saz"
 	include "Core/premake5.lua"
 	include "Editor/premake5.lua"
 	include "Game/premake5.lua"
+	include "ScriptCore/premake5.lua"
 	include "ZERO_CHECK/premake5.lua"
 
 	group "UnitTest"

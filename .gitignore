@@ -11,5 +11,6 @@ bin-int
 *.vcxproj
 *.vcxproj.user
 *.filters
-/Code/Editor/LastOpenScene.txt
-/Code/Editor/EditorScene.saz
+Editor/LastOpenScene.txt
+Editor/EditorScene.saz
+Editor/Resources/Scripts
