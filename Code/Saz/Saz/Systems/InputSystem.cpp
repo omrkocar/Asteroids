@@ -1,15 +1,13 @@
 #include "SazPCH.h"
 #include "InputSystem.h"
 
-#include "Saz/InputComponent.h"
-#include "Saz/MovementComponent.h"
+#include "Saz/Components/InputComponent.h"
+#include "Saz/Components/NameComponent.h"
+#include "Saz/Components/TransformComponent.h"
 #include "Saz/Core/WindowBase.h"
 
 #include <entt/entt.hpp>
-#include "TransformComponent.h"
-#include "Saz/Core/GameTime.h"
-#include "Saz/NameComponent.h"
-#include "imgui.h"
+#include <imgui/imgui.h>
 
 namespace ecs
 {	

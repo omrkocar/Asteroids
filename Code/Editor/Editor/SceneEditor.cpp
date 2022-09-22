@@ -3,29 +3,29 @@
 
 #include "Editor/Application.h"
 
-#include "Saz/InputComponent.h"
-#include "Saz/Rendering/RenderCommand.h"
-#include "Saz/Rendering/Texture.h"
-#include "Saz/SceneComponent.h"
-#include "Saz/TransformComponent.h"
-#include <Saz/CameraComponent.h>
-#include <Saz/RenderComponents.h>
+#include <Saz/Components/CameraComponent.h>
+#include <Saz/Components/ComponentGroup.h>
+#include <Saz/Components/InputComponent.h>
+#include <Saz/Components/NameComponent.h>
+#include <Saz/Components/PhysicsComponents.h>
+#include <Saz/Components/RenderComponents.h>
+#include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/TransformComponent.h>
+#include <Saz/Components/WindowResizedOneFrameComponent.h>
+#include <Saz/ProjectSettings/PhysicsSettings.h>
 #include <Saz/Rendering/Framebuffer.h>
+#include <Saz/Rendering/RenderCommand.h>
 #include <Saz/Rendering/Renderer.h>
 #include <Saz/Rendering/Renderer2D.h>
+#include <Saz/Rendering/Texture.h>
 #include <Saz/SceneSerializer.h>
 #include <Saz/Utils/PlatformUtils.h>
-#include <Saz/WindowResizedOneFrameComponent.h>
+#include <Saz/Utils/SceneUtils.h>
 
+#include <filesystem>
+#include <glm/gtc/type_ptr.inl>
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
-#include <glm/gtc/type_ptr.inl>
-#include <filesystem>
-#include "Saz/Utils/SceneUtils.h"
-#include "Saz/NameComponent.h"
-#include "Saz/ComponentGroup.h"
-#include "Saz/ProjectSettings/PhysicsSettings.h"
-#include "Saz/PhysicsComponents.h"
 
 
 namespace ecs

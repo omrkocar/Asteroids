@@ -32,6 +32,6 @@ namespace ecs
 		component::LoadedSceneComponent* m_Scene;
 
 	private:
-		void OnSceneStateChangeRequest(entt::registry& registry, entt::entity entity);
+		void OnSceneStateChangeRequest(Entity entity);
 	};
 }

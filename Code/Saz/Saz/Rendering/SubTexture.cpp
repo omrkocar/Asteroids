@@ -1,6 +1,7 @@
 #include "SazPCH.h"
 #include "SubTexture2D.h"
-#include "Texture.h"
+
+#include "Saz/Rendering/Texture.h"
 
 namespace Saz
 {

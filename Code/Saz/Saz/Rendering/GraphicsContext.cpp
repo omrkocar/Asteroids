@@ -2,7 +2,7 @@
 #include "Saz/Rendering/GraphicsContext.h"
 
 #include "Saz/Rendering/Renderer.h"
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Saz/Platform/OpenGL/OpenGLContext.h"
 
 namespace Saz {
 

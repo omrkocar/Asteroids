@@ -1,11 +1,11 @@
 #include "SazPCH.h"
 #include "SceneSystem.h"
 
-#include "Saz/SceneComponent.h"
-#include "Saz/SceneSerializer.h"
-#include "Saz/Rendering/Renderer.h"
+#include "Saz/Components/SceneComponent.h"
+#include "Saz/Components/CameraComponent.h"
 #include "Saz/Core/Application.h"
-#include "CameraComponent.h"
+#include "Saz/Rendering/Renderer.h"
+#include "Saz/SceneSerializer.h"
 
 namespace ecs
 {	
@@ -29,9 +29,6 @@ namespace ecs
 		{
 			NewScene();
 		}*/
-
-		auto& registry = m_World->m_Registry;
-		registry.on_construct<component::SceneStateChangeRequestOneFrameComponent>().connect<&SceneSystem::OnSceneStateChangeRequest>(this);
 	}
 
 	void SceneSystem::Destroy()
@@ -46,6 +43,12 @@ namespace ecs
 
 	void SceneSystem::Update(const Saz::GameTime& gameTime)
 	{
+		const auto sceneStateView = m_World->GetAllEntitiesWith<component::SceneStateChangeRequestOneFrameComponent>();
+		for (const auto& entity : sceneStateView)
+		{
+			OnSceneStateChangeRequest(entity);
+		}
+
 		const auto newSceneView = m_World->GetAllEntitiesWith<component::NewSceneRequestOneFrameComponent>();
 		for (const auto& newSceneEntity : newSceneView)
 		{
@@ -125,7 +128,7 @@ namespace ecs
 		}
 	}
 
-	void SceneSystem::OnSceneStateChangeRequest(entt::registry& registry, entt::entity entity)
+	void SceneSystem::OnSceneStateChangeRequest(Entity entity)
 	{
 		auto& sceneStateRequest = m_World->GetComponent<component::SceneStateChangeRequestOneFrameComponent>(entity);
 

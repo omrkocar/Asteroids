@@ -1,7 +1,9 @@
 #include "EditorPCH.h"
 #include "ProfilerPanel.h"
-#include "Saz/Rendering/Renderer2D.h"
-#include "imgui/imgui.h"
+
+#include <Saz/Rendering/Renderer2D.h>
+
+#include <imgui/imgui.h>
 
 namespace ecs
 {

@@ -1,17 +1,14 @@
 #include "EditorPCH.h"
 #include "Inspector.h"
 
-#include "Core/String.h"
-
-#include "Saz/CameraComponent.h"
-#include "Saz/Core/GameTime.h"
-#include "Saz/NameComponent.h"
-#include "Saz/PhysicsComponents.h"
-#include "Saz/RenderComponents.h"
+#include "Saz/Components/CameraComponent.h"
+#include "Saz/Components/NameComponent.h"
+#include "Saz/Components/PhysicsComponents.h"
+#include "Saz/Components/RenderComponents.h"
+#include "Saz/Components/SceneComponent.h"
+#include "Saz/Components/TransformComponent.h"
 #include "Saz/Rendering/Texture.h"
-#include "Saz/SceneComponent.h"
 #include "Saz/Screen.h"
-#include "Saz/TransformComponent.h"
 
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui.h>

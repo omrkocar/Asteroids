@@ -1,6 +1,7 @@
 #include "SazPCH.h"
 #include "VertexArray.h"
-#include "Renderer.h"
+
+#include "Saz/Rendering/Renderer.h"
 #include "Saz/Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Saz

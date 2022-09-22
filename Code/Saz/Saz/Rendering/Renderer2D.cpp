@@ -1,14 +1,15 @@
 #include "SazPCH.h"
 #include "Saz/Rendering/Renderer2D.h"
 
-#include "Saz/Rendering/VertexArray.h"
-#include "Saz/Rendering/Shader.h"
-#include "Saz/Rendering/UniformBuffer.h"
+#include "Saz/Components/RenderComponents.h"
 #include "Saz/Rendering/RenderCommand.h"
+#include "Saz/Rendering/Shader.h"
+#include "Saz/Rendering/SceneCamera.h"
+#include "Saz/Rendering/UniformBuffer.h"
+#include "Saz/Rendering/VertexArray.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "SceneCamera.h"
 
 namespace Saz {
 

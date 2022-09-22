@@ -1,8 +1,9 @@
 #include "SazPCH.h"
 #include "Renderer.h"
-#include "Shader.h"
-#include "Platform/OpenGL/OpenGLShader.h"
-#include "Renderer2D.h"
+
+#include "Saz/Platform/OpenGL/OpenGLShader.h"
+#include "Saz/Rendering/Renderer2D.h"
+#include "Saz/Rendering/Shader.h"
 
 namespace Saz
 {

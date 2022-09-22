@@ -1,16 +1,15 @@
 #include "SazPCH.h"
 #include "WindowsWindow.h"
 
-#include "Saz/Core/GameTime.h"
+#include "Saz/Components/InputComponent.h"
+#include "Saz/Core/Application.h"
+#include "Saz/Core/KeyCodes.h"
+#include "Saz/Platform/OpenGL/OpenGLContext.h"
+#include "Saz/Rendering/Renderer.h"
 #include "Saz/Screen.h"
 
-#include "Saz/Platform/OpenGL/OpenGLContext.h"
+#include <imgui/imgui.h>
 #include <GLFW/glfw3.h>
-#include "Core/KeyCodes.h"
-#include "Rendering/Renderer.h"
-#include "Core/Application.h"
-#include "InputComponent.h"
-#include "imgui.h"
 
 namespace Saz
 {

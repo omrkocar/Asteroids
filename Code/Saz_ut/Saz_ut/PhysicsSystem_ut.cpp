@@ -2,14 +2,13 @@
 
 #include <Saz/Core/EntityWorld.h>
 #include <Saz/Systems/PhysicsSystem.h>
-#include <Saz/PhysicsComponents.h>
-#include <Saz/SceneComponent.h>
-#include <Saz/TransformComponent.h>
+#include <Saz/Components/PhysicsComponents.h>
+#include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/TransformComponent.h>
 #include <Saz/Core/GameTime.h>
-#include "Saz/ProjectSettings/PhysicsSettings.h"
+#include <Saz/ProjectSettings/PhysicsSettings.h>
 
 #include <box2d/box2d.h>
-
 
 TEST_CASE("Physics System")
 {

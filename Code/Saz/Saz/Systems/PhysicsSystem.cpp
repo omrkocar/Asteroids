@@ -1,16 +1,16 @@
 #include "SazPCH.h"
 #include "PhysicsSystem.h"
 
+#include "Saz/Components/PhysicsComponents.h"
+#include "Saz/Components/TransformComponent.h"
+#include "Saz/Components/SceneComponent.h"
 #include "Saz/ProjectSettings/PhysicsSettings.h"
-#include "Saz/PhysicsComponents.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/SceneComponent.h"
 
 #include <box2d/box2d.h>
-#include "box2d/b2_body.h"
-#include "box2d/b2_fixture.h"
-#include "box2d/b2_polygon_shape.h"
-#include "box2d/b2_circle_shape.h"
+#include <box2d/b2_body.h>
+#include <box2d/b2_circle_shape.h>
+#include <box2d/b2_fixture.h>
+#include <box2d/b2_polygon_shape.h>
 
 namespace
 {

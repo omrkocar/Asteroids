@@ -10,8 +10,8 @@
 #include "Editor/WorldOutliner.h"
 #include "Editor/ContentBrowser.h"
 
-#include "Saz/InputComponent.h"
-#include "Saz/SceneComponent.h"
+#include "Saz/Components/InputComponent.h"
+#include "Saz/Components/SceneComponent.h"
 #include "Saz/Utils/PlatformUtils.h"
 #include "Saz/Utils/SceneUtils.h"
 
@@ -126,13 +126,6 @@ namespace ecs
 				m_ProjectSettings.SetVisible(true);
 			}
 
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Profiler Panel..."))
-			{
-				m_ProfilerPanel.SetVisible(true);
-			}
-
 			ImGui::EndMenu();
 		}
 	}
@@ -182,34 +175,37 @@ namespace ecs
 	{
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::Button("Scene"))
+			if (ImGui::MenuItem("Scene"))
 			{
 				m_SceneEditor.SetVisible(true);
-				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::Separator();
-			
-			if (ImGui::Button("Game"))
+
+			if (ImGui::MenuItem("Game"))
 			{
 				m_GameViewport.SetVisible(true);
-				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::Separator();
 
-			if (ImGui::Button("Inspector"))
+			if (ImGui::MenuItem("Inspector"))
 			{
 				m_Inspector.SetVisible(true);
-				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::Separator();
 
-			if (ImGui::Button("World Outliner"))
+			if (ImGui::MenuItem("World Outliner"))
 			{
 				m_WorldOutliner.SetVisible(true);
-				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Profiler"))
+			{
+				m_ProfilerPanel.SetVisible(true);
 			}
 
 			ImGui::EndMenu();

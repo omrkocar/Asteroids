@@ -1,18 +1,19 @@
 #include "SazPCH.h"
 #include "Saz/SceneSerializer.h"
 
-#include <yaml-cpp/yaml.h>
-#include "Core/Application.h"
+#include "Saz/Components/CameraComponent.h"
+#include "Saz/Components/InputComponent.h"
+#include "Saz/Components/NameComponent.h"
+#include "Saz/Components/PhysicsComponents.h"
+#include "Saz/Components/RenderComponents.h"
+#include "Saz/Components/SceneComponent.h"
+#include "Saz/Components/TransformComponent.h"
+#include "Saz/Core/Application.h"
 #include "Saz/Core/EntityWorld.h"
-#include "NameComponent.h"
-#include "TransformComponent.h"
-#include "CameraComponent.h"
-#include "RenderComponents.h"
-#include "glm/glm.hpp"
-#include "SceneComponent.h"
-#include "InputComponent.h"
-#include "PhysicsComponents.h"
-#include "Rendering/Texture.h"
+#include "Saz/Rendering/Texture.h"
+
+#include <glm/glm.hpp>
+#include <yaml-cpp/yaml.h>
 
 namespace YAML {
 

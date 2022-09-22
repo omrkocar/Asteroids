@@ -12,24 +12,24 @@
 #include "Editor/ProfilerPanel.h"
 #include "Editor/ContentBrowser.h"
 
-#include "Saz/CameraComponent.h"
-#include "Saz/Core/EntityWorld.h"
-#include "Saz/Core/GameTime.h"
-#include "Saz/InputComponent.h"
-#include "Saz/LevelComponent.h"
-#include "Saz/MovementComponent.h"
-#include "Saz/NameComponent.h"
-#include "Saz/PhysicsComponents.h"
-#include "Saz/RenderComponents.h"
-#include "Saz/SceneComponent.h"
-#include "Saz/Screen.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/Systems/CameraSystem.h"
-#include "Saz/Systems/InputSystem.h"
-#include "Saz/Systems/PhysicsSystem.h"
-#include "Saz/Systems/RenderSystem.h"
-#include "Saz/Systems/SceneSystem.h"
-#include "Saz/WindowResizedOneFrameComponent.h"
+#include <Saz/Components/CameraComponent.h>
+#include <Saz/Components/InputComponent.h>
+#include <Saz/Components/LevelComponent.h>
+#include <Saz/Components/MovementComponent.h>
+#include <Saz/Components/NameComponent.h>
+#include <Saz/Components/PhysicsComponents.h>
+#include <Saz/Components/RenderComponents.h>
+#include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/TransformComponent.h>
+#include <Saz/Components/WindowResizedOneFrameComponent.h>
+#include <Saz/Core/EntityWorld.h>
+#include <Saz/Core/GameTime.h>
+#include <Saz/Screen.h>
+#include <Saz/Systems/CameraSystem.h>
+#include <Saz/Systems/InputSystem.h>
+#include <Saz/Systems/PhysicsSystem.h>
+#include <Saz/Systems/RenderSystem.h>
+#include <Saz/Systems/SceneSystem.h>
 
 Application::Application()
 	: Saz::Application("Saz Editor")

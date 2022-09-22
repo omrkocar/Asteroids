@@ -9,7 +9,7 @@
 #include <entt/entt.hpp>
 #include <Saz/Core/Entity.h>
 #include "Saz/Core/UUID.h"
-#include "Saz/ComponentGroup.h"
+#include "Saz/Components/ComponentGroup.h"
 
 namespace Saz
 {

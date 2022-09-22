@@ -1,8 +1,8 @@
 #include "SazPCH.h"
 #include "UniformBuffer.h"
 
-#include "Saz/Rendering/Renderer.h"
 #include "Saz/Platform/OpenGL/OpenGLUniformBuffer.h"
+#include "Saz/Rendering/Renderer.h"
 
 namespace Saz {
 

@@ -1,29 +1,7 @@
 #include "SazPCH.h"
 #include "Application.h"
-
-#include "Saz/CameraComponent.h"
-#include "Saz/Core/EntityWorld.h"
-#include "Saz/Core/GameTime.h"
-#include "Saz/Systems/CameraSystem.h"
-#include "Saz/InputComponent.h"
-#include "Saz/Systems/InputSystem.h"
-#include "Saz/Systems/RenderSystem.h"
-#include "Saz/LevelComponent.h"
-#include "Saz/Systems/SceneSystem.h"
-#include "Saz/MovementComponent.h"
-#include "Saz/RenderComponents.h"
-#include "Saz/NameComponent.h"
-#include "Saz/Screen.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/Platform/Windows/WindowsWindow.h"
-
-#include "ImGui/ImGuiLog.h"
-#include "imgui/imgui.h"
-#include "GLFW/glfw3.h"
 #include "Saz/Rendering/Renderer.h"
-#include "SceneComponent.h"
-#include "Systems/PhysicsSystem.h"
-#include "PhysicsComponents.h"
+#include <GLFW/glfw3.h>
 
 namespace Saz
 {

@@ -1,7 +1,7 @@
 #include "SazPCH.h"
 #include "ImGuiLayer.h"
 
-#include "Saz/InputComponent.h"
+#include "Saz/Components/InputComponent.h"
 #include "Saz/Core/Application.h"
 
 #include <imgui/backends/imgui_impl_glfw.h>

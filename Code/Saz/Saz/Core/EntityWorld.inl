@@ -2,7 +2,7 @@
 
 #include <Saz/TypeId.h>
 #include <Saz/Core/Log.h>
-#include <Saz/NameComponent.h>
+#include <Saz/Components/NameComponent.h>
 
 inline bool ecs::EntityWorld::IsAlive(const ecs::Entity& entity) const
 {

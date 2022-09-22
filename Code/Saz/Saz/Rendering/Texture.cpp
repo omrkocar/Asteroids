@@ -1,8 +1,9 @@
 #include "SazPCH.h"
 #include "Texture.h"
-#include "Saz/Rendering/RendererAPI.h"
+
 #include "Saz/Platform/OpenGL/OpenGLTexture.h"
 #include "Saz/Rendering/Renderer.h"
+#include "Saz/Rendering/RendererAPI.h"
 
 namespace Saz
 {

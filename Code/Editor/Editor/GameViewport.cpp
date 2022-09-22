@@ -1,22 +1,22 @@
 #include "EditorPCH.h"
 #include "GameViewport.h"
 
-#include "Saz/Core/GameTime.h"
-#include "Saz/NameComponent.h"
-#include "Saz/LevelComponent.h"
-#include "Saz/CameraComponent.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/SceneComponent.h"
+#include <Saz/Components/CameraComponent.h>
+#include <Saz/Components/InputComponent.h>
+#include <Saz/Components/LevelComponent.h>
+#include <Saz/Components/NameComponent.h>
+#include <Saz/Components/RenderComponents.h>
+#include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/TransformComponent.h>
+#include <Saz/Components/WindowResizedOneFrameComponent.h>
+#include <Saz/Core/GameTime.h>
+#include <Saz/Rendering/Framebuffer.h>
+#include <Saz/Rendering/RenderCommand.h>
+#include <Saz/Rendering/Renderer2D.h>
+#include <Saz/Utils/SceneUtils.h>
 
 #include <entt/entt.hpp>
 #include <imgui/imgui.h>
-#include "Saz/InputComponent.h"
-#include "Saz/Rendering/Framebuffer.h"
-#include "Saz/RenderComponents.h"
-#include "Saz/WindowResizedOneFrameComponent.h"
-#include "Saz/Rendering/Renderer2D.h"
-#include "Saz/Rendering/RenderCommand.h"
-#include "Saz/Utils/SceneUtils.h"
 
 namespace ecs
 {	

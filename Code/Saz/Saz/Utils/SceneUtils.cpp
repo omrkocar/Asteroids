@@ -1,7 +1,8 @@
 #include "SazPCH.h"
 #include "SceneUtils.h"
-#include "PlatformUtils.h"
-#include "Saz/SceneComponent.h"
+
+#include "Saz/Components/SceneComponent.h"
+#include "Saz/Utils/PlatformUtils.h"
 
 namespace Saz
 {

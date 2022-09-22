@@ -1,17 +1,16 @@
 #include "SazPCH.h"
 #include "RenderSystem.h"
 
-#include "Saz/CameraComponent.h"
-#include "Saz/RenderComponents.h"
-#include "Saz/TransformComponent.h"
-
+#include "Saz/Components/CameraComponent.h"
+#include "Saz/Components/RenderComponents.h"
+#include "Saz/Components/TransformComponent.h"
 #include "Saz/Core/WindowBase.h"
+#include "Saz/Platform/OpenGL/OpenGLFrameBuffer.h"
+#include "Saz/Rendering/RenderCommand.h"
+#include "Saz/Rendering/Renderer.h"
+#include "Saz/Rendering/Renderer2D.h"
+#include "Saz/Systems/CameraSystem.h"
 
-#include "Rendering/Renderer2D.h"
-#include "Rendering/RenderCommand.h"
-#include "Platform/OpenGL/OpenGLFrameBuffer.h"
-#include "Rendering/Renderer.h"
-#include <Saz/Systems/CameraSystem.h>
 
 namespace ecs
 {

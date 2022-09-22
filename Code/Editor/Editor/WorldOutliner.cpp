@@ -1,16 +1,15 @@
 #include "EditorPCH.h"
 #include "WorldOutliner.h"
 
-#include "Saz/Core/GameTime.h"
-#include "Saz/NameComponent.h"
-#include "Saz/LevelComponent.h"
-#include "Saz/CameraComponent.h"
-#include "Saz/TransformComponent.h"
-#include "Saz/SceneComponent.h"
+#include "Saz/Components/NameComponent.h"
+#include "Saz/Components/LevelComponent.h"
+#include "Saz/Components/CameraComponent.h"
+#include "Saz/Components/TransformComponent.h"
+#include "Saz/Components/SceneComponent.h"
+#include "Saz/Components/InputComponent.h"
 
 #include <entt/entt.hpp>
 #include <imgui/imgui.h>
-#include "Saz/InputComponent.h"
 
 namespace ecs
 {	

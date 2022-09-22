@@ -1,7 +1,8 @@
 #include "SazPCH.h"
 #include "FrameBuffer.h"
-#include "Platform/OpenGL/OpenGLFrameBuffer.h"
-#include "Renderer.h"
+
+#include "Saz/Platform/OpenGL/OpenGLFrameBuffer.h"
+#include "Saz/Rendering/Renderer.h"
 
 namespace Saz
 {

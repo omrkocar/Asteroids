@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Saz/Rendering/SceneCamera.h"
-#include "Rendering/EditorCamera.h"
-
+#include "Saz/Rendering/EditorCamera.h"
 
 enum class ViewType
 {

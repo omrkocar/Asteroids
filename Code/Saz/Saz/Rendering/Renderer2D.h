@@ -1,11 +1,16 @@
 #pragma once
 
-#include "Texture.h"
-#include "SubTexture2D.h"
-#include "glm/glm.hpp"
-#include "Camera.h"
-#include "EditorCamera.h"
-#include "Saz/RenderComponents.h"
+#include <Saz/Rendering/Camera.h>
+#include <Saz/Rendering/EditorCamera.h>
+#include <Saz/Rendering/SubTexture2D.h>
+#include <Saz/Rendering/Texture.h>
+
+#include <glm/glm.hpp>
+
+namespace component
+{
+	struct SpriteComponent;
+}
 
 namespace Saz
 {
