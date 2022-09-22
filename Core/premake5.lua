@@ -1,7 +1,6 @@
 
 project "Core"
-	kind		"StaticLib"
-	location	"%{wks.location}/Projects/Core"
+	kind "StaticLib"
 
 	vpaths 
 	{ 
@@ -13,6 +12,6 @@ project "Core"
 
 	includedirs 
 	{
-		"%{wks.location}/Code/Core/",
+		"%{wks.location}/Core/Source/",
 		"%{IncludeDir.glm}",
 	}

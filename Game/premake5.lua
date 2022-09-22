@@ -2,8 +2,7 @@ project "Game"
 	kind "ConsoleApp"
 	dependson { "Core", "Saz" }
 	pchheader "GamePCH.h"
-	pchsource "Game/GamePCH.cpp"
-	location "%{wks.location}/Projects/Game"
+	pchsource "Source/Game/GamePCH.cpp"
 
 	vpaths 
 	{ 
@@ -16,9 +15,9 @@ project "Game"
 	includedirs 
 	{
 		"%{wks.location}/3rdParty/",
-		"%{wks.location}/Code/Core/",
-		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/Code/Game/",
+		"%{wks.location}/Core/Source",
+		"%{wks.location}/Saz/Source",
+		"%{wks.location}/Game/Source",
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",

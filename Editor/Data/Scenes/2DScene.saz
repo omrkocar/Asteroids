@@ -1,4 +1,4 @@
-Scene: ../../Data\Scenes\2DScene.saz
+Scene: Data\Scenes\2DScene.saz
 Entities:
   - Entity: 819849596157414977
     NameComponent:
@@ -9,7 +9,7 @@ Entities:
       Scale: [7.49919415, 0.999899447, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -72,7 +72,7 @@ Entities:
       Scale: [2.82301998, 0.999877632, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -94,7 +94,7 @@ Entities:
       Scale: [6, 1, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -138,7 +138,7 @@ Entities:
       Scale: [3.08641219, 0.999951124, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -160,7 +160,7 @@ Entities:
       Scale: [5.64878988, 0.999916553, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -182,7 +182,7 @@ Entities:
       Scale: [6, 1, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -204,7 +204,7 @@ Entities:
       Scale: [7.49897575, 0.999872148, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -226,7 +226,7 @@ Entities:
       Scale: [2.82340479, 0.999973834, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -292,7 +292,7 @@ Entities:
       Scale: [3.08641219, 0.999951124, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0
@@ -314,7 +314,7 @@ Entities:
       Scale: [5.64879084, 0.999916553, 1]
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
-      TexturePath: ../../Data\Textures\White.png
+      TexturePath: Data\Textures\White.png
       TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 0

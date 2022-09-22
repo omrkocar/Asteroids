@@ -6,7 +6,7 @@ project "Editor"
 	kind		"ConsoleApp"
 	dependson { "Saz" }
 	pchheader "EditorPCH.h"
-	pchsource "Editor/EditorPCH.cpp"
+	pchsource "Source/Editor/EditorPCH.cpp"
 	staticruntime "off"
 
 	vpaths 
@@ -28,10 +28,9 @@ project "Editor"
 	includedirs {
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/imgui",
-		"%{wks.location}/Code/Core/",
-		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/Code/Editor/",
-		"%{wks.location}",
+		"%{wks.location}/Core/Source",
+		"%{wks.location}/Saz/Source",
+		"%{wks.location}/Editor/Source",
 		"%{wks.location}/3rdParty/GLFW/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/spdlog/include",

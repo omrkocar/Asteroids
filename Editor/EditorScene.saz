@@ -1,0 +1,350 @@
+Scene: EditorScene.saz
+Entities:
+  - Entity: 819849596157414977
+    NameComponent:
+      Name: Ground5
+    TransformComponent:
+      Position: [-7.11999989, 3.26093221, 0]
+      Rotation: [0, -0, 1.57079637]
+      Scale: [7.49919415, 0.999899447, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 1070494456252922411
+    NameComponent:
+      Name: Circle_D_D
+    TransformComponent:
+      Position: [0.0323406458, 7.88693523, 0]
+      Rotation: [0, -0, 0]
+      Scale: [0.999999762, 0.999999762, 1]
+    CircleRendererComponent:
+      Color: [0.11063838, 1, 0, 1]
+      Thickness: 1
+      Fade: 0.0469999984
+    Rigidbody2DComponent:
+      BodyType: 1
+      GravityScale: 1
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Radius: 0.5
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 1
+      RestitutionThreshold: 1
+  - Entity: 1361290673011095473
+    NameComponent:
+      Name: Camera
+    TransformComponent:
+      Position: [0, 3.10687327, 12.6599998]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.959931076
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 31
+        OrthographicNear: -1
+        OrthographicFar: 104
+        AspectRatio: 0.756660759
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 2931263859854777723
+    NameComponent:
+      Name: Ground6
+    TransformComponent:
+      Position: [1.99647057, -1.83257151, 5.96046412e-08]
+      Rotation: [0, -0, 1.57079637]
+      Scale: [2.82301998, 0.999877632, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 4251087686114508660
+    NameComponent:
+      Name: Ground9
+    TransformComponent:
+      Position: [-4.49999952, 0.00156253646, 5.96046448e-08]
+      Rotation: [0, -0, -0.000347230321]
+      Scale: [6, 1, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 6214035980858422971
+    NameComponent:
+      Name: Circle1
+    TransformComponent:
+      Position: [5.19542027, 7.88693523, 0]
+      Rotation: [0, -0, 0]
+      Scale: [0.999999762, 0.999999762, 1]
+    CircleRendererComponent:
+      Color: [1, 0.35744679, 0, 1]
+      Thickness: 0.100000001
+      Fade: 0.0469999984
+    Rigidbody2DComponent:
+      BodyType: 1
+      GravityScale: 1
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Radius: 0.5
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 0.75
+      RestitutionThreshold: 0.5
+  - Entity: 6873574639080617748
+    NameComponent:
+      Name: Ground8
+    TransformComponent:
+      Position: [-0.0161292553, -2.74680114, 5.96046448e-08]
+      Rotation: [0, -0, 0]
+      Scale: [3.08641219, 0.999951124, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 8331887411754855742
+    NameComponent:
+      Name: Ground7
+    TransformComponent:
+      Position: [-5, 2.05560184, 0]
+      Rotation: [0, -0, -0.785398245]
+      Scale: [5.64878988, 0.999916553, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 9746048895614336067
+    NameComponent:
+      Name: Ground1
+    TransformComponent:
+      Position: [4.49999952, -0.00156253646, 5.96046448e-08]
+      Rotation: [0, -0, -0.000347230321]
+      Scale: [6, 1, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 10432629579423884720
+    NameComponent:
+      Name: Ground2
+    TransformComponent:
+      Position: [7.11999989, 3.26093245, 0]
+      Rotation: [0, -0, 1.57079637]
+      Scale: [7.49897575, 0.999872148, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 10533510133469135717
+    NameComponent:
+      Name: Ground3
+    TransformComponent:
+      Position: [-2.00932741, -1.83272195, 5.96046412e-08]
+      Rotation: [0, -0, 1.57079637]
+      Scale: [2.82340479, 0.999973834, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 10635030949726890261
+    NameComponent:
+      Name: Circle_D
+    TransformComponent:
+      Position: [5.87987423, 1.18151319, -0.0845659971]
+      Rotation: [0, -0, 0]
+      Scale: [0.599999905, 0.599999905, 0.600000024]
+    CircleRendererComponent:
+      Color: [0, 0.399999857, 1, 1]
+      Thickness: 1
+      Fade: 0.0469999984
+    Rigidbody2DComponent:
+      BodyType: 1
+      GravityScale: 1
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Radius: 0.5
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 1.20000005
+      RestitutionThreshold: 1
+  - Entity: 13110575813868137717
+    NameComponent:
+      Name: Circle_D_D
+    TransformComponent:
+      Position: [-5.88592863, 1.18151319, -0.0845659971]
+      Rotation: [0, -0, 0]
+      Scale: [0.599999905, 0.599999905, 0.600000024]
+    CircleRendererComponent:
+      Color: [0, 0.399999857, 1, 1]
+      Thickness: 1
+      Fade: 0.0469999984
+    Rigidbody2DComponent:
+      BodyType: 1
+      GravityScale: 1
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Radius: 0.5
+      Offset: [0, 0]
+      Density: 1
+      Friction: 1
+      Restitution: 1.20000005
+      RestitutionThreshold: 1
+  - Entity: 13340897345286203593
+    NameComponent:
+      Name: Ground4
+    TransformComponent:
+      Position: [0.0957212448, 5.1284771, 5.96046448e-08]
+      Rotation: [0, -0, 0]
+      Scale: [3.08641219, 0.999951124, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 14612189867271038119
+    NameComponent:
+      Name: Ground
+    TransformComponent:
+      Position: [5, 2.10574698, 0]
+      Rotation: [0, -0, 0.785398245]
+      Scale: [5.64879084, 0.999916553, 1]
+    SpriteComponent:
+      Color: [0.443137258, 0, 1, 1]
+      TexturePath: Data\Textures\White.png
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 0
+      GravityScale: 1
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.75
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 15814911019247289850
+    NameComponent:
+      Name: Square_D
+    TransformComponent:
+      Position: [-4.67726421, 8.17956448, 0]
+      Rotation: [0, -0, 0.582949519]
+      Scale: [0.999997735, 0.999997735, 1]
+    SpriteComponent:
+      Color: [1, 0.58723402, 0, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: 1
+      GravityScale: 2
+      FixedRotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0.5
+      RestitutionThreshold: 0.5

@@ -10,12 +10,12 @@
 namespace ecs
 {	
 	//#todo: Introduce a directory manager
-	extern const std::filesystem::path g_DataPath = "../../Data";
+	extern const std::filesystem::path g_DataPath = "Data";
 
 	ContentBrowser::ContentBrowser()
 	{
-		m_DirectoryIcon = Saz::Texture2D::Create("../../Data/Textures/Folder.png");
-		m_FileIcon = Saz::Texture2D::Create("../../Data/Textures/File.png");
+		m_DirectoryIcon = Saz::Texture2D::Create("Data/Textures/Folder.png");
+		m_FileIcon = Saz::Texture2D::Create("Data/Textures/File.png");
 	}
 
 	void ContentBrowser::Init()
