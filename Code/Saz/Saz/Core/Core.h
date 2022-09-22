@@ -15,7 +15,6 @@
 #else
 #error "Platform doesn't support debugbreak yet!"
 #endif
-#define SAZ_ENABLE_ASSERTS
 #else
 #define SAZ_DEBUGBREAK()
 #endif
