@@ -3,6 +3,7 @@
 -- Editor
 -----------------------------------------------------
 project "Editor"
+	location "%{wks.location}/Projects/Editor"
 	kind		"ConsoleApp"
 	dependson { "Saz" }
 	pchheader "EditorPCH.h"
@@ -26,18 +27,15 @@ project "Editor"
 	}
 
 	includedirs {
+		"%{wks.location}/Code/Editor/",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/imgui",
 		"%{wks.location}/Code/Core/",
 		"%{wks.location}/Code/Saz/",
-		"%{wks.location}/Code/Editor/",
-		"%{wks.location}",
 		"%{wks.location}/3rdParty/GLFW/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{wks.location}/3rdParty/glm/glm",
-		"%{wks.location}/3rdParty/stb_image",
-		"%{wks.location}/3rdParty/yaml-cpp/yaml-cpp/include",
 		"%{IncludeDir.ImGuizmo}",
 	}
 

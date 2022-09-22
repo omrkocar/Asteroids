@@ -48,10 +48,6 @@ project "Saz"
 		"%{IncludeDir.Mono}",
 	}
 
-	libdirs {
-		"%{LibraryDir.Mono}"
-	}
-
 	links {
 		"Core",
 		"ImGui",
@@ -61,5 +57,15 @@ project "Saz"
 		"ImGuizmo",
 		"yaml-cpp",
 		"opengl32.lib",
-		"%{Library.Mono}"
 	}	
+
+	filter "system:windows"
+		systemversion "latest"
+		links
+		{
+			"%{Library.Mono}",
+			"%{Library.WinSock}",
+			"%{Library.WinMM}",
+			"%{Library.WinVersion}",
+			"%{Library.BCrypt}",
+		}
