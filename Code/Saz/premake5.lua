@@ -45,6 +45,11 @@ project "Saz"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.Box2D}",
+		"%{IncludeDir.Mono}",
+	}
+
+	libdirs {
+		"%{LibraryDir.Mono}"
 	}
 
 	links {
@@ -55,5 +60,6 @@ project "Saz"
 		"Box2D",
 		"ImGuizmo",
 		"yaml-cpp",
-		"opengl32.lib"
+		"opengl32.lib",
+		"%{Library.Mono}"
 	}	
