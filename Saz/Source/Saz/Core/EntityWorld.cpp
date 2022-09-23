@@ -10,6 +10,7 @@
 #include "Saz/Components/SceneComponent.h"
 #include "Saz/Components/TransformComponent.h"
 #include "Saz/Core/UUID.h"
+#include "Components/ScriptComponent.h"
 
 namespace ecs
 {
@@ -68,6 +69,7 @@ namespace ecs
 		CopyComponentIfExists<component::CircleRendererComponent>(newEntity, entity);
 		CopyComponentIfExists<component::SceneEntityComponent>(newEntity, entity);
 		CopyComponentIfExists<component::TransformComponent>(newEntity, entity);
+		CopyComponentIfExists<component::ScriptComponent>(newEntity, entity);
 	}
 
 	const Saz::UUID& EntityWorld::GetUUID(Entity entity)

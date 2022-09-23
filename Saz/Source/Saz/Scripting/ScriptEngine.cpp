@@ -1,11 +1,14 @@
 #include "SazPCH.h"
 #include "ScriptEngine.h"
 
+#include "Saz/Components/ScriptComponent.h"
+#include "Saz/Core/EntityWorld.h"
+#include "Saz/Scripting/ScriptGlue.h"
+
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/utils/mono-forward.h>
 #include <mono/metadata/object.h>
-#include "ScriptGlue.h"
 
 namespace
 {
@@ -75,6 +78,7 @@ namespace
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
+
 			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
 			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
@@ -94,6 +98,12 @@ namespace Saz
 		MonoImage* CoreAssemblyImage = nullptr;
 
 		ScriptClass EntityClass;
+
+		std::unordered_map<std::string, Ref<ScriptClass>> EntityClasses;
+		std::unordered_map<Saz::UUID, Ref<ScriptInstance>> EntityInstances;
+
+		//Runtime
+		ecs::EntityWorld* World = nullptr;
 	};
 
 	static ScriptEngineData* s_Data = nullptr;
@@ -104,9 +114,11 @@ namespace Saz
 
 		InitMono();
 		LoadAssembly("Resources/Scripts/ScriptCore.dll");
+		LoadAssemblyClasses(s_Data->CoreAssembly);
 
 		ScriptGlue::RegisterFunctions();
 
+#if 0
 		// Retrieve and instantiate class (with constructor)
 		s_Data->EntityClass = ScriptClass("Saz", "Entity");
 
@@ -137,16 +149,48 @@ namespace Saz
 		MonoMethod* printCustomMessageFunc = s_Data->EntityClass.GetMethod("PrintCustomMessage", 1);
 		void* stringParam = monoString;
 		s_Data->EntityClass.InvokeMethod(instance, printCustomMessageFunc, &stringParam);
+#endif
+	}
 
-		//SAZ_CORE_ASSERT(false);
+	void ScriptEngine::LoadAssemblyClasses(MonoAssembly* assembly)
+	{
+		s_Data->EntityClasses.clear();
+
+		MonoImage* image = mono_assembly_get_image(assembly);
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+		MonoClass* entityClass = mono_class_from_name(image, "Saz", "Entity");
+
+		for (int32_t i = 0; i < numTypes; i++)
+		{
+			uint32_t cols[MONO_TYPEDEF_SIZE];
+			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+
+			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+			std::string fullName;
+			if (strlen(nameSpace) != 0)
+				fullName = fmt::format("{}.{}", nameSpace, name);
+			else
+				fullName = name;
+
+			MonoClass* monoClass = mono_class_from_name(image, nameSpace, name);
+			/*if (monoClass == entityClass)
+				continue;*/
+
+			bool isEntity = mono_class_is_subclass_of(monoClass, entityClass, false);
+			if (isEntity)
+			{
+				s_Data->EntityClasses[fullName] = CreateRef<ScriptClass>(nameSpace, name);
+			}
+		}
 	}
 
 	void ScriptEngine::Shutdown()
 	{
 		ShutdownMono();
-		delete s_Data;
 	}
-
 
 	void ScriptEngine::InitMono()
 	{
@@ -159,15 +203,53 @@ namespace Saz
 		s_Data->RootDomain = rootDomain;
 	}
 
+	void ScriptEngine::OnRuntimeStart(ecs::EntityWorld* world)
+	{
+		s_Data->World = world;
+	}
+
+	void ScriptEngine::OnRuntimeStop(ecs::EntityWorld* world)
+	{
+		s_Data->World = nullptr;
+
+		s_Data->EntityInstances.clear();
+	}
+
+	bool ScriptEngine::EntityClassExists(const String& fullClassName)
+	{
+		return s_Data->EntityClasses.find(fullClassName) != s_Data->EntityClasses.end();
+	}
+
+	void ScriptEngine::OnCreateEntity(ecs::EntityWorld* world, const ecs::Entity& entity)
+	{
+		const auto& sc = world->GetComponent<component::ScriptComponent>(entity);
+		if (EntityClassExists(sc.ClassName))
+		{
+			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->EntityClasses[sc.ClassName]);
+			s_Data->EntityInstances[world->GetUUID(entity)] = instance;
+
+			instance->InvokeInit();
+		}
+	}
+
+	void ScriptEngine::OnUpdateEntity(ecs::EntityWorld* world, const ecs::Entity& entity, float deltaTime)
+	{
+		UUID entityUUID = world->GetUUID(entity);
+		SAZ_CORE_ASSERT(s_Data->EntityInstances.find(entityUUID) != s_Data->EntityInstances.end());
+
+		const auto& sc = world->GetComponent<component::ScriptComponent>(entity);
+		Ref<ScriptInstance> instance = s_Data->EntityInstances[entityUUID];
+
+		instance->InvokeUpdate(deltaTime);
+	}
+
 	void ScriptEngine::ShutdownMono()
 	{
-		// NOTE(Yan): mono is a little confusing to shutdown, so maybe come back to this
-
-		// mono_domain_unload(s_Data->AppDomain);
 		s_Data->AppDomain = nullptr;
 
-		// mono_jit_cleanup(s_Data->RootDomain);
 		s_Data->RootDomain = nullptr;
+
+		delete s_Data;
 	}
 
 	void ScriptEngine::LoadAssembly(const std::filesystem::path& filepath)
@@ -179,7 +261,12 @@ namespace Saz
 		// Move this maybe
 		s_Data->CoreAssembly = LoadMonoAssembly(filepath);
 		s_Data->CoreAssemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
-		// Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
+		PrintAssemblyTypes(s_Data->CoreAssembly);
+	}
+
+	std::unordered_map<std::string, Ref<ScriptClass>> ScriptEngine::GetEntityClasses()
+	{
+		return s_Data->EntityClasses;
 	}
 
 	MonoObject* ScriptEngine::InstantiateClass(MonoClass* monoClass)
@@ -209,4 +296,26 @@ namespace Saz
 	{
 		return mono_runtime_invoke(method, instance, params, nullptr);
 	}
+
+	///////////////////////////////////////////
+
+	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass)
+		: m_ScriptClass(scriptClass)
+	{
+		m_Instance = scriptClass->Instantiate();
+		m_InitMethod = scriptClass->GetMethod("Init", 0);
+		m_UpdateMethod = scriptClass->GetMethod("Update", 1);
+	}
+
+	void ScriptInstance::InvokeInit()
+	{
+		m_ScriptClass->InvokeMethod(m_Instance, m_InitMethod);
+	}
+
+	void ScriptInstance::InvokeUpdate(float deltaTime)
+	{
+		void* param = &deltaTime;
+		m_ScriptClass->InvokeMethod(m_Instance, m_UpdateMethod, &param);
+	}
+
 }

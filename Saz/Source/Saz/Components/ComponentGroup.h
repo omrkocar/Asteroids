@@ -13,6 +13,7 @@ namespace component
 	struct CircleRendererComponent;
 	struct BoxCollider2DComponent;
 	struct CameraComponent;
+	struct ScriptComponent;
 
 }
 using AllComponents =
@@ -22,4 +23,6 @@ ComponentGroup<
 	component::CircleRendererComponent,
 	component::CameraComponent, 
 	component::Rigidbody2DComponent, 
-	component::BoxCollider2DComponent>;
+	component::BoxCollider2DComponent,
+	component::ScriptComponent
+>;

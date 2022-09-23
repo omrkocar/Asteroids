@@ -34,13 +34,13 @@ namespace Saz
 
         public Entity()
         {
-            Console.WriteLine("Main constructor!");
-            Log("AAstroPhysiC", 8058);
+            //Console.WriteLine("Main constructor!");
+            //Log("AAstroPhysiC", 8058);
 
-            Vector3 pos = new Vector3(5, 2.5f, 1);
-            Vector3 result = Log(pos);
-            Console.WriteLine($"{result.X}, {result.Y}, {result.Z}");
-            Console.WriteLine("{0}", InternalCalls.NativeLog_VectorDot(ref pos));
+            //Vector3 pos = new Vector3(5, 2.5f, 1);
+            //Vector3 result = Log(pos);
+            //Console.WriteLine($"{result.X}, {result.Y}, {result.Z}");
+            //Console.WriteLine("{0}", InternalCalls.NativeLog_VectorDot(ref pos));
         }
 
         public void PrintMessage()
@@ -73,7 +73,5 @@ namespace Saz
             InternalCalls.NativeLog_Vector(ref parameter, out Vector3 result);
             return result;
         }
-
     }
-
 }

@@ -20,6 +20,7 @@
 #include <Saz/Components/PhysicsComponents.h>
 #include <Saz/Components/RenderComponents.h>
 #include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/ScriptComponent.h>
 #include <Saz/Components/TransformComponent.h>
 #include <Saz/Components/WindowResizedOneFrameComponent.h>
 #include <Saz/Core/EntityWorld.h>
@@ -30,6 +31,7 @@
 #include <Saz/Systems/PhysicsSystem.h>
 #include <Saz/Systems/RenderSystem.h>
 #include <Saz/Systems/SceneSystem.h>
+#include <Saz/Systems/ScriptSystem.h>
 
 Application::Application()
 	: Saz::Application("Saz Editor")
@@ -66,6 +68,7 @@ void Application::Register()
 	m_World.RegisterComponent<component::NameComponent>();
 	m_World.RegisterComponent<component::SpriteComponent>();
 	m_World.RegisterComponent<component::CircleRendererComponent>();
+	m_World.RegisterComponent<component::ScriptComponent>();
 	m_World.RegisterComponent<component::Rigidbody2DComponent>();
 	m_World.RegisterComponent<component::BoxCollider2DComponent>();
 	m_World.RegisterComponent<component::TransformComponent>();
@@ -82,6 +85,7 @@ void Application::Register()
 	m_World.RegisterSystem<ecs::CameraSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
 	m_World.RegisterSystem<ecs::Toolbar>();
+	m_World.RegisterSystem<ecs::ScriptSystem>();
 	m_World.RegisterSystem<ecs::ProfilerPanel>();
 	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
 	m_World.RegisterSystem<ecs::GameViewport>();

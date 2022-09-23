@@ -26,7 +26,7 @@ Entities:
     NameComponent:
       Name: Circle_D_D
     TransformComponent:
-      Position: [0.0323406458, 7.88693523, 0]
+      Position: [0.0323406458, 7.88693333, 0]
       Rotation: [0, -0, 0]
       Scale: [0.999999762, 0.999999762, 1]
     CircleRendererComponent:
@@ -60,7 +60,7 @@ Entities:
         OrthographicSize: 31
         OrthographicNear: -1
         OrthographicFar: 104
-        AspectRatio: 0.756660759
+        AspectRatio: 0.642984033
       Primary: true
       FixedAspectRatio: false
   - Entity: 2931263859854777723
@@ -111,7 +111,7 @@ Entities:
     NameComponent:
       Name: Circle1
     TransformComponent:
-      Position: [5.19542027, 7.88693523, 0]
+      Position: [5.19542027, 7.88693333, 0]
       Rotation: [0, -0, 0]
       Scale: [0.999999762, 0.999999762, 1]
     CircleRendererComponent:
@@ -243,7 +243,7 @@ Entities:
     NameComponent:
       Name: Circle_D
     TransformComponent:
-      Position: [5.87987423, 1.18151319, -0.0845659971]
+      Position: [5.87987423, 1.18151152, -0.0845659971]
       Rotation: [0, -0, 0]
       Scale: [0.599999905, 0.599999905, 0.600000024]
     CircleRendererComponent:
@@ -265,7 +265,7 @@ Entities:
     NameComponent:
       Name: Circle_D_D
     TransformComponent:
-      Position: [-5.88592863, 1.18151319, -0.0845659971]
+      Position: [-5.88592863, 1.18151152, -0.0845659971]
       Rotation: [0, -0, 0]
       Scale: [0.599999905, 0.599999905, 0.600000024]
     CircleRendererComponent:
@@ -287,9 +287,11 @@ Entities:
     NameComponent:
       Name: Ground4
     TransformComponent:
-      Position: [0.0957212448, 5.1284771, 5.96046448e-08]
+      Position: [0.095721215, 5.1284771, 5.96046448e-08]
       Rotation: [0, -0, 0]
       Scale: [3.08641219, 0.999951124, 1]
+    ScriptComponent:
+      ClassName: Game.Player
     SpriteComponent:
       Color: [0.443137258, 0, 1, 1]
       TexturePath: Data\Textures\White.png
@@ -331,7 +333,7 @@ Entities:
     NameComponent:
       Name: Square_D
     TransformComponent:
-      Position: [-4.67726421, 8.17956448, 0]
+      Position: [-4.67726421, 8.17956066, 0]
       Rotation: [0, -0, 0.582949519]
       Scale: [0.999997735, 0.999997735, 1]
     SpriteComponent:

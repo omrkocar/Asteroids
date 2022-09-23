@@ -12,7 +12,7 @@ namespace Saz {
 		char* cStr = mono_string_to_utf8(string);
 		std::string str(cStr);
 		mono_free(cStr);
-		std::cout << str << ", " << parameter << std::endl;
+		SAZ_INFO("{0}, {1}, ", str, parameter);
 	}
 
 	static void NativeLog_Vector(glm::vec3* parameter, glm::vec3* outResult)

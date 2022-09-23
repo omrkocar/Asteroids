@@ -33,6 +33,7 @@ namespace ecs
 		void DrawNameComponent(Entity entity);
 		void DrawTransformComponent(Entity entity);
 		void DrawCameraComponent(Entity entity);
+		void DrawScriptComponent(Entity entity);
 		void DrawSpriteComponent(Entity entity);
 		void DrawCircleRendererComponent(Entity entity);
 		void DrawRigidbody2DComponent(Entity entity);

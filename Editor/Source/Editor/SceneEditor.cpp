@@ -233,6 +233,9 @@ namespace ecs
 				return;
 			}
 
+			if (ImGui::IsAnyItemActive())
+				return;
+
 			if (inputComp.IsKeyPressed(Input::KeyCode::Q))
 				m_GizmoType = -1; 
 			if (inputComp.IsKeyPressed(Input::KeyCode::W))

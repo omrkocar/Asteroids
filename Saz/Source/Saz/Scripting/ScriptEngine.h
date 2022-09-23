@@ -12,25 +12,13 @@ extern "C" {
 	typedef struct _MonoClassField MonoClassField;
 }
 
+namespace ecs
+{
+	class EntityWorld;
+}
 
 namespace Saz
 {
-	class ScriptEngine
-	{
-	public:
-		static void Init();
-		static void Shutdown();
-
-		static void LoadAssembly(const std::filesystem::path& filepath);
-	private:
-		static void InitMono();
-		static void ShutdownMono();
-
-		static MonoObject* InstantiateClass(MonoClass* monoClass);
-
-		friend class ScriptClass;
-	};
-
 	class ScriptClass
 	{
 	public:
@@ -45,5 +33,46 @@ namespace Saz
 		std::string m_ClassName;
 
 		MonoClass* m_MonoClass = nullptr;
+	};
+
+	class ScriptInstance
+	{
+	public:
+		ScriptInstance(Ref<ScriptClass> scriptClass);
+
+		void InvokeInit();
+		void InvokeUpdate(float deltaTime);
+	private:
+		Ref<ScriptClass> m_ScriptClass;
+
+		MonoObject* m_Instance = nullptr;
+		MonoMethod* m_InitMethod = nullptr;
+		MonoMethod* m_UpdateMethod = nullptr;
+	};
+
+	class ScriptEngine
+	{
+	public:
+		static void Init();
+		static void Shutdown();
+
+		static void LoadAssembly(const std::filesystem::path& filepath);
+
+		static void OnRuntimeStart(ecs::EntityWorld* world);
+		static void OnRuntimeStop(ecs::EntityWorld* world);
+
+		static bool EntityClassExists(const String& fullClassName);
+		static void OnCreateEntity(ecs::EntityWorld* world, const ecs::Entity& entity);
+		static void OnUpdateEntity(ecs::EntityWorld* world, const ecs::Entity& entity, float deltaTime);
+
+		static std::unordered_map<std::string, Ref<ScriptClass>> GetEntityClasses();
+	private:
+		static void LoadAssemblyClasses(MonoAssembly* assembly);
+		static void InitMono();
+		static void ShutdownMono();
+
+		static MonoObject* InstantiateClass(MonoClass* monoClass);
+
+		friend class ScriptClass;
 	};
 }

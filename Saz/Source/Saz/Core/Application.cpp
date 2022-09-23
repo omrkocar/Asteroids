@@ -2,7 +2,6 @@
 #include "Application.h"
 
 #include "Saz/Rendering/Renderer.h"
-#include "Saz/Scripting/ScriptEngine.h"
 
 #include <GLFW/glfw3.h>
 
@@ -22,13 +21,12 @@ namespace Saz
 
 	Application::~Application()
 	{
-		Destroy();
+		
 	}
 
 	void Application::Init()
 	{
 		Renderer::Init();
-		ScriptEngine::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -51,7 +49,6 @@ namespace Saz
 		SAZ_PROFILE_FUNCTION();
 
 		m_Window->Destroy();
-		ScriptEngine::Shutdown();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)

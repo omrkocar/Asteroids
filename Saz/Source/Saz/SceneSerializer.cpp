@@ -7,6 +7,7 @@
 #include "Saz/Components/PhysicsComponents.h"
 #include "Saz/Components/RenderComponents.h"
 #include "Saz/Components/SceneComponent.h"
+#include "Saz/Components/ScriptComponent.h"
 #include "Saz/Components/TransformComponent.h"
 #include "Saz/Core/Application.h"
 #include "Saz/Core/EntityWorld.h"
@@ -174,6 +175,15 @@ namespace Saz
 			out << YAML::Key << "FixedAspectRatio" << YAML::Value << cameraComponent.FixedAspectRatio;
 
 			out << YAML::EndMap; // CameraComponent
+		}
+
+		if (world.HasComponent<component::ScriptComponent>(entity))
+		{
+			auto& script = world.GetComponent<component::ScriptComponent>(entity);
+			out << YAML::Key << "ScriptComponent";
+			out << YAML::BeginMap;
+			out << YAML::Key << "ClassName" << YAML::Value << script.ClassName;
+			out << YAML::EndMap; // ScriptComponent
 		}
 
 		if (world.HasComponent<component::SpriteComponent>(entity))
@@ -344,6 +354,13 @@ namespace Saz
 
 					cc.Primary = cameraComponent["Primary"].as<bool>();
 					cc.FixedAspectRatio = cameraComponent["FixedAspectRatio"].as<bool>();
+				}
+
+				auto scriptComponent = entity["ScriptComponent"];
+				if (scriptComponent)
+				{
+					auto& sc = m_World.AddComponent < component::ScriptComponent>(deserializedEntity);
+					sc.ClassName = scriptComponent["ClassName"].as<String>();
 				}
 
 				auto spriteComponent = entity["SpriteComponent"];

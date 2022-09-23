@@ -1,14 +1,16 @@
 #include "EditorPCH.h"
 #include "Inspector.h"
 
-#include "Saz/Components/CameraComponent.h"
-#include "Saz/Components/NameComponent.h"
-#include "Saz/Components/PhysicsComponents.h"
-#include "Saz/Components/RenderComponents.h"
-#include "Saz/Components/SceneComponent.h"
-#include "Saz/Components/TransformComponent.h"
-#include "Saz/Rendering/Texture.h"
-#include "Saz/Screen.h"
+#include <Saz/Components/CameraComponent.h>
+#include <Saz/Components/NameComponent.h>
+#include <Saz/Components/PhysicsComponents.h>
+#include <Saz/Components/RenderComponents.h>
+#include <Saz/Components/SceneComponent.h>
+#include <Saz/Components/ScriptComponent.h>
+#include <Saz/Components/TransformComponent.h>
+#include <Saz/Rendering/Texture.h>
+#include <Saz/Screen.h>
+#include <Saz/Scripting/ScriptEngine.h>
 
 #include <imgui/imgui_internal.h>
 #include <imgui/imgui.h>
@@ -18,8 +20,6 @@
 
 namespace
 {
-
-
 	constexpr ImGuiTreeNodeFlags treeNodeFlags =
 		ImGuiTreeNodeFlags_DefaultOpen |
 		ImGuiTreeNodeFlags_AllowItemOverlap |
@@ -176,6 +176,7 @@ namespace ecs
 
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
+		DrawScriptComponent(entity);
 		DrawSpriteComponent(entity);
 		DrawCircleRendererComponent(entity);
 		DrawRigidbody2DComponent(entity);
@@ -194,6 +195,7 @@ namespace ecs
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			DisplayAddComponentEntry<component::CameraComponent>("Camera");
+			DisplayAddComponentEntry<component::ScriptComponent>("Script");
 			DisplayAddComponentEntry<component::SpriteComponent>("Sprite Renderer");
 			DisplayAddComponentEntry<component::CircleRendererComponent>("Circle Renderer");
 			DisplayAddComponentEntry<component::Rigidbody2DComponent>("Rigidbody 2D");
@@ -301,6 +303,26 @@ namespace ecs
 
 					IMGUI_LEFT_LABEL(ImGui::Checkbox, "Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
+			});
+	}
+
+	void Inspector::DrawScriptComponent(Entity entity)
+	{
+		DrawComponent<component::ScriptComponent>(*m_World, "Script Component", entity, [](auto& component)
+			{
+				bool scriptClassExists = Saz::ScriptEngine::EntityClassExists(component.ClassName);
+
+				static char buffer[64];
+				strcpy(buffer, component.ClassName.c_str());
+
+				if (!scriptClassExists)
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+
+				if (IMGUI_LEFT_LABEL(ImGui::InputText, "Class", buffer, sizeof(buffer)))
+					component.ClassName = buffer;
+
+				if (!scriptClassExists)
+					ImGui::PopStyleColor();
 			});
 	}
 

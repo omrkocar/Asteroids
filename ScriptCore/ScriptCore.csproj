@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Source\ScriptCore\Main.cs" />
+    <Compile Include="Source\ScriptCore\Player.cs" />
     <None Include="premake5.lua" />
   </ItemGroup>
   <ItemGroup>
