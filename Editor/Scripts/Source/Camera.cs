@@ -8,7 +8,7 @@ namespace Game
 
         void Init()
         {
-            m_Speed = 5.0f;
+            m_Speed = 100.0f;
         }
 
         void Update(float deltaTime)

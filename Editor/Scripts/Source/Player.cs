@@ -7,16 +7,16 @@ namespace Game
     {
         private Rigidbody2D m_Rigidbody;
         private float m_JumpForce = 1500f;
+        private float m_Speed = 1000f;
 
         void Init()
         {
             m_Rigidbody = GetComponent<Rigidbody2D>();
-            
         }
 
         void Update(float deltaTime)
         {
-            float speed = 1750f;
+ 
             Vector3 velocity = Vector3.zero;
 
             if (Input.IsKeyHeld(KeyCode.W))
@@ -31,7 +31,7 @@ namespace Game
             if (Input.IsKeyPressed(KeyCode.Space))
                 m_Rigidbody.ApplyForce(Vector2.up * m_JumpForce * deltaTime, true);
 
-            velocity *= speed;
+            velocity *= m_Speed;
             if (velocity != Vector3.zero)
                 m_Rigidbody.ApplyForce(velocity.xy * deltaTime, true);
 

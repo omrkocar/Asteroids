@@ -15,33 +15,29 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Editor\Resources\Scripts\</OutputPath>
-    <BaseIntermediateOutputPath>..\Editor\Resources\Scripts\Intermediates\x64\Debug\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\Editor\Resources\Scripts\Intermediates\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>_DEBUG;SAZ_DEBUG;SAZ_ENABLE_ASSERTS;_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;SAZ_PROFILE=0;SAZ_PLATFORM_WINDOWS</DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>26812</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>..\Editor\Resources\Scripts\</OutputPath>
-    <BaseIntermediateOutputPath>..\Editor\Resources\Scripts\Intermediates\x64\Release\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\Editor\Resources\Scripts\Intermediates\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>NDEBUG;SAZ_RELEASE;_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;SAZ_PROFILE=0;SAZ_PLATFORM_WINDOWS</DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>26812</NoWarn>
   </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\ScriptCore\Camera.cs" />
     <Compile Include="Source\ScriptCore\Components\Component.cs" />
     <Compile Include="Source\ScriptCore\Components\Rigidbody2D.cs" />
     <Compile Include="Source\ScriptCore\Components\Transform.cs" />
@@ -49,10 +45,8 @@
     <Compile Include="Source\ScriptCore\Input.cs" />
     <Compile Include="Source\ScriptCore\InternalCalls.cs" />
     <Compile Include="Source\ScriptCore\KeyCode.cs" />
-    <Compile Include="Source\ScriptCore\Player.cs" />
     <Compile Include="Source\ScriptCore\Vector2.cs" />
     <Compile Include="Source\ScriptCore\Vector3.cs" />
-    <None Include="premake5.lua" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

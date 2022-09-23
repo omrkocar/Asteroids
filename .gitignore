@@ -1,5 +1,6 @@
 Build
 .vs
+Binaries
 Intermediate
 Projects
 /3rdParty/imgui/imgui/examples
@@ -9,6 +10,7 @@ bin
 bin-int
 /*.sln
 *.vcxproj
+*.csproj
 *.vcxproj.user
 *.filters
 Editor/LastOpenScene.txt
