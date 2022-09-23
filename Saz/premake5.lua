@@ -4,7 +4,7 @@
 -----------------------------------------------------
 project "Saz"
 	kind		"StaticLib"
-	dependson { "Core", "Imgui", "GLFW", "GLAD", "glm" }
+	dependson { "Core", "Imgui", "GLFW", "GLAD", "glm", "stb_image" }
 	pchheader "SazPCH.h"
 	pchsource "Source/Saz/SazPCH.cpp"
 	staticruntime "on"

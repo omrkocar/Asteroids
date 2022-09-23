@@ -12,9 +12,10 @@ namespace Saz
 	class WindowsWindow final : public WindowBase
 	{
 	public:
-		explicit WindowsWindow(const WindowProps& props);
+		explicit WindowsWindow(const WindowSpecification& specification);
 		virtual ~WindowsWindow() override;
 
+		void Init();
 
 		virtual void PostInit() override;
 		void OnUpdate(const GameTime& gameTime) override;
@@ -26,11 +27,16 @@ namespace Saz
 		virtual const std::string& GetTitle() const override;
 		virtual void SetTitle(const std::string& title) override;
 
+		virtual void SetResizable(bool resizable) override;
+
 		virtual uint32_t GetWidth() const override;
 		virtual uint32_t GetHeight() const override;
 
 		virtual bool ShouldClose() const override;
 		void SetShouldClose(bool close) { m_ShouldClose = close; }
+
+		virtual void Maximize() override;
+		virtual void CenterWindow() override;
 
 		static void OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
 
@@ -39,13 +45,13 @@ namespace Saz
 
 		inline virtual void* GetNativeWindow() const override { return m_Window; }
 
-	private:
-		void Init(const WindowProps& props);
+		
 
 	private:
 		GLFWwindow* m_Window;
 		Ref<GraphicsContext> m_Context;
 		bool m_ShouldClose = false;
+		WindowSpecification m_Specification;
 
 		vec2 m_MousePos = vec2::Zero();
 		vec2 m_MouseDelta = vec2::Zero();
@@ -54,7 +60,6 @@ namespace Saz
 		{
 			std::string Title;
 			uint32_t Width, Height;
-			bool VSync;
 		};
 
 		WindowData m_Data;

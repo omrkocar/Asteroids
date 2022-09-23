@@ -18,7 +18,7 @@ Entities:
       Rotation: [4.11590345e-11, -0.785398185, 0.00102332991]
       Scale: [0.999999881, 1, 0.999999881]
     ScriptComponent:
-      ClassName: Game.Player
+      ClassName: Game.Camera
     SpriteComponent:
       Color: [0.847058833, 0.541176498, 0, 1]
       TilingFactor: 1
@@ -48,6 +48,6 @@ Entities:
         OrthographicSize: 10
         OrthographicNear: -1
         OrthographicFar: 1
-        AspectRatio: 0.674115479
+        AspectRatio: 0.805660367
       Primary: true
       FixedAspectRatio: false

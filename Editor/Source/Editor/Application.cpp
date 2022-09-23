@@ -33,8 +33,8 @@
 #include <Saz/Systems/SceneSystem.h>
 #include <Saz/Systems/ScriptSystem.h>
 
-Application::Application()
-	: Saz::Application("Saz Editor")
+Application::Application(const Saz::ApplicationSpecification& specification)
+	: Saz::Application(specification)
 {
 	
 }
@@ -102,7 +102,6 @@ void Application::Register()
 		m_World.GetSystem<ecs::WorldOutliner>(),
 		m_World.GetSystem<ecs::ContentBrowser>());
 	m_World.RegisterSystem<ecs::RenderSystem>(*m_Window, m_World.GetSystem<ecs::CameraSystem>());
-
 }
 
 void Application::Update(const Saz::GameTime& gameTime)
@@ -119,5 +118,14 @@ void Application::Update(const Saz::GameTime& gameTime)
 
 Saz::Application* Saz::CreateApplication()
 {
-	return new ::Application();
+	Saz::ApplicationSpecification specification;
+	specification.Name = "Saz Editor";
+	specification.WindowWidth = 1600;
+	specification.WindowHeight = 900;
+	specification.VSync = true;
+	specification.StartMaximized = true;
+	specification.WindowDecorated = true;
+	specification.Resizable = true;
+	specification.EnableImGui = true;
+	return new ::Application(specification);
 }

@@ -2,19 +2,21 @@
 #include "ScriptGlue.h"
 
 #include "Saz/Core/EntityWorld.h"
-#include "Saz/Scripting/ScriptEngine.h"
-#include "Components/TransformComponent.h"
+#include "Saz/Core/Application.h"
 #include "Saz/Core/KeyCodes.h"
-#include "Components/InputComponent.h"
-#include "Components/ComponentGroup.h"
+#include "Saz/Components/InputComponent.h"
+#include "Saz/Components/ComponentGroup.h"
 #include "Saz/Components/CameraComponent.h"
 #include "Saz/Components/PhysicsComponents.h"
 #include "Saz/Components/RenderComponents.h"
 #include "Saz/Components/ScriptComponent.h"
+#include "Saz/Components/TransformComponent.h"
+#include "Saz/Scripting/ScriptEngine.h"
 
 #include <box2d/b2_body.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
+#include "imgui_internal.h"
 
 namespace Saz {
 
@@ -148,8 +150,20 @@ namespace Saz {
 	static bool Input_IsKeyPressed(Input::KeyCode keyCode)
 	{
 		ecs::EntityWorld* world = ScriptEngine::GetWorld();
-		ecs::Entity entity = world->GetGameInputEntity(); 
-		return world->GetComponent<component::InputComponent>(entity).IsKeyPressed(keyCode);
+		ecs::Entity entity = world->GetGameInputEntity();
+
+		bool wasPressed = world->GetComponent<component::InputComponent>(entity).IsKeyPressed(keyCode);
+
+		bool enableImGui = Application::Get().GetSpecification().EnableImGui;
+		if (wasPressed && enableImGui && GImGui->NavWindow != nullptr)
+		{
+			// Make sure we're in the game panel
+			ImGuiWindow* viewportWindow = ImGui::FindWindowByName("Game");
+			if (viewportWindow != nullptr)
+				wasPressed = GImGui->NavWindow->ID == viewportWindow->ID;
+		}
+
+		return wasPressed;
 	}
 
 	static bool Input_IsKeyHeld(Input::KeyCode keyCode)
@@ -157,7 +171,18 @@ namespace Saz {
 		ecs::EntityWorld* world = ScriptEngine::GetWorld();
 		ecs::Entity entity = world->GetGameInputEntity();
 
-		return world->GetComponent<component::InputComponent>(entity).IsKeyHeld(keyCode);
+		bool wasPressed = world->GetComponent<component::InputComponent>(entity).IsKeyHeld(keyCode);
+
+		bool enableImGui = Application::Get().GetSpecification().EnableImGui;
+		if (wasPressed && enableImGui && GImGui->NavWindow != nullptr)
+		{
+			// Make sure we're in the game panel
+			ImGuiWindow* viewportWindow = ImGui::FindWindowByName("Game");
+			if (viewportWindow != nullptr)
+				wasPressed = GImGui->NavWindow->ID == viewportWindow->ID;
+		}
+
+		return wasPressed;
 	}
 
 

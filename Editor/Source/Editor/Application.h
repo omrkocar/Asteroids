@@ -5,7 +5,7 @@
 class Application final : public Saz::Application
 {
 public:
-	Application();
+	Application(const Saz::ApplicationSpecification& specification);
 	virtual ~Application() override;
 
 	virtual void Init();

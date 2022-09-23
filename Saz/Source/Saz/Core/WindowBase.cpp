@@ -8,7 +8,7 @@
 
 namespace Saz
 {
-	Scope<Saz::WindowBase> WindowBase::Create(const WindowProps& props)
+	Scope<Saz::WindowBase> WindowBase::Create(const WindowSpecification& props)
 	{
 #ifdef SAZ_PLATFORM_WINDOWS
 		return CreateScope<WindowsWindow>(props);

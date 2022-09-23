@@ -11,6 +11,8 @@
 #include <imgui/imgui.h>
 #include <GLFW/glfw3.h>
 
+#include <stb_image.h>
+
 namespace Saz
 {
 	static bool s_GLFWInitialized = false;
@@ -20,10 +22,10 @@ namespace Saz
 		SAZ_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props)
-		: WindowBase(props)
+	WindowsWindow::WindowsWindow(const WindowSpecification& specification)
+		: WindowBase(specification), m_Specification(specification)
 	{
-		Init(props);
+		
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -31,33 +33,75 @@ namespace Saz
 		Shutdown();
 	}
 
-	void WindowsWindow::Init(const WindowProps& props)
+	void WindowsWindow::Init()
 	{
 		SAZ_PROFILE_FUNCTION();
+
+		m_Data.Title = m_Specification.Title;
+		m_Data.Width = m_Specification.Width;
+		m_Data.Height = m_Specification.Height;
+
+		SAZ_CORE_INFO("Creating window {0} ({1}, {2})", m_Specification.Title, m_Specification.Width, m_Specification.Height);
 
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			s_GLFWInitialized = true;
 			SAZ_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
+			s_GLFWInitialized = true;
 		}
 
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		if (!m_Specification.Decorated)
+		{
+#ifdef SAZ_PLATFORM_WINDOWS
+			glfwWindowHint(GLFW_TITLEBAR, false);
+#else
+			glfwWindowHint(GLFW_DECORATED, false);
+#endif
+		}
 
-		m_Data.Title = props.Title;
-		m_Data.Width = mode->width;
-		m_Data.Height = mode->height;
+		if (m_Specification.Fullscreen)
+		{
+			GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 
-		SAZ_CORE_INFO("Creating Window {0} ({1}, {2}", props.Title, props.Width, props.Height);
+			glfwWindowHint(GLFW_DECORATED, false);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			m_Window = glfwCreateWindow(mode->width, mode->height, m_Data.Title.c_str(), primaryMonitor, nullptr);
+		}
+		else
+		{
+			m_Window = glfwCreateWindow((int)m_Specification.Width, (int)m_Specification.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		}
+
+		
 		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 		glfwSetFramebufferSizeCallback(m_Window, OnWindowResized);
+
+		// Update window size to actual size
+		{
+			int width, height;
+			glfwGetWindowSize(m_Window, &width, &height);
+			m_Data.Width = width;
+			m_Data.Height = height;
+		}
+
+		// Set icon
+		{
+			GLFWimage icon;
+			int channels;
+			icon.pixels = stbi_load("Data/Textures/SazLogo.png", &icon.width, &icon.height, &channels, 4);
+			glfwSetWindowIcon(m_Window, 1, &icon);
+			stbi_image_free(icon.pixels);
+		}
 	}
 
 	void WindowsWindow::PostInit()
@@ -98,12 +142,12 @@ namespace Saz
 		else
 			glfwSwapInterval(0);
 
-		m_Data.VSync = isEnabled;
+		m_Specification.VSync = isEnabled;
 	}
 
 	bool WindowsWindow::IsVSync() const
 	{
-		return m_Data.VSync;
+		return m_Specification.VSync;
 	}
 
 	const std::string& WindowsWindow::GetTitle() const
@@ -115,6 +159,11 @@ namespace Saz
 	{
 		m_Data.Title = title;
 		glfwSetWindowTitle(m_Window, title.c_str());
+	}
+
+	void WindowsWindow::SetResizable(bool resizable)
+	{
+		glfwSetWindowAttrib(m_Window, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 	}
 
 	uint32_t WindowsWindow::GetWidth() const
@@ -130,6 +179,19 @@ namespace Saz
 	bool WindowsWindow::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_Window);
+	}
+
+	void WindowsWindow::Maximize()
+	{
+		glfwMaximizeWindow(m_Window);
+	}
+
+	void WindowsWindow::CenterWindow()
+	{
+		const GLFWvidmode* videmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		int x = (videmode->width / 2) - (m_Data.Width / 2);
+		int y = (videmode->height / 2) - (m_Data.Height / 2);
+		glfwSetWindowPos(m_Window, x, y);
 	}
 
 	void WindowsWindow::OnWindowResized(GLFWwindow* glfwWindow, int width, int height)

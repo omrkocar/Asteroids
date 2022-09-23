@@ -9,14 +9,33 @@ namespace Saz
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const String& name)
+	Application::Application(const ApplicationSpecification& specification)
+		: m_Specification(specification)
 	{
 		SAZ_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
 		Saz::Log::Init();
 
-		m_Window = WindowBase::Create(WindowProps(name));
+		if (!specification.WorkingDirectory.empty())
+			std::filesystem::current_path(specification.WorkingDirectory);
+
+		WindowSpecification windowSpec;
+		windowSpec.Title = specification.Name;
+		windowSpec.Width = specification.WindowWidth;
+		windowSpec.Height = specification.WindowHeight;
+		windowSpec.Decorated = specification.WindowDecorated;
+		windowSpec.Fullscreen = specification.Fullscreen;
+		windowSpec.VSync = specification.VSync;
+		m_Window = WindowBase::Create(windowSpec);
+		m_Window->Init();
+		if (specification.StartMaximized)
+			m_Window->Maximize();
+		else
+			m_Window->CenterWindow();
+
+		m_Window->SetResizable(m_Specification.Resizable);
+
 	}
 
 	Application::~Application()

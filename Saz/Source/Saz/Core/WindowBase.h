@@ -13,17 +13,14 @@ namespace Saz
 {
 	class GameTime;
 
-	struct WindowProps
+	struct WindowSpecification
 	{
-		String Title;
-		uint32_t Width;
-		uint32_t Height;
-
-		WindowProps(const String& title = "Saz Engine",
-					uint32_t width = 1920,
-					uint32_t height = 1080)
-			: Title(title), Width(width), Height(height)
-		{}
+		String Title = "Saz Engine";
+		uint32_t Width = 1600;
+		uint32_t Height = 900;
+		bool Decorated = true;
+		bool Fullscreen = false;
+		bool VSync = true;
 	};
 
 	// Interface representing a desktop system based Window
@@ -31,7 +28,7 @@ namespace Saz
 	{
 	public:
 		WindowBase() = delete;
-		WindowBase(const WindowProps& props) {}
+		WindowBase(const WindowSpecification& specification) {}
 		virtual ~WindowBase() {}
 
 		virtual void Init() {}
@@ -45,6 +42,7 @@ namespace Saz
 		virtual const std::string& GetTitle() const = 0;
 		virtual void SetTitle(const std::string& title) = 0;
 		
+		virtual void SetResizable(bool resizable) = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
@@ -53,12 +51,15 @@ namespace Saz
 
 		virtual void Shutdown() = 0;
 
+		virtual void Maximize() = 0;
+		virtual void CenterWindow() = 0;
+
 		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
 		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Scope<WindowBase> Create(const WindowProps& props = WindowProps());
+		static Scope<WindowBase> Create(const WindowSpecification& props = WindowSpecification());
 
 	private:
 		WindowBase(const WindowBase&) = delete;

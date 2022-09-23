@@ -14,11 +14,24 @@ namespace Saz
 
 namespace Saz
 {
+	struct ApplicationSpecification
+	{
+		std::string Name = "Saz Engine";
+		uint32_t WindowWidth = 1600, WindowHeight = 900;
+		bool WindowDecorated = false;
+		bool Fullscreen = false;
+		bool VSync = true;
+		std::string WorkingDirectory;
+		bool StartMaximized = true;
+		bool Resizable = true;
+		bool EnableImGui = true;
+	};
+
 	class Application
 	{
 
 	public:
-		Application(const String& name = "Saz Engine");
+		Application(const ApplicationSpecification& specification);
 		virtual ~Application();
 
 		void Run();
@@ -31,7 +44,9 @@ namespace Saz
 
 		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
-	public:
+		const ApplicationSpecification& GetSpecification() const { return m_Specification; }
+
+	protected:
 		ecs::EntityWorld m_World;
 
 	protected:
@@ -49,6 +64,8 @@ namespace Saz
 		std::unique_ptr<WindowBase> m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
+
+		ApplicationSpecification m_Specification;
 
 		bool m_Running = true;
 		bool m_Minimized = false;

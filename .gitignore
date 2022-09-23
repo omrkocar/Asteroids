@@ -16,3 +16,5 @@ Editor/LastOpenScene.txt
 Editor/EditorScene.saz
 Editor/Resources/Scripts
 *.sln
+*.csproj
+*.csproj

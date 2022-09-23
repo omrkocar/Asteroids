@@ -8,12 +8,11 @@ namespace Game
 
         void Init()
         {
-            m_Speed = 100.0f;
+            m_Speed = 5.0f;
         }
 
         void Update(float deltaTime)
         {
-
             Vector3 velocity = Vector3.zero;
 
             if (Input.IsKeyHeld(KeyCode.W))
