@@ -51,6 +51,8 @@ namespace ecs
 
 		const Saz::UUID& GetUUID(Entity entity);
 
+		Entity GetEntity(Saz::UUID uuid);
+
 		ecs::Entity TryGetEntityWithTag(const String& tag);
 
 		template<class TComponent>
@@ -97,6 +99,10 @@ namespace ecs
 		ecs::Entity GetMainCameraEntity();
 		void SetMainCamera(Entity entity);
 
+		void SetGameInputEntity(Entity entity);
+		Entity GetGameInputEntity() { return m_GameInputEntity; }
+		Entity GetEditorInputEntity() { return m_MainCamera; }
+
 	public:
 		entt::registry m_Registry;
 
@@ -106,6 +112,8 @@ namespace ecs
 		Entity m_MainCamera;
 
 		EntityMap m_EntityIDMap;
+
+		Entity m_GameInputEntity;
 	};
 }
 

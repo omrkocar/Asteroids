@@ -38,7 +38,7 @@ namespace Saz
 	class ScriptInstance
 	{
 	public:
-		ScriptInstance(Ref<ScriptClass> scriptClass);
+		ScriptInstance(Ref<ScriptClass> scriptClass, const ecs::Entity& entity, ecs::EntityWorld* world);
 
 		void InvokeInit();
 		void InvokeUpdate(float deltaTime);
@@ -46,6 +46,7 @@ namespace Saz
 		Ref<ScriptClass> m_ScriptClass;
 
 		MonoObject* m_Instance = nullptr;
+		MonoMethod* m_Constructor = nullptr;
 		MonoMethod* m_InitMethod = nullptr;
 		MonoMethod* m_UpdateMethod = nullptr;
 	};
@@ -64,6 +65,9 @@ namespace Saz
 		static bool EntityClassExists(const String& fullClassName);
 		static void OnCreateEntity(ecs::EntityWorld* world, const ecs::Entity& entity);
 		static void OnUpdateEntity(ecs::EntityWorld* world, const ecs::Entity& entity, float deltaTime);
+
+		static MonoImage* GetCoreAssemblyImage();
+		static ecs::EntityWorld* GetWorld();
 
 		static std::unordered_map<std::string, Ref<ScriptClass>> GetEntityClasses();
 	private:

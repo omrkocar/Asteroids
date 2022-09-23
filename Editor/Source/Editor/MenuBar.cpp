@@ -58,10 +58,7 @@ namespace ecs
 		if (m_World->HasComponent<component::NewSceneRequestOneFrameComponent>(m_Entity))
 			m_World->RemoveComponent<component::NewSceneRequestOneFrameComponent>(m_Entity);
 
-		const auto inputView = m_World->GetAllEntitiesWith<component::InputComponent>();
-		for (const auto& inputEntity : inputView)
-		{
-			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(inputEntity);
+			const auto& inputComp = m_World->m_Registry.get<component::InputComponent>(m_World->GetEditorInputEntity());
 
 			bool control = inputComp.IsKeyHeld(Input::KeyCode::LeftControl) || inputComp.IsKeyHeld(Input::KeyCode::RightControl);
 			bool shift = inputComp.IsKeyHeld(Input::KeyCode::LeftShift) || inputComp.IsKeyHeld(Input::KeyCode::RightShift);
@@ -100,8 +97,7 @@ namespace ecs
 					Saz::SceneUtils::OpenScene(*m_World, m_Entity);
 				}
 			}
-		}
-
+		
 		ImGuiRender();
 	}
 

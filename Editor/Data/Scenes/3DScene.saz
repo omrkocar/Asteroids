@@ -14,44 +14,24 @@ Entities:
     NameComponent:
       Name: Right
     TransformComponent:
-      Position: [-0.349999994, 0, 0.350000024]
-      Rotation: [0, -0.785398245, 0]
-      Scale: [1, 1, 1]
+      Position: [-0.349999994, -0.00171090965, 0.349999994]
+      Rotation: [4.11590345e-11, -0.785398185, 0.00102332991]
+      Scale: [0.999999881, 1, 0.999999881]
+    ScriptComponent:
+      ClassName: Game.Player
     SpriteComponent:
       Color: [0.847058833, 0.541176498, 0, 1]
       TilingFactor: 1
-    Rigidbody2DComponent:
-      BodyType: 1
-      GravityScale: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 0.5
-      Restitution: 0
-      RestitutionThreshold: 0.5
   - Entity: 3907972785362261350
     NameComponent:
       Name: Left
     TransformComponent:
-      Position: [0.349999994, 0, 0.349999994]
-      Rotation: [0, 0.785398185, 0]
-      Scale: [1, 1, 1]
+      Position: [0.349999994, 0.000326164125, 0.349999994]
+      Rotation: [6.58544552e-10, 0.785398245, -0.00579594634]
+      Scale: [1, 1, 0.999999881]
     SpriteComponent:
       Color: [0.411764711, 0.286274523, 0.0313725509, 1]
       TilingFactor: 1
-    Rigidbody2DComponent:
-      BodyType: 1
-      GravityScale: 1
-      FixedRotation: false
-    BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
-      Density: 1
-      Friction: 0.5
-      Restitution: 0
-      RestitutionThreshold: 0.5
   - Entity: 13589021571275563727
     NameComponent:
       Name: Camera
@@ -68,6 +48,6 @@ Entities:
         OrthographicSize: 10
         OrthographicNear: -1
         OrthographicFar: 1
-        AspectRatio: 0.668743491
+        AspectRatio: 0.674115479
       Primary: true
       FixedAspectRatio: false

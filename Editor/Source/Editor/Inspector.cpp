@@ -150,12 +150,11 @@ namespace ecs
 
 	void Inspector::ImGuiRender()
 	{
-		ImGui::Begin("Inspector", &m_IsActive, ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::Begin("Inspector", &m_IsActive);
 
 		if (m_WorldOutliner.m_SelectedEntity != entt::null)
 		{
-			auto entity = m_WorldOutliner.m_SelectedEntity;
-			DrawComponents(entity);
+			DrawComponents(m_WorldOutliner.m_SelectedEntity);
 		}
 
 		ImGui::End();
@@ -168,12 +167,14 @@ namespace ecs
 
 		ImGui::PushFont(boldFont);
 
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.5f);
 		DrawNameComponent(entity);
-
+		ImGui::PopItemWidth();
 		ImGui::SameLine();
-		ImGui::PushItemWidth(-1);
+
 		DrawAddComponentPopup(entity);
 
+		ImGui::PushItemWidth(-1);
 		DrawTransformComponent(entity);
 		DrawCameraComponent(entity);
 		DrawScriptComponent(entity);
@@ -182,14 +183,14 @@ namespace ecs
 		DrawRigidbody2DComponent(entity);
 		DrawBoxCollider2DComponent(entity);
 		DrawCircleCollider2DComponent(entity);
-		ImGui::PopItemWidth();
 
+		ImGui::PopItemWidth();
 		ImGui::PopFont();
 	}
 
 	void Inspector::DrawAddComponentPopup(Entity entity)
 	{
-		if (ImGui::Button("Add Component"))
+		if (ImGui::Button("Add Component", ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)))
 			ImGui::OpenPopup("AddComponent");
 
 		if (ImGui::BeginPopup("AddComponent"))

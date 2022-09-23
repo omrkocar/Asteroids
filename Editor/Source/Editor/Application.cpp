@@ -82,10 +82,11 @@ void Application::Register()
 
 	m_World.RegisterSystem<ecs::InputSystem>(*m_Window);
 	m_World.RegisterSystem<ecs::SceneSystem>();
+	m_World.RegisterSystem<ecs::PhysicsSystem>();
 	m_World.RegisterSystem<ecs::CameraSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
-	m_World.RegisterSystem<ecs::Toolbar>();
 	m_World.RegisterSystem<ecs::ScriptSystem>();
+	m_World.RegisterSystem<ecs::Toolbar>();
 	m_World.RegisterSystem<ecs::ProfilerPanel>();
 	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
 	m_World.RegisterSystem<ecs::GameViewport>();
@@ -100,7 +101,6 @@ void Application::Register()
 		m_World.GetSystem<ecs::Inspector>(),
 		m_World.GetSystem<ecs::WorldOutliner>(),
 		m_World.GetSystem<ecs::ContentBrowser>());
-	m_World.RegisterSystem<ecs::PhysicsSystem>();
 	m_World.RegisterSystem<ecs::RenderSystem>(*m_Window, m_World.GetSystem<ecs::CameraSystem>());
 
 }

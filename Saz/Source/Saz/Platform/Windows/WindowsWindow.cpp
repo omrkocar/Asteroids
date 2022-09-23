@@ -144,7 +144,7 @@ namespace Saz
 
 	void WindowsWindow::GatherKeyboard(Set<Input::KeyCode>& out_Keys) const
 	{
-		for (uint16_t i = static_cast<uint16_t>(Input::KeyCode::A); i < static_cast<uint16_t>(Input::KeyCode::Max); ++i)
+		for (uint16_t i = static_cast<uint16_t>(Input::KeyCode::Space); i < static_cast<uint16_t>(Input::KeyCode::Max); ++i)
 		{
 			if (glfwGetKey(m_Window, i) == GLFW_PRESS)
 				out_Keys.insert((Input::KeyCode)i);

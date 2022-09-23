@@ -47,6 +47,10 @@ namespace ecs
 			auto& inputComponent = m_World->GetComponent<component::InputComponent>(cameraEntity);
 			auto& transformComponent = m_World->GetComponent<component::TransformComponent>(cameraEntity);
 
+			if (inputComponent.IsKeyPressed(Input::KeyCode::Space))
+			{
+				int bp = 1;
+			}
 
 			const glm::vec2& mouse{ inputComponent.GetMousePosition().x, inputComponent.GetMousePosition().y };
 			glm::vec2 delta = { inputComponent.GetMouseDelta().x * 0.003f, inputComponent.GetMouseDelta().y * 0.003f };

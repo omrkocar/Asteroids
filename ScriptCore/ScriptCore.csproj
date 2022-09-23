@@ -41,8 +41,17 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\ScriptCore\Main.cs" />
+    <Compile Include="Source\ScriptCore\Camera.cs" />
+    <Compile Include="Source\ScriptCore\Components\Component.cs" />
+    <Compile Include="Source\ScriptCore\Components\Rigidbody2D.cs" />
+    <Compile Include="Source\ScriptCore\Components\Transform.cs" />
+    <Compile Include="Source\ScriptCore\Entity.cs" />
+    <Compile Include="Source\ScriptCore\Input.cs" />
+    <Compile Include="Source\ScriptCore\InternalCalls.cs" />
+    <Compile Include="Source\ScriptCore\KeyCode.cs" />
     <Compile Include="Source\ScriptCore\Player.cs" />
+    <Compile Include="Source\ScriptCore\Vector2.cs" />
+    <Compile Include="Source\ScriptCore\Vector3.cs" />
     <None Include="premake5.lua" />
   </ItemGroup>
   <ItemGroup>

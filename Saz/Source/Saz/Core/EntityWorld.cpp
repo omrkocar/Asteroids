@@ -77,6 +77,15 @@ namespace ecs
 		return GetComponent<component::IDComponent>(entity).ID;
 	}
 
+	ecs::Entity EntityWorld::GetEntity(Saz::UUID uuid)
+	{
+		if (m_EntityIDMap.find(uuid) != m_EntityIDMap.end())
+			return m_EntityIDMap[uuid];
+
+		SAZ_CORE_ASSERT(false);
+		return entt::null;
+	}
+
 	ecs::Entity EntityWorld::TryGetEntityWithTag(const String& tag)
 	{
 		auto entities = GetAllEntitiesWith<component::NameComponent>();
@@ -129,5 +138,9 @@ namespace ecs
 		m_MainCamera = entity;
 	}
 
+	void EntityWorld::SetGameInputEntity(Entity entity)
+	{
+		m_GameInputEntity = entity;
+	}
 }
 

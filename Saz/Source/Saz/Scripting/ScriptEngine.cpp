@@ -116,7 +116,10 @@ namespace Saz
 		LoadAssembly("Resources/Scripts/ScriptCore.dll");
 		LoadAssemblyClasses(s_Data->CoreAssembly);
 
+		ScriptGlue::RegisterComponents();
 		ScriptGlue::RegisterFunctions();
+
+		s_Data->EntityClass = ScriptClass("Saz", "Entity");
 
 #if 0
 		// Retrieve and instantiate class (with constructor)
@@ -187,6 +190,11 @@ namespace Saz
 		}
 	}
 
+	MonoImage* ScriptEngine::GetCoreAssemblyImage()
+	{
+		return s_Data->CoreAssemblyImage;
+	}
+
 	void ScriptEngine::Shutdown()
 	{
 		ShutdownMono();
@@ -225,7 +233,7 @@ namespace Saz
 		const auto& sc = world->GetComponent<component::ScriptComponent>(entity);
 		if (EntityClassExists(sc.ClassName))
 		{
-			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->EntityClasses[sc.ClassName]);
+			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->EntityClasses[sc.ClassName], entity, world);
 			s_Data->EntityInstances[world->GetUUID(entity)] = instance;
 
 			instance->InvokeInit();
@@ -241,6 +249,11 @@ namespace Saz
 		Ref<ScriptInstance> instance = s_Data->EntityInstances[entityUUID];
 
 		instance->InvokeUpdate(deltaTime);
+	}
+
+	ecs::EntityWorld* ScriptEngine::GetWorld()
+	{
+		return s_Data->World;
 	}
 
 	void ScriptEngine::ShutdownMono()
@@ -299,23 +312,31 @@ namespace Saz
 
 	///////////////////////////////////////////
 
-	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass)
+	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass, const ecs::Entity& entity, ecs::EntityWorld* world)
 		: m_ScriptClass(scriptClass)
 	{
 		m_Instance = scriptClass->Instantiate();
+		m_Constructor = s_Data->EntityClass.GetMethod(".ctor", 1);
 		m_InitMethod = scriptClass->GetMethod("Init", 0);
 		m_UpdateMethod = scriptClass->GetMethod("Update", 1);
+
+		UUID entityID = world->GetUUID(entity);
+		void* param = &entityID;
+		m_ScriptClass->InvokeMethod(m_Instance, m_Constructor, &param);
 	}
 
 	void ScriptInstance::InvokeInit()
 	{
+		if (m_InitMethod)
 		m_ScriptClass->InvokeMethod(m_Instance, m_InitMethod);
 	}
 
 	void ScriptInstance::InvokeUpdate(float deltaTime)
 	{
+		if (!m_UpdateMethod)
+			return;
+
 		void* param = &deltaTime;
 		m_ScriptClass->InvokeMethod(m_Instance, m_UpdateMethod, &param);
 	}
-
 }
