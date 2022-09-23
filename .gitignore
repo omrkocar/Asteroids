@@ -8,7 +8,6 @@ Projects
 .sln
 bin
 bin-int
-/*.sln
 *.vcxproj
 *.csproj
 *.vcxproj.user
@@ -16,4 +15,4 @@ bin-int
 Editor/LastOpenScene.txt
 Editor/EditorScene.saz
 Editor/Resources/Scripts
-Editor/Scripts/*.sln
+*.sln
