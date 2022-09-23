@@ -16,3 +16,4 @@ bin-int
 Editor/LastOpenScene.txt
 Editor/EditorScene.saz
 Editor/Resources/Scripts
+Editor/Scripts/*.sln
