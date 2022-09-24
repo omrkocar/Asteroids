@@ -12,7 +12,8 @@ project "ScriptCore"
 
 	files
 	{
-		"Source/ScriptCore/**.cs"
+		"Source/ScriptCore/**.cs",
+		"premake5.lua"
 	}
 
 	vpaths 

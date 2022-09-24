@@ -16,7 +16,7 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
 
-#define IMGUI_LEFT_LABEL(func, label, ...) (ImGui::TextUnformatted(label), ImGui::SameLine(150.0f), func("##" label, __VA_ARGS__))
+#define IMGUI_LEFT_LABEL(func, label, ...) (ImGui::TextUnformatted(label), ImGui::SameLine(150.0f), func(label, __VA_ARGS__))
 
 namespace
 {
@@ -121,7 +121,7 @@ namespace
 
 		if (open)
 		{
-			uiFunction(component);
+			uiFunction(component, world);
 			ImGui::TreePop();
 		}
 
@@ -234,7 +234,7 @@ namespace ecs
 
 	void Inspector::DrawTransformComponent(Entity entity)
 	{
-		DrawComponent<component::TransformComponent>(*m_World, "Transform Component", entity, [](auto& component)
+		DrawComponent<component::TransformComponent>(*m_World, "Transform Component", entity, [](auto& component, auto& world)
 			{
 				DrawVec3Control("Position", component.Position);
 				glm::vec3 rotation = glm::degrees(component.Rotation);
@@ -247,7 +247,7 @@ namespace ecs
 
 	void Inspector::DrawCameraComponent(Entity entity)
 	{
-		DrawComponent<component::CameraComponent>(*m_World, "Camera Component", entity, [](auto& component)
+		DrawComponent<component::CameraComponent>(*m_World, "Camera Component", entity, [](auto& component, auto& world)
 			{
 				auto& camera = component.Camera;
 				bool isProjection = component.Camera.GetProjectionType() == Saz::SceneCamera::ProjectionType::Perspective;
@@ -309,7 +309,7 @@ namespace ecs
 
 	void Inspector::DrawScriptComponent(Entity entity)
 	{
-		DrawComponent<component::ScriptComponent>(*m_World, "Script Component", entity, [](auto& component)
+		DrawComponent<component::ScriptComponent>(*m_World, "Script Component", entity, [entity](auto& component, auto& world) mutable
 			{
 				bool scriptClassExists = Saz::ScriptEngine::EntityClassExists(component.ClassName);
 
@@ -322,6 +322,26 @@ namespace ecs
 				if (IMGUI_LEFT_LABEL(ImGui::InputText, "Class", buffer, sizeof(buffer)))
 					component.ClassName = buffer;
 
+				Saz::UUID id = world.GetUUID(entity);
+				// Fields
+				Saz::Ref<Saz::ScriptInstance> scriptInstance = Saz::ScriptEngine::GetEntityScriptInstance(id);
+				if (scriptInstance)
+				{
+					const auto& fields = scriptInstance->GetScriptClass()->GetFields();
+
+					for (const auto& [name, field] : fields)
+					{
+						if (field.Type == Saz::ScriptFieldType::Float)
+						{
+							float data = scriptInstance->GetFieldValue<float>(name);
+							if (IMGUI_LEFT_LABEL(ImGui::DragFloat, name.c_str(), &data))
+							{
+								scriptInstance->SetFieldValue(name, data);
+							}
+						}
+					}
+				}
+
 				if (!scriptClassExists)
 					ImGui::PopStyleColor();
 			});
@@ -329,7 +349,7 @@ namespace ecs
 
 	void Inspector::DrawSpriteComponent(Entity entity)
 	{
-		DrawComponent<component::SpriteComponent>(*m_World, "Sprite Component", entity, [](auto& component)
+		DrawComponent<component::SpriteComponent>(*m_World, "Sprite Component", entity, [](auto& component, auto& world)
 			{
 				IMGUI_LEFT_LABEL(ImGui::ColorEdit4, "Color", glm::value_ptr(component.Color));
 				
@@ -352,7 +372,7 @@ namespace ecs
 
 	void Inspector::DrawCircleRendererComponent(Entity entity)
 	{
-		DrawComponent<component::CircleRendererComponent>(*m_World, "Circle Renderer Component", entity, [](auto& component)
+		DrawComponent<component::CircleRendererComponent>(*m_World, "Circle Renderer Component", entity, [](auto& component, auto& world)
 			{
 				IMGUI_LEFT_LABEL(ImGui::ColorEdit4, "Color", glm::value_ptr(component.Color));
 				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
@@ -362,7 +382,7 @@ namespace ecs
 
 	void Inspector::DrawRigidbody2DComponent(Entity entity)
 	{
-		DrawComponent<component::Rigidbody2DComponent>(*m_World, "Rigidbody2D Component", entity, [](auto& component)
+		DrawComponent<component::Rigidbody2DComponent>(*m_World, "Rigidbody2D Component", entity, [](auto& component, auto& world)
 			{
 				const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic" };
 				const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
@@ -392,7 +412,7 @@ namespace ecs
 
 	void Inspector::DrawBoxCollider2DComponent(Entity entity)
 	{
-		DrawComponent<component::BoxCollider2DComponent>(*m_World, "BoxCollider2D Component", entity, [](auto& component)
+		DrawComponent<component::BoxCollider2DComponent>(*m_World, "BoxCollider2D Component", entity, [](auto& component, auto& world)
 			{
 				IMGUI_LEFT_LABEL(ImGui::DragFloat2, "Size", glm::value_ptr(component.Size));
 				IMGUI_LEFT_LABEL(ImGui::DragFloat2,"Offset", glm::value_ptr(component.Offset));
@@ -406,7 +426,7 @@ namespace ecs
 
 	void Inspector::DrawCircleCollider2DComponent(Entity entity)
 	{
-		DrawComponent<component::CircleCollider2DComponent>(*m_World, "CircleCollider2D Component", entity, [](auto& component)
+		DrawComponent<component::CircleCollider2DComponent>(*m_World, "CircleCollider2D Component", entity, [](auto& component, auto& world)
 			{
 				IMGUI_LEFT_LABEL(ImGui::DragFloat, "Radius", &component.Radius);
 				IMGUI_LEFT_LABEL(ImGui::DragFloat2, "Offset", glm::value_ptr(component.Offset));

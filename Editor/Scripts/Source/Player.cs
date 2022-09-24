@@ -6,8 +6,8 @@ namespace Game
     public class Player : Entity
     {
         private Rigidbody2D m_Rigidbody;
-        private float m_JumpForce = 1500f;
-        private float m_Speed = 1000f;
+        public float JumpForce = 5f;
+        public float Speed;
 
         void Init()
         {
@@ -19,21 +19,19 @@ namespace Game
  
             Vector3 velocity = Vector3.zero;
 
-            if (Input.IsKeyHeld(KeyCode.W))
-                velocity.y = 1f;
-            if (Input.IsKeyHeld(KeyCode.S))
-                velocity.y = -1f;
             if (Input.IsKeyHeld(KeyCode.D))
                 velocity.x = 1f;
             if (Input.IsKeyHeld(KeyCode.A))
                 velocity.x = -1f;
 
             if (Input.IsKeyPressed(KeyCode.Space))
-                m_Rigidbody.ApplyForce(Vector2.up * m_JumpForce * deltaTime, true);
+            {
+                m_Rigidbody.ApplyLinearImpulse(Vector2.up * JumpForce, true);
+            }
 
-            velocity *= m_Speed;
+            velocity *= Speed;
             if (velocity != Vector3.zero)
-                m_Rigidbody.ApplyForce(velocity.xy * deltaTime, true);
+                m_Rigidbody.ApplyLinearImpulse(velocity.xy, true);
 
         }
     }

@@ -24,28 +24,27 @@ Entities:
       RestitutionThreshold: 0.5
   - Entity: 1070494456252922411
     NameComponent:
-      Name: Circle_D_D
+      Name: Player
     TransformComponent:
-      Position: [0.0323406458, 7.88741302, 0]
+      Position: [0.0571274757, 7.88741302, 0]
       Rotation: [0, -0, 0]
       Scale: [0.999999762, 0.999999762, 1]
     ScriptComponent:
       ClassName: Game.Player
-    CircleRendererComponent:
-      Color: [0.11063838, 1, 0, 1]
-      Thickness: 1
-      Fade: 0.0469999984
+    SpriteComponent:
+      Color: [1, 1, 1, 1]
+      TilingFactor: 1
     Rigidbody2DComponent:
       BodyType: 1
-      GravityScale: 1
-      FixedRotation: false
-    CircleCollider2DComponent:
-      Radius: 0.5
+      GravityScale: 3
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
-      Friction: 1
-      Restitution: 1
-      RestitutionThreshold: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 1361290673011095473
     NameComponent:
       Name: Camera
@@ -62,7 +61,7 @@ Entities:
         OrthographicSize: 31
         OrthographicNear: -1
         OrthographicFar: 104
-        AspectRatio: 0.826415122
+        AspectRatio: 0.797169805
       Primary: true
       FixedAspectRatio: false
   - Entity: 2931263859854777723
