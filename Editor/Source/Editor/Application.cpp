@@ -80,9 +80,7 @@ void Application::Update(const Saz::GameTime& gameTime)
 
 	if (!m_Minimized)
 	{
-		m_ImGuiLayer->Begin();
 		m_World.Update(gameTime);
-		m_ImGuiLayer->End();
 	}
 }
 

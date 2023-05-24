@@ -9,6 +9,8 @@ namespace Saz
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 		: WindowBase(props)
 	{
+		glfwInit();
+
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -22,7 +24,7 @@ namespace Saz
 
 	void WindowsWindow::WindowsWindow::OnUpdate(const Saz::GameTime& gameTime)
 	{
-
+		glfwPollEvents();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

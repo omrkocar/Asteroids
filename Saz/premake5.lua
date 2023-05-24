@@ -33,6 +33,7 @@ project "Saz"
 		"%{wks.location}/Saz/Source",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include",
+		"%{wks.location}/3rdParty/Vulkan/Include/",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.ImGui}/imgui",
 		"%{IncludeDir.entt}",
@@ -42,6 +43,11 @@ project "Saz"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+	}
+
+	libdirs
+	{
+		"%{wks.location}/3rdParty/Vulkan/Library/",
 	}
 
 	links {
