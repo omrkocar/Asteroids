@@ -78,10 +78,10 @@ void Application::Update(const Saz::GameTime& gameTime)
 {
 	Saz::Application::Update(gameTime);
 
-	if (!m_Minimized)
+	/*if (!m_Minimized)
 	{
 		m_World.Update(gameTime);
-	}
+	}*/
 }
 
 Saz::Application* Saz::CreateApplication()

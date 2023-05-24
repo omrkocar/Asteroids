@@ -38,13 +38,11 @@ namespace Saz
 
 	void Application::Destroy()
 	{
-
 		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
-
 		m_Window->OnUpdate(gameTime);
 	}
 

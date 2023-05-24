@@ -3,18 +3,24 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#include "../Screen.h"
 
 namespace Saz
 {
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 		: WindowBase(props)
 	{
+		Initialize();
+	}
+
+	void WindowsWindow::Initialize()
+	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_Window = glfwCreateWindow(800, 600, "Saz Engine", nullptr, nullptr);
+		m_Window = glfwCreateWindow(Screen::width, Screen::height, "Saz Engine", nullptr, nullptr);
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -22,9 +28,17 @@ namespace Saz
 
 	}
 
-	void WindowsWindow::WindowsWindow::OnUpdate(const Saz::GameTime& gameTime)
+	void WindowsWindow::OnUpdate(const Saz::GameTime& gameTime)
 	{
 		glfwPollEvents();
+	}
+
+	void WindowsWindow::Destroy()
+	{
+		WindowBase::Destroy();
+
+		glfwDestroyWindow(m_Window);
+		glfwTerminate();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
@@ -59,7 +73,7 @@ namespace Saz
 
 	bool WindowsWindow::ShouldClose() const
 	{
-		return false;
+		return glfwWindowShouldClose(m_Window);
 	}
 
 	void WindowsWindow::Shutdown()
@@ -81,5 +95,4 @@ namespace Saz
 	{
 		return nullptr;
 	}
-
 }

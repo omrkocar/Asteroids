@@ -14,6 +14,7 @@ namespace Saz
 		virtual ~WindowsWindow() override;
 
 		void OnUpdate(const Saz::GameTime& gameTime) override;
+		void Destroy() override;
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 		const String& GetTitle() const override;
@@ -25,6 +26,9 @@ namespace Saz
 		void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const override;
 		void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const override;
 		void* GetNativeWindow() const override;
+
+	private:
+		void Initialize();
 
 	private:
 		GLFWwindow* m_Window;
