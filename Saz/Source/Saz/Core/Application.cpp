@@ -28,26 +28,22 @@ namespace Saz
 
 	void Application::PostInit()
 	{
-		SAZ_PROFILE_FUNCTION();
 
 		m_Window->PostInit();
 	}
 
 	void Application::Register()
 	{
-		SAZ_PROFILE_FUNCTION();
 	}
 
 	void Application::Destroy()
 	{
-		SAZ_PROFILE_FUNCTION();
 
 		m_Window->Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
-		SAZ_PROFILE_FUNCTION();
 
 		m_Window->OnUpdate(gameTime);
 	}

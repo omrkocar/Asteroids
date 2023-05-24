@@ -44,7 +44,7 @@ namespace Saz
 		float m_LastFrameTime = 0.0f;
 
 	protected:
-		std::unique_ptr<WindowBase> m_Window = nullptr;
+		WindowBase* m_Window = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 

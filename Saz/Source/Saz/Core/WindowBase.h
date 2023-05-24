@@ -58,7 +58,7 @@ namespace Saz
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Scope<WindowBase> Create(const WindowProps& props = WindowProps());
+		static Saz::WindowBase* Create(const WindowProps& props = WindowProps());
 
 	private:
 		WindowBase(const WindowBase&) = delete;
