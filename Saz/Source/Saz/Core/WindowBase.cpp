@@ -1,5 +1,6 @@
 #include "SazPCH.h"
 #include "WindowBase.h"
+#include "WindowsWindow.h"
 
 namespace Saz
 {
@@ -7,9 +8,10 @@ namespace Saz
 	{
 #ifdef SAZ_PLATFORM_WINDOWS
 		
-		return nullptr;
+		return new WindowsWindow(props);
 #else
 		SAZ_CORE_ASSERT(false, "Unknown platform!");
+		return nullptr;
 #endif
 	}
 

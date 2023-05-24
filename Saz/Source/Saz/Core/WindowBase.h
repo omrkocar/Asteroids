@@ -42,8 +42,8 @@ namespace Saz
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-		virtual const std::string& GetTitle() const = 0;
-		virtual void SetTitle(const std::string& title) = 0;
+		virtual const String& GetTitle() const = 0;
+		virtual void SetTitle(const String& title) = 0;
 		
 
 		virtual uint32_t GetWidth() const = 0;
