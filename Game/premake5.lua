@@ -19,6 +19,7 @@ project "Game"
 		"%{wks.location}/Saz/Source",
 		"%{wks.location}/Game/Source",
 		"%{wks.location}/3rdParty/spdlog/include",
+		"%{wks.location}/3rdParty/Vulkan/Include/",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.ImGui}",
@@ -28,15 +29,14 @@ project "Game"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.Box2D}",
 	}
+	
+	libdirs
+	{
+		"%{wks.location}/3rdParty/Vulkan/Library/",
+	}
 
 	links 
 	{
 		"Saz",
+		"vulkan-1"
 	}
-
-	filter "system:windows"
-		systemversion "latest"
-		defines
-		{
-			"SAZ_PLATFORM_WINDOWS"
-		}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Saz/Core/WindowBase.h"
+#include <Vulkan/vulkan.h>
 
 struct GLFWwindow;
 
@@ -32,6 +33,7 @@ namespace Saz
 
 	private:
 		GLFWwindow* m_Window;
+		VkInstance m_VkInstance;
 	};
 
 }
