@@ -13,6 +13,3 @@
 [submodule "3rdParty/imgui/imgui"]
 	path = 3rdParty/imgui/imgui
 	url = https://github.com/TheCherno/imgui
-[submodule "3rdParty/box2d"]
-	path = 3rdParty/box2d
-	url = https://github.com/TheCherno/box2d.git
