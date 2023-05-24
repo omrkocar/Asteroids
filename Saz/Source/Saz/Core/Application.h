@@ -41,8 +41,6 @@ namespace Saz
 		virtual void Destroy();
 		virtual void Update(const Saz::GameTime& gameTime);
 
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
 		float m_LastFrameTime = 0.0f;
 
 	protected:

@@ -42,7 +42,6 @@ project "Saz"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.Box2D}",
 	}
 
 	links {
@@ -50,7 +49,6 @@ project "Saz"
 		"ImGui",
 		"GLFW",
 		"GLAD",
-		"Box2D",
 		"ImGuizmo",
 		"yaml-cpp",
 		"opengl32.lib"

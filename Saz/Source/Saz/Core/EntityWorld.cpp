@@ -2,7 +2,6 @@
 #include "EntityWorld.h"
 #include "Saz/Systems/System.h"
 
-#include "Saz/Components/CameraComponent.h"
 #include "Saz/Components/InputComponent.h"
 #include "Saz/Components/NameComponent.h"
 #include "Saz/Components/PhysicsComponents.h"
@@ -64,7 +63,6 @@ namespace ecs
 		CopyComponentIfExists<component::BoxCollider2DComponent>(newEntity, entity);
 		CopyComponentIfExists<component::CircleCollider2DComponent>(newEntity, entity);
 		CopyComponentIfExists<component::NameComponent>(newEntity, entity);
-		CopyComponentIfExists<component::CameraComponent>(newEntity, entity);
 		CopyComponentIfExists<component::CircleRendererComponent>(newEntity, entity);
 		CopyComponentIfExists<component::SceneEntityComponent>(newEntity, entity);
 		CopyComponentIfExists<component::TransformComponent>(newEntity, entity);
@@ -102,19 +100,6 @@ namespace ecs
 				auto rhsEntity = m_EntityIDMap.find(rhs.ID);
 				return static_cast<uint32_t>(lhsEntity->second) < static_cast<uint32_t>(rhsEntity->second);
 			});
-	}
-
-	ecs::Entity EntityWorld::CreateMainCamera()
-	{
-		auto mainCamera = CreateEntity();
-		auto& cameraComp = AddComponent<component::EditorCameraComponent>(mainCamera);
-		cameraComp.Camera.Setup(30.0f, 1.778f, 0.1f, 1000.0f, 0.0f, 0.0f, 50.0f);
-		AddComponent<component::InputComponent>(mainCamera);
-		AddComponent<component::TransformComponent>(mainCamera);
-		AddComponent<component::NameComponent>(mainCamera, "Editor Camera");
-		
-		SetMainCamera(mainCamera);
-		return mainCamera;
 	}
 
 	ecs::Entity EntityWorld::GetMainCameraEntity()

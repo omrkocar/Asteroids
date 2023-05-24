@@ -12,14 +12,12 @@ namespace component
 	struct SpriteComponent;
 	struct CircleRendererComponent;
 	struct BoxCollider2DComponent;
-	struct CameraComponent;
-
 }
+
 using AllComponents =
 ComponentGroup<
 	component::TransformComponent, 
 	component::SpriteComponent, 
 	component::CircleRendererComponent,
-	component::CameraComponent, 
 	component::Rigidbody2DComponent, 
 	component::BoxCollider2DComponent>;

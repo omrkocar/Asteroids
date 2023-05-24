@@ -3,7 +3,6 @@
 
 #include "Saz/Components/NameComponent.h"
 #include "Saz/Components/LevelComponent.h"
-#include "Saz/Components/CameraComponent.h"
 #include "Saz/Components/TransformComponent.h"
 #include "Saz/Components/SceneComponent.h"
 #include "Saz/Components/InputComponent.h"

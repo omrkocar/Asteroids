@@ -1,6 +1,5 @@
 #include "SazPCH.h"
 #include "Application.h"
-#include "Saz/Rendering/Renderer.h"
 #include <GLFW/glfw3.h>
 
 namespace Saz
@@ -24,10 +23,7 @@ namespace Saz
 
 	void Application::Init()
 	{
-		Renderer::Init();
-
-		m_ImGuiLayer = new ImGuiLayer();
-		PushOverlay(m_ImGuiLayer);
+		//Renderer::Init();
 	}
 
 	void Application::PostInit()
@@ -78,17 +74,5 @@ namespace Saz
 	void Application::Close()
 	{
 		m_Running = false;
-	}
-
-	void Application::PushLayer(Layer* layer)
-	{
-		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
-	}
-
-	void Application::PushOverlay(Layer* layer)
-	{
-		m_LayerStack.PushOverlay(layer);
-		layer->OnAttach();
 	}
 }

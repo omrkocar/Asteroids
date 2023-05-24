@@ -4,10 +4,6 @@
 #include <Saz/Core/WindowBase.h>
 #include <glm/glm.hpp>
 
-namespace ecs
-{
-	class CameraSystem;
-}
 
 namespace Saz
 {
@@ -22,15 +18,12 @@ namespace ecs
 	{
 	public:
 		
-		RenderSystem(Saz::WindowBase& window, CameraSystem& cameraSystem);
+		RenderSystem();
 		~RenderSystem();
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 		void RenderScene();
 		void RenderRuntime();
-	private:
-		Saz::WindowBase& m_Window;
-		CameraSystem& m_CameraSystem;
 	};
 }
