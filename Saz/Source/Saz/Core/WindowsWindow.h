@@ -31,9 +31,15 @@ namespace Saz
 	private:
 		void Initialize();
 
+		void CreateInstance();
+		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+		void SetupDebugMessenger();
 	private:
 		GLFWwindow* m_Window;
 		VkInstance m_VkInstance;
+		VkDebugUtilsMessengerEXT m_DebugMessenger;
+
+		const DynamicArray<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 	};
 
 }
