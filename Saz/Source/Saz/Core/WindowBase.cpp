@@ -1,17 +1,14 @@
 #include "SazPCH.h"
 #include "WindowBase.h"
-
-#ifdef SAZ_PLATFORM_WINDOWS
-#include "Saz/Platform/Windows/WindowsWindow.h"
-#endif
-
+#include "WindowsWindow.h"
 
 namespace Saz
 {
-	Scope<Saz::WindowBase> WindowBase::Create(const WindowProps& props)
+	Saz::WindowBase* WindowBase::Create(const WindowProps& props)
 	{
 #ifdef SAZ_PLATFORM_WINDOWS
-		return CreateScope<WindowsWindow>(props);
+		
+		return new WindowsWindow(props);
 #else
 		SAZ_CORE_ASSERT(false, "Unknown platform!");
 		return nullptr;

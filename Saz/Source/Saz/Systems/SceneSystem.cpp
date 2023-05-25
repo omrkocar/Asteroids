@@ -2,10 +2,7 @@
 #include "SceneSystem.h"
 
 #include "Saz/Components/SceneComponent.h"
-#include "Saz/Components/CameraComponent.h"
 #include "Saz/Core/Application.h"
-#include "Saz/Rendering/Renderer.h"
-#include "Saz/SceneSerializer.h"
 
 namespace ecs
 {	
@@ -33,11 +30,10 @@ namespace ecs
 
 	void SceneSystem::Destroy()
 	{
-		Saz::SceneSerializer serializer(*m_World);
 		auto& sceneComp = m_World->GetSingleComponent<component::LoadedSceneComponent>();
 		if (sceneComp.Path != "")
 		{
-			serializer.SerializeLastOpenScene(strLastOpenScene, sceneComp.Path);
+			/*serializer.SerializeLastOpenScene(strLastOpenScene, sceneComp.Path);*/
 		}
 	}
 
@@ -89,16 +85,12 @@ namespace ecs
 		}
 		DestroySceneEntities();
 
-		Saz::SceneSerializer serializer(*m_World);
-		serializer.Deserialize(scenePath);
 		
 		UpdateWindowName(scenePath);
 	}
 
 	void SceneSystem::SaveScene(const String& scenePath)
 	{
-		Saz::SceneSerializer serializer(*m_World);
-		serializer.Serialize(scenePath);
 
 		UpdateWindowName(scenePath);
 	}
@@ -134,9 +126,6 @@ namespace ecs
 
 		if (sceneStateRequest.SceneState == SceneState::Play)
 		{
-			Saz::SceneSerializer serializer(*m_World);
-			serializer.Serialize("EditorScene.saz");
-
 			m_Scene->SceneState = SceneState::Play;
 		}
 		else if (sceneStateRequest.SceneState == SceneState::Editor)
@@ -147,8 +136,6 @@ namespace ecs
 				m_World->DestroyEntity(sceneEntity);
 			}
 
-			Saz::SceneSerializer serializer(*m_World);
-			serializer.Deserialize("EditorScene.saz");
 			m_Scene->SceneState = SceneState::Editor;
 		}
 		else if (sceneStateRequest.SceneState == SceneState::ForceStop)

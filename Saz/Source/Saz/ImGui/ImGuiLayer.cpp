@@ -24,8 +24,6 @@ namespace Saz
 
 	void ImGuiLayer::OnAttach()
 	{
-		SAZ_PROFILE_FUNCTION();
-
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		SetupImGuiStyle();
@@ -54,8 +52,6 @@ namespace Saz
 
 	void ImGuiLayer::OnDetach()
 	{
-		SAZ_PROFILE_FUNCTION();
-
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -63,8 +59,6 @@ namespace Saz
 
 	void ImGuiLayer::Begin()
 	{
-		SAZ_PROFILE_FUNCTION();
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -74,8 +68,6 @@ namespace Saz
 
 	void ImGuiLayer::End()
 	{
-		SAZ_PROFILE_FUNCTION();
-
 		// Docking
 		ImGui::End();
 
