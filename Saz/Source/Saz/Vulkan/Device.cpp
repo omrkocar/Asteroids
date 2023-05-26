@@ -81,6 +81,7 @@ namespace vulkan
 	{
 		CreateInstance();
 		SetupDebugMessenger();
+		PickPhysicalDevice();
 	}
 
 	Device::~Device()
@@ -148,4 +149,60 @@ namespace vulkan
 		bool success = CreateDebugUtilsMessengerEXT(m_VkInstance, &createInfo, nullptr, &m_DebugMessenger) == VK_SUCCESS;
 		SAZ_CORE_ASSERT(success, "failed to set up debug messenger!");
 	}
+
+	void Device::PickPhysicalDevice()
+	{
+		uint32_t deviceCount = 0;
+		vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, nullptr);
+
+		if (deviceCount == 0)
+			SAZ_CORE_ASSERT(false, "No device found with Vulkan support!");
+
+		DynamicArray<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(m_VkInstance, &deviceCount, devices.data());
+
+		for (const auto& device : devices)
+		{
+			if (IsDeviceSuitable(device))
+			{
+				m_PhysicalDevice = device;
+				break;
+			}
+		}
+
+		if (m_PhysicalDevice == VK_NULL_HANDLE)
+			SAZ_CORE_ASSERT(false, "Failed to find a suitable GPU!");
+	}
+
+	bool Device::IsDeviceSuitable(VkPhysicalDevice device)
+	{
+		auto indices = FindQueueFamilies(device);
+		return indices.IsComplete();
+	}
+
+	QueueFamilyIndices Device::FindQueueFamilies(VkPhysicalDevice device)
+	{
+		QueueFamilyIndices indices;
+
+		uint32_t queueFamilyCount;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		DynamicArray<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies)
+		{
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+				indices.graphicsFamily = i;
+
+			if (indices.IsComplete())
+				break;
+
+			i++;
+		}
+
+		return indices;
+	}
+
 }
