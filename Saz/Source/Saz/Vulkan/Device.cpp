@@ -1,6 +1,8 @@
 #include "SazPCH.h"
 #include "Device.h"
 
+#include "Saz/Core/WindowsWindow.h"
+
 #include <GLFW/glfw3.h>
 
 namespace
@@ -77,10 +79,12 @@ namespace
 
 namespace vulkan
 {
-	Device::Device()
+	Device::Device(Saz::WindowsWindow& window)
+		: m_Window(window)
 	{
 		CreateInstance();
 		SetupDebugMessenger();
+		CreateSurface();
 		PickPhysicalDevice();
 		CreateLogicalDevice();
 	}
@@ -89,6 +93,8 @@ namespace vulkan
 	{
 		if (enableValidationLayers)
 			DestroyDebugUtilsMessengerEXT(m_VkInstance, m_DebugMessenger, nullptr);
+
+		vkDestroySurfaceKHR(m_VkInstance, m_Surface, nullptr);
 		vkDestroyInstance(m_VkInstance, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
 	}
@@ -179,6 +185,7 @@ namespace vulkan
 	bool Device::IsDeviceSuitable(VkPhysicalDevice device)
 	{
 		auto indices = FindQueueFamilies(device);
+
 		return indices.IsComplete();
 	}
 
@@ -193,8 +200,15 @@ namespace vulkan
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
 		int i = 0;
+		VkBool32 presentSupport = false;
+
 		for (const auto& queueFamily : queueFamilies)
 		{
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
+
+			if (presentSupport)
+				indices.presentFamily = i;
+
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 				indices.graphicsFamily = i;
 
@@ -211,12 +225,25 @@ namespace vulkan
 	{
 		QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
+		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
+		Set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+
+		float queuePriority = 1.0f;
+		for (uint32_t queueFamily : uniqueQueueFamilies)
+		{
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
+
 		VkDeviceQueueCreateInfo queueCreateInfo{};
 		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
 		queueCreateInfo.queueCount = 1;
 
-		float queuePriority = 1.0f;
 		queueCreateInfo.pQueuePriorities = &queuePriority;
 
 		VkPhysicalDeviceFeatures deviceFeatures = {};
@@ -226,11 +253,19 @@ namespace vulkan
 		createInfo.pQueueCreateInfos = &queueCreateInfo;
 		createInfo.queueCreateInfoCount = 1;
 		createInfo.pEnabledFeatures = &deviceFeatures;
+		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
 			SAZ_CORE_ASSERT(false, "Failed to create logical device!");
 
 		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
+		vkGetDeviceQueue(m_Device, indices.presentFamily.value(), 0, &m_PresentQueue);
+	}
+
+	void Device::CreateSurface()
+	{
+		m_Window.CreateWindowSurface(m_VkInstance, &m_Surface);
 	}
 
 }
