@@ -6,7 +6,7 @@
 /* Debug Logging into the Log window.
 *  Formatting Specifiers:
 *  %s = String,		%f = float,	  %0.2f = float with 2 decimals		%d = int
-*  Example: LOG(WARNING, "PlayerPosition: vec2(%0.2f, %0.2f)", playerPos.x, playerPos.y);
+*  Example: LOG(WARNING, "PlayerPosition: Vector2(%0.2f, %0.2f)", playerPos.x, playerPos.y);
 *  Also see the Macros at the bottom
 */
 

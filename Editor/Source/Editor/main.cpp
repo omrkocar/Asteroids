@@ -2,6 +2,8 @@
 
 #include "Application.h"
 
+#include <Saz/Debug/Instrumentor.h>
+
 int main(int agrc, char* argv[])
 {
 	SAZ_PROFILE_BEGIN_SESSION("Startup", "SazProfile-Startup.json");

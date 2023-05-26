@@ -20,12 +20,12 @@ constexpr Matrix::Matrix(
 {
 }
 
-constexpr Matrix::Matrix(const vec4& v0, const vec4& v1, const vec4& v2, const vec4& v3) noexcept
+constexpr Matrix::Matrix(const Vector4& v0, const Vector4& v1, const Vector4& v2, const Vector4& v3) noexcept
 	: m_Data{ v0.x, v0.y, v0.z, v0.w, v1.x, v1.y, v1.z, v1.w, v2.x, v2.y, v2.z, v2.w, v3.x, v3.y, v3.z, v3.w }
 {
 }
 
-inline Matrix::Matrix(const vec3& translate, const Quaternion& rotate, const float scale) noexcept
+inline Matrix::Matrix(const Vector3& translate, const Quaternion& rotate, const float scale) noexcept
 	: m_Data()
 {
 	*this = FromRotate(rotate);
@@ -39,7 +39,7 @@ inline Matrix::Matrix(const vec3& translate, const Quaternion& rotate, const flo
 	m_Data[3][2] = translate.z;
 }
 
-inline Matrix::Matrix(const vec3& translate, const Quaternion& rotate, const vec3& scale) noexcept
+inline Matrix::Matrix(const Vector3& translate, const Quaternion& rotate, const Vector3& scale) noexcept
 	: m_Data()
 {
 	*this = FromRotate(rotate);
@@ -453,9 +453,9 @@ inline Matrix Matrix::FromScale(const float value)
 		0.f, 0.f, 0.f, 1.f };
 }
 
-inline vec2 operator*(const vec2& lhs, const Matrix& rhs)
+inline Vector2 operator*(const Vector2& lhs, const Matrix& rhs)
 {
-	return vec2(
+	return Vector2(
 		rhs.m_Data[0][0] * lhs.x + rhs.m_Data[1][0] * lhs.y + rhs.m_Data[3][0],
 		rhs.m_Data[0][1] * lhs.x + rhs.m_Data[1][1] * lhs.y + rhs.m_Data[3][1]);
 }

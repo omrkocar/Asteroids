@@ -11,24 +11,24 @@
 
 #include "Vector.h"
 
-inline Quaternion Quaternion::FromRotator(const vec3& value) noexcept
+inline Quaternion Quaternion::FromRotator(const Vector3& value) noexcept
 {
 	Quaternion quaternion = Quaternion::Identity;
-	quaternion = quaternion * Quaternion::FromAxisAngle(vec3(1.0f, 0.0f, 0.0f), value.x);
-	quaternion = Quaternion::FromAxisAngle(vec3(0.0f, 1.0f, 0.0f), value.y) * quaternion;
-	quaternion = Quaternion::FromAxisAngle(vec3(0.0f, 0.0f, 1.0f), value.z) * quaternion;
+	quaternion = quaternion * Quaternion::FromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), value.x);
+	quaternion = Quaternion::FromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), value.y) * quaternion;
+	quaternion = Quaternion::FromAxisAngle(Vector3(0.0f, 0.0f, 1.0f), value.z) * quaternion;
 	return quaternion;
 }
 
-inline Quaternion Quaternion::FromAxisAngle(const vec3& axis, const float degrees) noexcept
+inline Quaternion Quaternion::FromAxisAngle(const Vector3& axis, const float degrees) noexcept
 {
 	const float radians = Math::ToRadians(degrees) * 0.5f;
 	return Quaternion(axis * sinf(radians), cosf(radians));
 }
 
-inline vec3 operator*(const vec3& vec, const Quaternion& quat) noexcept
+inline Vector3 operator*(const Vector3& vec, const Quaternion& quat) noexcept
 {
-	const vec3 quatv(quat.x, quat.y, quat.z);
+	const Vector3 quatv(quat.x, quat.y, quat.z);
 	return quatv * (2.0f * quatv.Dot(vec))
 		+ vec * (quat.w * quat.w - quatv.Dot(quatv))
 		+ quatv.Cross(vec) * (2.0f * quat.w);

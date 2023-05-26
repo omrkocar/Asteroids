@@ -1,6 +1,8 @@
 #pragma once
 
-#include <Core/Vector.h>
+#include <Core/String.h>
+#include <Core/DynamicArray.h>
+#include <Core/FilePath.h>
 
 namespace Saz::file
 {

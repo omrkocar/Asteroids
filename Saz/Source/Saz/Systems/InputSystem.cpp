@@ -34,7 +34,7 @@ namespace ecs
 		m_KeyboardPrevious = std::move(m_KeyboardCurrent);
 		m_MousePrevious = std::move(m_MouseCurrent);
 
-		vec2 mouseDelta, mousePos;
+		Vector2 mouseDelta, mousePos;
 		m_Window.GatherKeyboard(m_KeyboardCurrent);
 		m_Window.GatherMouse(m_MouseCurrent, mouseDelta, mousePos);
 

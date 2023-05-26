@@ -1,6 +1,8 @@
 #include "SazPCH.h"
 #include "FileHelpers.h"
 
+#include <fstream>
+
 namespace Saz::file
 {
 	String LoadCompleteFile(const char* filename)
