@@ -15,14 +15,11 @@ namespace Saz
 
 	struct WindowProps
 	{
-		String Title;
-		uint32_t Width;
-		uint32_t Height;
+		StringView Title;
+		Vector2Int Size;
 
-		WindowProps(const String& title = "Saz Engine",
-					uint32_t width = 1920,
-					uint32_t height = 1080)
-			: Title(title), Width(width), Height(height)
+		WindowProps(const String& title = "Saz Engine", Vector2Int size = Vector2Int(1920, 1080))
+			: Title(title), Size(size)
 		{}
 	};
 
@@ -40,11 +37,7 @@ namespace Saz
 
 		virtual void OnUpdate(const Saz::GameTime& gameTime) = 0;
 		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
-
-		virtual const String& GetTitle() const = 0;
-		virtual void SetTitle(const String& title) = 0;
-		
+		virtual bool IsVSync() const = 0;		
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
@@ -54,7 +47,7 @@ namespace Saz
 		virtual void Shutdown() = 0;
 
 		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
-		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const = 0;
+		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
 

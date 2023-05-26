@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <string>
 #include <thread>
+#include <sstream>
 
 namespace Saz {
 

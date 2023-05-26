@@ -1,6 +1,7 @@
 #include "SazPCH.h"
 #include "Application.h"
 
+#include "Saz/Core/GameTime.h"
 #include "Saz/Vulkan/Device.h"
 
 #include <GLFW/glfw3.h>

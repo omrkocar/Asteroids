@@ -23,7 +23,7 @@ namespace Saz
 		m11 = m22 = m33 = m44 = 1;
 	}
 
-	void Matrix::SetAxesView(const vec3& right, const vec3& up, const vec3& at, const vec3& pos)
+	void Matrix::SetAxesView(const Vector3& right, const Vector3& up, const Vector3& at, const Vector3& pos)
 	{
 		m11 = right.x; m21 = right.y; m31 = right.z; m41 = pos.x;
 		m12 = up.x;    m22 = up.y;    m32 = up.z;    m42 = pos.y;
@@ -31,7 +31,7 @@ namespace Saz
 		m14 = 0;       m24 = 0;       m34 = 0;       m44 = 1;
 	}
 
-	void Matrix::SetAxesWorld(const vec3& right, const vec3& up, const vec3& at, const vec3& pos)
+	void Matrix::SetAxesWorld(const Vector3& right, const Vector3& up, const Vector3& at, const Vector3& pos)
 	{
 		m11 = right.x; m21 = up.x; m31 = at.x; m41 = pos.x;
 		m12 = right.y; m22 = up.y; m32 = at.y; m42 = pos.y;
@@ -39,7 +39,7 @@ namespace Saz
 		m14 = 0;       m24 = 0;    m34 = 0;    m44 = 1;
 	}
 
-	void Matrix::SetTranslation(vec3 pos)
+	void Matrix::SetTranslation(Vector3 pos)
 	{
 		m41 = pos.x;
 		m42 = pos.y;
@@ -69,7 +69,7 @@ namespace Saz
 		m44 = 1;
 	}
 
-	void Matrix::CreateScale(vec3 scale)
+	void Matrix::CreateScale(Vector3 scale)
 	{
 		m12 = m13 = m14 = m21 = m23 = m24 = m31 = m32 = m34 = m41 = m42 = m43 = 0;
 		m11 = scale.x;
@@ -78,7 +78,7 @@ namespace Saz
 		m44 = 1;
 	}
 
-	void Matrix::CreateRotation(vec3 eulerdegrees)
+	void Matrix::CreateRotation(Vector3 eulerdegrees)
 	{
 		SetIdentity();
 		Rotate(eulerdegrees.z, 0, 0, 1); // roll
@@ -95,7 +95,7 @@ namespace Saz
 		m43 = z;
 	}
 
-	void Matrix::CreateTranslation(vec3 pos)
+	void Matrix::CreateTranslation(Vector3 pos)
 	{
 		m12 = m13 = m14 = m21 = m23 = m24 = m31 = m32 = m34 = 0;
 		m11 = m22 = m33 = m44 = 1;
@@ -104,7 +104,7 @@ namespace Saz
 		m43 = pos.z;
 	}
 
-	void Matrix::CreateSRT(float scale, vec3 rot, vec3 pos)
+	void Matrix::CreateSRT(float scale, Vector3 rot, Vector3 pos)
 	{
 		SetIdentity();
 		Scale(scale);
@@ -114,7 +114,7 @@ namespace Saz
 		Translate(pos.x, pos.y, pos.z);
 	}
 
-	void Matrix::CreateSRT(vec3 scale, vec3 rot, vec3 pos)
+	void Matrix::CreateSRT(Vector3 scale, Vector3 rot, Vector3 pos)
 	{
 		CreateScale(scale.x, scale.y, scale.z);
 		Rotate(rot.z, 0, 0, 1); // roll
@@ -123,7 +123,7 @@ namespace Saz
 		Translate(pos.x, pos.y, pos.z);
 	}
 
-	void Matrix::CreateSRT(vec3 scale, Quaternion rot, vec3 pos)
+	void Matrix::CreateSRT(Vector3 scale, Quaternion rot, Vector3 pos)
 	{
 		SetIdentity();
 		Scale(scale.x, scale.y, scale.z);
@@ -131,7 +131,7 @@ namespace Saz
 		Translate(pos.x, pos.y, pos.z);
 	}
 
-	Matrix::Matrix(const vec3& translate, const Quaternion& rotate, const float scale) noexcept
+	Matrix::Matrix(const Vector3& translate, const Quaternion& rotate, const float scale) noexcept
 	{
 		CreateSRT(scale, rotate, translate);
 	}
@@ -150,7 +150,7 @@ namespace Saz
 		m13 *= sz; m32 *= sz; m33 *= sz; m43 *= sz;
 	}
 
-	void Matrix::Scale(vec3 scale)
+	void Matrix::Scale(Vector3 scale)
 	{
 		m11 *= scale.x; m21 *= scale.x; m31 *= scale.x; m41 *= scale.x;
 		m12 *= scale.y; m22 *= scale.y; m32 *= scale.y; m42 *= scale.y;
@@ -237,7 +237,7 @@ namespace Saz
 	}
 
 
-	void Matrix::TranslatePreRotScale(vec3 translate)
+	void Matrix::TranslatePreRotScale(Vector3 translate)
 	{
 		m41 += m11 * translate.x + m21 * translate.y + m31 * translate.z;
 		m42 += m12 * translate.x + m22 * translate.y + m32 * translate.z;
@@ -253,7 +253,7 @@ namespace Saz
 		m44 += m14 * tx + m24 * ty + m34 * tz;
 	}
 
-	void Matrix::Translate(vec3 pos)
+	void Matrix::Translate(Vector3 pos)
 	{
 		m41 += pos.x;
 		m42 += pos.y;
@@ -342,31 +342,31 @@ namespace Saz
 		m44 = 1;
 	}
 
-	void Matrix::CreateLookAtView(const vec3& eye, const vec3& up, const vec3& at)
+	void Matrix::CreateLookAtView(const Vector3& eye, const Vector3& up, const Vector3& at)
 	{
 #if MYFW_RIGHTHANDED
-		vec3 zaxis = (eye - at).Normalize();
+		Vector3 zaxis = (eye - at).Normalize();
 #else
-		vec3 zaxis = (at - eye).Normalize();
+		Vector3 zaxis = (at - eye).Normalize();
 #endif
-		vec3 xaxis = (up.Cross(zaxis)).Normalize();
-		vec3 yaxis = zaxis.Cross(xaxis);
+		Vector3 xaxis = (up.Cross(zaxis)).Normalize();
+		Vector3 yaxis = zaxis.Cross(xaxis);
 
-		vec3 pos = vec3(-xaxis.Dot(eye), -yaxis.Dot(eye), -zaxis.Dot(eye));
+		Vector3 pos = Vector3(-xaxis.Dot(eye), -yaxis.Dot(eye), -zaxis.Dot(eye));
 
 		SetAxesView(xaxis, yaxis, zaxis, pos);
 	}
 
-	void Matrix::CreateLookAtWorld(const vec3& objpos, const vec3& up, const vec3& at)
+	void Matrix::CreateLookAtWorld(const Vector3& objpos, const Vector3& up, const Vector3& at)
 	{
-		vec3 zaxis = (at - objpos).Normalize();
-		vec3 xaxis = (up.Cross(zaxis)).Normalize();
-		vec3 yaxis = zaxis.Cross(xaxis);
+		Vector3 zaxis = (at - objpos).Normalize();
+		Vector3 xaxis = (up.Cross(zaxis)).Normalize();
+		Vector3 yaxis = zaxis.Cross(xaxis);
 
 		SetAxesWorld(xaxis, yaxis, zaxis, objpos);
 	}
 
-	vec3 Matrix::GetEulerAngles()
+	Vector3 Matrix::GetEulerAngles()
 	{
 		// from http://www.geometrictools.com/Documentation/EulerAngles.pdf and adapted to fit
 
@@ -377,7 +377,7 @@ namespace Saz
 		//        float x = asin( m32 );
 		//        float y = atan2( -m31, m33 );
 		//        float z = atan2( -m12, m22 );
-		//        return vec3( x, y, z );
+		//        return Vector3( x, y, z );
 		//    }
 		//    else // m32 = -1
 		//    {
@@ -385,7 +385,7 @@ namespace Saz
 		//        float x = pi/2;
 		//        float y = atan2( m21, m11 );
 		//        float z = 0;
-		//        return vec3( x, y, z );
+		//        return Vector3( x, y, z );
 		//    }
 		//}
 		//else // m32 = +1
@@ -394,7 +394,7 @@ namespace Saz
 		//    float x = -pi/2;
 		//    float y = -atan2( m21, m11 );
 		//    float z = 0;
-		//    return vec3( x, y, z );
+		//    return Vector3( x, y, z );
 		//}
 
 		// rearranged from above and using FEQUALEPSILON to give special cases more chance of hitting
@@ -403,46 +403,46 @@ namespace Saz
 			float x = PI / 2;
 			float y = atan2f(m21, m11);
 			float z = 0.0f;
-			return vec3(x, y, z) * 180.0f / PI;
+			return Vector3(x, y, z) * 180.0f / PI;
 		}
 		else if (m32 < -1.0f + EPSILON) // Not a unique solution: thetaZ + thetaY = atan2( -m21, m11 )
 		{
 			float x = -PI / 2;
 			float y = -atan2f(m21, m11);
 			float z = 0.0f;
-			return vec3(x, y, z) * 180.0f / PI;
+			return Vector3(x, y, z) * 180.0f / PI;
 		}
 		else
 		{
 			float x = asinf(m32);
 			float y = atan2f(-m31, m33);
 			float z = atan2f(-m12, m22);
-			return vec3(x, y, z) * 180.0f / PI;
+			return Vector3(x, y, z) * 180.0f / PI;
 		}
 	}
 
-	vec3 Matrix::GetScale()
+	Vector3 Matrix::GetScale()
 	{
-		vec3 scale;
-		scale.x = vec3(m11, m12, m13).Length();
-		scale.y = vec3(m21, m22, m23).Length();
-		scale.z = vec3(m31, m32, m33).Length();
+		Vector3 scale;
+		scale.x = Vector3(m11, m12, m13).Length();
+		scale.y = Vector3(m21, m22, m23).Length();
+		scale.z = Vector3(m31, m32, m33).Length();
 		return scale;
 	}
 
-	vec3 Matrix::GetUp()
+	Vector3 Matrix::GetUp()
 	{
-		return vec3(m21, m22, m23);
+		return Vector3(m21, m22, m23);
 	}
 
-	vec3 Matrix::GetRight()
+	Vector3 Matrix::GetRight()
 	{
-		return vec3(m11, m12, m13);
+		return Vector3(m11, m12, m13);
 	}
 
-	vec3 Matrix::GetAt()
+	Vector3 Matrix::GetAt()
 	{
-		return vec3(m31, m32, m33);
+		return Vector3(m31, m32, m33);
 	}
 }
 

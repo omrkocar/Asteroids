@@ -24,8 +24,8 @@ namespace Saz
 
 	public:
 		Quaternion() {}
-		Quaternion(vec3 nv, float nw) { x = nv.x; y = nv.y; z = nv.z; w = nw; }
-		Quaternion(vec4 nv) { x = nv.x; y = nv.y; z = nv.z; w = nv.w; }
+		Quaternion(Vector3 nv, float nw) { x = nv.x; y = nv.y; z = nv.z; w = nw; }
+		Quaternion(Vector4 nv) { x = nv.x; y = nv.y; z = nv.z; w = nv.w; }
 		Quaternion(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
 
 		inline void Set(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
@@ -39,8 +39,8 @@ namespace Saz
 		inline void Conjugate() { x *= -1; y *= -1; z *= -1; }
 		inline Quaternion GetInverse() { return GetConjugate() * 1.0f / LengthSquared(); }
 		inline void Inverse() { Conjugate(); *this *= 1.0f / LengthSquared(); }
-		static Quaternion FromRotator(const vec3& value) noexcept;
-		static Quaternion FromAxisAngle(const vec3& axis, const float degrees) noexcept;
+		static Quaternion FromRotator(const Vector3& value) noexcept;
+		static Quaternion FromAxisAngle(const Vector3& axis, const float degrees) noexcept;
 
 		inline bool operator ==(const Quaternion& o) const { return Math::fequal(this->x, o.x) && Math::fequal(this->y, o.y) && Math::fequal(this->z, o.z) && Math::fequal(this->w, o.w); }
 		inline bool operator !=(const Quaternion& o) const { return !Math::fequal(this->x, o.x) || !Math::fequal(this->y, o.y) || !Math::fequal(this->z, o.z) || !Math::fequal(this->w, o.w); }
@@ -76,7 +76,7 @@ namespace Saz
 
 	};
 
-	vec3 operator*(const vec3& vec, const Quaternion& quat) noexcept;
+	Vector3 operator*(const Vector3& vec, const Quaternion& quat) noexcept;
 
 	#include <Core/Quaternion.inl>
 }

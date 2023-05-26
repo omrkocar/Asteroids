@@ -3,24 +3,22 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "Saz/Screen.h"
-
 namespace Saz
 {
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 		: WindowBase(props)
 	{
-		Initialize();
+		Initialize(props);
 	}
 
-	void WindowsWindow::Initialize()
+	void WindowsWindow::Initialize(const WindowProps& props)
 	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_Window = glfwCreateWindow(Screen::width, Screen::height, "Saz Engine", nullptr, nullptr);
+		m_Window = glfwCreateWindow(props.Size.x, props.Size.y, "Saz Engine", nullptr, nullptr);
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -51,16 +49,6 @@ namespace Saz
 		return true;
 	}
 
-	const String& WindowsWindow::GetTitle() const
-	{
-		return nullptr;
-	}
-
-	void WindowsWindow::SetTitle(const String& title)
-	{
-
-	}
-
 	uint32_t WindowsWindow::GetWidth() const
 	{
 		return 0;
@@ -86,7 +74,7 @@ namespace Saz
 
 	}
 
-	void WindowsWindow::GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const
+	void WindowsWindow::GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const
 	{
 
 	}

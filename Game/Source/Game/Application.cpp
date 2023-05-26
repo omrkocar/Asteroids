@@ -12,6 +12,7 @@ namespace Game
 
 	Application::~Application()
 	{
+		
 	}
 
 	void Application::Init()
