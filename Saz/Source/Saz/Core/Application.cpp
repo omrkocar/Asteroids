@@ -1,5 +1,8 @@
 #include "SazPCH.h"
 #include "Application.h"
+
+#include "Saz/Core/GameTime.h"
+
 #include <GLFW/glfw3.h>
 
 namespace Saz

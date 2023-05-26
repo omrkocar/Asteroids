@@ -18,8 +18,6 @@ namespace Saz
 		void Destroy() override;
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
-		const String& GetTitle() const override;
-		void SetTitle(const String& title) override;
 		uint32_t GetWidth() const override;
 		uint32_t GetHeight() const override;
 		bool ShouldClose() const override;

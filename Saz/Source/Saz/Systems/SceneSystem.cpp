@@ -107,8 +107,6 @@ namespace ecs
 		}
 		
 		scene.Name = name;
-		auto& window = Saz::Application::Get().GetWindow();
-		window.SetTitle(String("Saz Editor") + " - " + scene.Name);
 	}
 
 	void SceneSystem::DestroySceneEntities()

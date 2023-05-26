@@ -1,6 +1,8 @@
 #include "GamePCH.h"
 #include "Game/Application.h"
 
+#include <Saz/Debug/Instrumentor.h>
+
 int main(int argc, char* argv[])
 {
 	SAZ_PROFILE_BEGIN_SESSION("Startup", "SazProfile-Startup.json");

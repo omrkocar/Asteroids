@@ -49,16 +49,6 @@ namespace Saz
 		return true;
 	}
 
-	const String& WindowsWindow::GetTitle() const
-	{
-		return nullptr;
-	}
-
-	void WindowsWindow::SetTitle(const String& title)
-	{
-
-	}
-
 	uint32_t WindowsWindow::GetWidth() const
 	{
 		return 0;

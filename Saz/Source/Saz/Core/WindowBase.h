@@ -15,7 +15,7 @@ namespace Saz
 
 	struct WindowProps
 	{
-		String Title;
+		StringView Title;
 		Vector2Int Size;
 
 		WindowProps(const String& title = "Saz Engine", Vector2Int size = Vector2Int(1920, 1080))
@@ -37,11 +37,7 @@ namespace Saz
 
 		virtual void OnUpdate(const Saz::GameTime& gameTime) = 0;
 		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
-
-		virtual const String& GetTitle() const = 0;
-		virtual void SetTitle(const String& title) = 0;
-		
+		virtual bool IsVSync() const = 0;		
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
