@@ -12,7 +12,7 @@ namespace Game
 
 	Application::~Application()
 	{
-		Destroy();
+		
 	}
 
 	void Application::Init()
