@@ -82,6 +82,7 @@ namespace vulkan
 		CreateInstance();
 		SetupDebugMessenger();
 		PickPhysicalDevice();
+		CreateLogicalDevice();
 	}
 
 	Device::~Device()
@@ -89,6 +90,7 @@ namespace vulkan
 		if (enableValidationLayers)
 			DestroyDebugUtilsMessengerEXT(m_VkInstance, m_DebugMessenger, nullptr);
 		vkDestroyInstance(m_VkInstance, nullptr);
+		vkDestroyDevice(m_Device, nullptr);
 	}
 
 	void Device::CreateInstance()
@@ -203,6 +205,32 @@ namespace vulkan
 		}
 
 		return indices;
+	}
+
+	void Device::CreateLogicalDevice()
+	{
+		QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
+
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+		queueCreateInfo.queueCount = 1;
+
+		float queuePriority = 1.0f;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		VkPhysicalDeviceFeatures deviceFeatures = {};
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.pQueueCreateInfos = &queueCreateInfo;
+		createInfo.queueCreateInfoCount = 1;
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
+			SAZ_CORE_ASSERT(false, "Failed to create logical device!");
+
+		vkGetDeviceQueue(m_Device, indices.graphicsFamily.value(), 0, &m_GraphicsQueue);
 	}
 
 }

@@ -24,18 +24,22 @@ namespace vulkan
 		void CreateInstance();
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 		void SetupDebugMessenger();
+
 		void PickPhysicalDevice();
 		bool IsDeviceSuitable(VkPhysicalDevice device);
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
+		void CreateLogicalDevice();
+
 	private:
 		// Implicitly destroyed when VkInstance is
 		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+		VkDevice m_Device;
+		VkQueue m_GraphicsQueue;
 		VkInstance m_VkInstance;
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 
 		VkPhysicalDeviceProperties m_DeviceProperties;
-		VkPhysicalDeviceFeatures m_DeviceFeatures;
 
 		const DynamicArray<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 	};
