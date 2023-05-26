@@ -40,9 +40,15 @@ project "Editor"
 		"%{IncludeDir.ImGuizmo}",
 	}
 
+	libdirs
+	{
+		"%{wks.location}/3rdParty/Vulkan/Library/",
+	}
+
 	links 
 	{
 		"Saz",
+		"vulkan-1"
 	}
 
 	filter "system:windows"

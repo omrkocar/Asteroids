@@ -1,6 +1,10 @@
 #pragma once
 
+#include <Core/DynamicArray.h>
+
 #include <Vulkan/vulkan.h>
+
+#include <optional>
 
 namespace vulkan
 {
