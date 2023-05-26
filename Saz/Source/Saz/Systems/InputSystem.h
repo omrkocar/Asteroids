@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
+#include <Saz/Core/Entity.h>
 #include <Saz/Core/KeyCodes.h>
 #include <Saz/Core/MouseCodes.h>
 #include <Core/Set.h>

@@ -81,6 +81,12 @@ namespace Saz
 
 	void* WindowsWindow::GetNativeWindow() const
 	{
-		return nullptr;
+		return m_Window;
 	}
+
+	void WindowsWindow::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
+	{
+		glfwCreateWindowSurface(instance, m_Window, nullptr, surface);
+	}
+
 }

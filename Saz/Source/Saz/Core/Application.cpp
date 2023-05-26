@@ -5,6 +5,7 @@
 #include "Saz/Vulkan/Device.h"
 
 #include <GLFW/glfw3.h>
+#include "Saz/Core/WindowsWindow.h"
 
 namespace Saz
 {
@@ -17,8 +18,11 @@ namespace Saz
 
 		Saz::Log::Init();
 
-		m_Window = WindowBase::Create(WindowProps(name));
-		m_Device = new vulkan::Device();
+		WindowProps props;
+		props.Title = "Saz Engine";
+		props.Size = Vector2Int(1920, 1080);
+		m_Window = new WindowsWindow(props);
+		m_Device = new vulkan::Device(*m_Window);
 	}
 
 	Application::~Application()

@@ -3,6 +3,7 @@
 
 #include "Saz/Components/InputComponent.h"
 #include "Saz/Core/Application.h"
+#include "Saz/Core/WindowsWindow.h"
 
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>

@@ -31,6 +31,7 @@ project "Saz"
 	includedirs {
 		"%{wks.location}/Core/Source",
 		"%{wks.location}/Saz/Source",
+		"%{wks.location}/Saz/Source/Saz",
 		"%{wks.location}/3rdParty/",
 		"%{wks.location}/3rdParty/spdlog/include",
 		"%{wks.location}/3rdParty/Vulkan/Include/",

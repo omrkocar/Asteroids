@@ -13,6 +13,7 @@ namespace vulkan
 namespace Saz
 {
 	class GameTime;
+	class WindowsWindow;
 }
 
 namespace Saz
@@ -27,7 +28,7 @@ namespace Saz
 		void Run();
 
 		inline static Application& Get() { return *s_Instance; }
-		inline WindowBase& GetWindow() { return *m_Window; }
+		inline WindowsWindow& GetWindow() { return *m_Window; }
 		ecs::EntityWorld* GetWorld() { return &m_World; }
 
 		void Close();
@@ -47,7 +48,7 @@ namespace Saz
 		float m_LastFrameTime = 0.0f;
 
 	protected:
-		WindowBase* m_Window = nullptr;
+		WindowsWindow* m_Window = nullptr;
 		vulkan::Device* m_Device = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;

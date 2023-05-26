@@ -2,6 +2,8 @@
 
 #include "Saz/Core/WindowBase.h"
 
+#include <Vulkan/vulkan.h>
+
 struct GLFWwindow;
 
 namespace Saz
@@ -24,6 +26,8 @@ namespace Saz
 		void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const override;
 		void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const override;
 		void* GetNativeWindow() const override;
+
+		void CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 	private:
 		void Initialize(const WindowProps& props);
