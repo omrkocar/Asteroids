@@ -16,13 +16,10 @@ namespace Saz
 	struct WindowProps
 	{
 		String Title;
-		uint32_t Width;
-		uint32_t Height;
+		ivec2 Size;
 
-		WindowProps(const String& title = "Saz Engine",
-					uint32_t width = 1920,
-					uint32_t height = 1080)
-			: Title(title), Width(width), Height(height)
+		WindowProps(const String& title = "Saz Engine", ivec2 size = ivec2(1920, 1080))
+			: Title(title), Size(size)
 		{}
 	};
 

@@ -29,7 +29,7 @@ namespace Saz
 		void* GetNativeWindow() const override;
 
 	private:
-		void Initialize();
+		void Initialize(const WindowProps& props);
 
 	private:
 		GLFWwindow* m_Window;

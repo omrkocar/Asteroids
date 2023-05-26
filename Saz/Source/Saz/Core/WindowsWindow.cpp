@@ -10,41 +10,17 @@ namespace Saz
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 		: WindowBase(props)
 	{
-		Initialize();
+		Initialize(props);
 	}
 
-	void WindowsWindow::Initialize()
+	void WindowsWindow::Initialize(const WindowProps& props)
 	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_Window = glfwCreateWindow(Screen::width, Screen::height, "Saz Engine", nullptr, nullptr);
-
-		VkApplicationInfo appInfo{};
-		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		appInfo.pApplicationName = "Saz Engine";
-		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.pEngineName = "Engine";
-		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.apiVersion = VK_API_VERSION_1_0;
-
-		VkInstanceCreateInfo createInfo{};
-		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		createInfo.pApplicationInfo = &appInfo;
-
-		uint32_t glfwExtensionCount = 0;
-		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-		createInfo.enabledExtensionCount = glfwExtensionCount;
-		createInfo.ppEnabledExtensionNames = glfwExtensions;
-		createInfo.enabledLayerCount = 0;
-
-		if (vkCreateInstance(&createInfo, nullptr, &m_VkInstance) != VK_SUCCESS)
-		{
-			
-		}
+		m_Window = glfwCreateWindow(props.Size.x, props.Size.y, "Saz Engine", nullptr, nullptr);
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -77,7 +53,7 @@ namespace Saz
 
 	const String& WindowsWindow::GetTitle() const
 	{
-		return "";
+		return nullptr;
 	}
 
 	void WindowsWindow::SetTitle(const String& title)
