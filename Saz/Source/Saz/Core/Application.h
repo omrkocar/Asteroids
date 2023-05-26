@@ -4,8 +4,11 @@
 #include <Saz/Core/LayerStack.h>
 #include <Saz/Core/WindowBase.h>
 #include "Saz/ImGui/ImGuiLayer.h"
-#include "Core/String.h"
 
+namespace vulkan
+{
+	class Device;
+}
 
 namespace Saz
 {
@@ -45,6 +48,7 @@ namespace Saz
 
 	protected:
 		WindowBase* m_Window = nullptr;
+		vulkan::Device* m_Device = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 

@@ -1,5 +1,8 @@
 #include "SazPCH.h"
 #include "Application.h"
+
+#include "Saz/Vulkan/Device.h"
+
 #include <GLFW/glfw3.h>
 
 namespace Saz
@@ -14,6 +17,7 @@ namespace Saz
 		Saz::Log::Init();
 
 		m_Window = WindowBase::Create(WindowProps(name));
+		m_Device = new vulkan::Device();
 	}
 
 	Application::~Application()
