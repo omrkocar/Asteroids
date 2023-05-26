@@ -26,7 +26,7 @@ namespace Saz
 
 	public:
 		Matrix() {}
-		//Matrix(const vec3& right, const vec3& up, const vec3& at, const vec3& pos) // view axes(inverse)
+		//Matrix(const Vector3& right, const Vector3& up, const Vector3& at, const Vector3& pos) // view axes(inverse)
 		//    : m11(right.x), m21(right.y), m31(right.z), m41(pos.x),
 		//    , m12(up.x),    m22(up.y),    m32(up.z),    m42(pos.y),
 		//    , m13(at.x),    m23(at.y),    m33(at.z),    m43(pos.z),
@@ -46,48 +46,48 @@ namespace Saz
 		//    , m13(o.m13), m23(o.m23), m33(o.m33), m43(o.m43)
 		//    , m14(o.m14), m24(o.m24), m34(o.m34), m44(o.m44) {}
 
-		Matrix(const vec3& translate, const Quaternion& rotate, const float scale) noexcept;
+		Matrix(const Vector3& translate, const Quaternion& rotate, const float scale) noexcept;
 
 		// The following functions will affect existing values in the matrix.
 		void Scale(float scale);
 		void Scale(float sx, float sy, float sz);
-		void Scale(vec3 scale);
+		void Scale(Vector3 scale);
 		void Rotate(float angle, float x, float y, float z);
 		void Rotate(Quaternion q);
-		void TranslatePreRotScale(vec3 translate);
+		void TranslatePreRotScale(Vector3 translate);
 		void TranslatePreRotScale(float tx, float ty, float tz);
-		void Translate(vec3 pos);
+		void Translate(Vector3 pos);
 		void Translate(float x, float y, float z);
 
 		// All create/set functions will overright values in the matrix.
 		void SetIdentity();
-		void SetAxesView(const vec3& right, const vec3& up, const vec3& at, const vec3& pos);
-		void SetAxesWorld(const vec3& right, const vec3& up, const vec3& at, const vec3& pos);
-		void SetTranslation(vec3 pos);
+		void SetAxesView(const Vector3& right, const Vector3& up, const Vector3& at, const Vector3& pos);
+		void SetAxesWorld(const Vector3& right, const Vector3& up, const Vector3& at, const Vector3& pos);
+		void SetTranslation(Vector3 pos);
 		void SetTranslation(float x, float y, float z);
 		void CreateScale(float scale);
 		void CreateScale(float x, float y, float z);
-		void CreateScale(vec3 scale);
-		void CreateRotation(vec3 eulerdegrees);
+		void CreateScale(Vector3 scale);
+		void CreateRotation(Vector3 eulerdegrees);
 		void CreateTranslation(float x, float y, float z);
-		void CreateTranslation(vec3 pos);
-		void CreateSRT(float scale, vec3 rot, vec3 pos);
-		void CreateSRT(vec3 scale, vec3 rot, vec3 pos);
-		void CreateSRT(vec3 scale, Quaternion rot, vec3 pos);
+		void CreateTranslation(Vector3 pos);
+		void CreateSRT(float scale, Vector3 rot, Vector3 pos);
+		void CreateSRT(Vector3 scale, Vector3 rot, Vector3 pos);
+		void CreateSRT(Vector3 scale, Quaternion rot, Vector3 pos);
 		void CreateFrustum(float left, float right, float bottom, float top, float nearZ, float farZ);
 		void CreatePerspectiveVFoV(float vertfovdegrees, float aspect, float nearZ, float farZ);
 		void CreatePerspectiveHFoV(float horfovdegrees, float aspect, float nearZ, float farZ);
 		void CreateOrtho(float left, float right, float bottom, float top, float nearZ, float farZ);
-		void CreateLookAtView(const vec3& eye, const vec3& up, const vec3& at);
-		void CreateLookAtWorld(const vec3& eye, const vec3& up, const vec3& at);
+		void CreateLookAtView(const Vector3& eye, const Vector3& up, const Vector3& at);
+		void CreateLookAtWorld(const Vector3& eye, const Vector3& up, const Vector3& at);
 
 		// Get values from matrix.
-		vec3 GetTranslation() { return vec3(m41, m42, m43); }
-		vec3 GetEulerAngles();
-		vec3 GetScale();
-		vec3 GetUp();
-		vec3 GetRight();
-		vec3 GetAt();
+		Vector3 GetTranslation() { return Vector3(m41, m42, m43); }
+		Vector3 GetEulerAngles();
+		Vector3 GetScale();
+		Vector3 GetUp();
+		Vector3 GetRight();
+		Vector3 GetAt();
 
 		static const Matrix Identity;
 		static const Matrix Zero;
@@ -116,33 +116,33 @@ namespace Saz
 			return newmat;
 		}
 
-		inline vec2 operator *(const vec2 o) const
+		inline Vector2 operator *(const Vector2 o) const
 		{
-			vec4 result = vec4(m11 * o.x + m21 * o.y + 0 + m41 * 1,
+			Vector4 result = Vector4(m11 * o.x + m21 * o.y + 0 + m41 * 1,
 				m12 * o.x + m22 * o.y + 0 + m42 * 1,
 				m13 * o.x + m23 * o.y + 0 + m43 * 1,
 				m14 * o.x + m24 * o.y + 0 + m44 * 1);
 			if (result.w)
-				return vec2(result.x / result.w, result.y / result.w);
+				return Vector2(result.x / result.w, result.y / result.w);
 			else
-				return vec2(result.x, result.y);
+				return Vector2(result.x, result.y);
 		}
 
-		inline vec3 operator *(const vec3 o) const
+		inline Vector3 operator *(const Vector3 o) const
 		{
-			vec4 result = vec4(m11 * o.x + m21 * o.y + m31 * o.z + m41 * 1,
+			Vector4 result = Vector4(m11 * o.x + m21 * o.y + m31 * o.z + m41 * 1,
 				m12 * o.x + m22 * o.y + m32 * o.z + m42 * 1,
 				m13 * o.x + m23 * o.y + m33 * o.z + m43 * 1,
 				m14 * o.x + m24 * o.y + m34 * o.z + m44 * 1);
 			if (result.w)
-				return vec3(result.x / result.w, result.y / result.w, result.z / result.w);
+				return Vector3(result.x / result.w, result.y / result.w, result.z / result.w);
 			else
-				return vec3(result.x, result.y, result.z);
+				return Vector3(result.x, result.y, result.z);
 		}
 
-		inline vec4 operator *(const vec4 o) const
+		inline Vector4 operator *(const Vector4 o) const
 		{
-			return vec4(m11 * o.x + m21 * o.y + m31 * o.z + m41 * o.w,
+			return Vector4(m11 * o.x + m21 * o.y + m31 * o.z + m41 * o.w,
 				m12 * o.x + m22 * o.y + m32 * o.z + m42 * o.w,
 				m13 * o.x + m23 * o.y + m33 * o.z + m43 * o.w,
 				m14 * o.x + m24 * o.y + m34 * o.z + m44 * o.w);

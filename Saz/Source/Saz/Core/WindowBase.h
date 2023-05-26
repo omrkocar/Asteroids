@@ -16,9 +16,9 @@ namespace Saz
 	struct WindowProps
 	{
 		String Title;
-		ivec2 Size;
+		Vector2Int Size;
 
-		WindowProps(const String& title = "Saz Engine", ivec2 size = ivec2(1920, 1080))
+		WindowProps(const String& title = "Saz Engine", Vector2Int size = Vector2Int(1920, 1080))
 			: Title(title), Size(size)
 		{}
 	};
@@ -51,7 +51,7 @@ namespace Saz
 		virtual void Shutdown() = 0;
 
 		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
-		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const = 0;
+		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
 

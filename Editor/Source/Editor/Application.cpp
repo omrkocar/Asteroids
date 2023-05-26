@@ -16,7 +16,6 @@
 #include <Saz/Components/WindowResizedOneFrameComponent.h>
 #include <Saz/Core/EntityWorld.h>
 #include <Saz/Core/GameTime.h>
-#include <Saz/Screen.h>
 #include <Saz/Systems/InputSystem.h>
 #include <Saz/Systems/RenderSystem.h>
 #include <Saz/Systems/SceneSystem.h>

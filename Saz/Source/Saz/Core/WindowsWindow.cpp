@@ -3,8 +3,6 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "Saz/Screen.h"
-
 namespace Saz
 {
 	WindowsWindow::WindowsWindow(const WindowProps& props)
@@ -86,7 +84,7 @@ namespace Saz
 
 	}
 
-	void WindowsWindow::GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const
+	void WindowsWindow::GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const
 	{
 
 	}

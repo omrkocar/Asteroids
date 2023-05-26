@@ -25,7 +25,7 @@ namespace Saz
 		bool ShouldClose() const override;
 		void Shutdown() override;
 		void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const override;
-		void GatherMouse(Set<Input::MouseCode>& out_Keys, vec2& out_Delta, vec2& out_Position) const override;
+		void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const override;
 		void* GetNativeWindow() const override;
 
 	private:
