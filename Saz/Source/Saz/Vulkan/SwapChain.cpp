@@ -10,15 +10,20 @@ namespace vulkan
 		CreateSwapChain();
 		CreateImageViews();
 		CreateRenderPass();
+		CreateFrameBuffers();
 	}
 
 	SwapChain::~SwapChain()
 	{
-		vkDestroySwapchainKHR(m_Device.GetDevice(), m_SwapChain, nullptr);
-		vkDestroyRenderPass(m_Device.GetDevice(), m_RenderPass, nullptr);
+		auto device = m_Device.GetDevice();
+		vkDestroySwapchainKHR(device, m_SwapChain, nullptr);
+		vkDestroyRenderPass(device, m_RenderPass, nullptr);
 
 		for (auto imageView : m_SwapChainImageViews)
-			vkDestroyImageView(m_Device.GetDevice(), imageView, nullptr);
+			vkDestroyImageView(device, imageView, nullptr);
+
+		for (auto framebuffer : m_SwapChainFramebuffers)
+			vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
 
 	void SwapChain::CreateSwapChain()
@@ -129,6 +134,30 @@ namespace vulkan
 
 		if (vkCreateRenderPass(m_Device.GetDevice(), &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create render pass!");
+		}
+	}
+
+	void SwapChain::CreateFrameBuffers()
+	{
+		m_SwapChainFramebuffers.resize(m_SwapChainImageViews.size());
+
+		for (size_t i = 0; i < m_SwapChainImageViews.size(); i++)
+		{
+			VkImageView attachments[] = {
+				m_SwapChainImageViews[i]
+			};
+
+			VkFramebufferCreateInfo framebufferInfo{};
+			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			framebufferInfo.renderPass = m_RenderPass;
+			framebufferInfo.attachmentCount = 1;
+			framebufferInfo.pAttachments = attachments;
+			framebufferInfo.width = m_Extent.x;
+			framebufferInfo.height = m_Extent.y;
+			framebufferInfo.layers = 1;
+
+			if (vkCreateFramebuffer(m_Device.GetDevice(), &framebufferInfo, nullptr, &m_SwapChainFramebuffers[i]) != VK_SUCCESS)
+				SAZ_CORE_ASSERT(false, "Failed to create frame buffer")
 		}
 	}
 

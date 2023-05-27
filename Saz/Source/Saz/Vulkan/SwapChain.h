@@ -13,10 +13,14 @@ namespace vulkan
 		SwapChain(Device& device, Vector2Int extent);
 		~SwapChain();
 
+
+		VkRenderPass GetRenderPass() { return m_RenderPass; }
+
 	private:
 		void CreateSwapChain();
 		void CreateImageViews();
 		void CreateRenderPass();
+		void CreateFrameBuffers();
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const DynamicArray<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR ChooseSwapPresentMode(const DynamicArray<VkPresentModeKHR>& availablePresentModes);
 		Vector2Int ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
@@ -29,6 +33,7 @@ namespace vulkan
 
 		VkRenderPass m_RenderPass = VK_NULL_HANDLE;
 
+		DynamicArray<VkFramebuffer> m_SwapChainFramebuffers;
 		DynamicArray<VkImage> m_SwapChainImages;
 		DynamicArray<VkImageView> m_SwapChainImageViews;
 	};
