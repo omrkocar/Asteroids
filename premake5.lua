@@ -5,7 +5,7 @@ workspace "Saz"
 	architecture "x64"
 	configurations	{ "Debug", "Release" }
 	platforms		{ "x64" }
-	startproject	"Editor"
+	startproject	"Game"
 	language "C++"
 	cppdialect	"C++17"
 	toolset "v143"
@@ -38,12 +38,19 @@ workspace "Saz"
 		"SAZ_PROFILE=0"
 	}
 
+	vpaths 
+	{ 
+		{ ["Worskspace/*"] = {  
+			"premake5.lua" } }
+	}
+
 	files 
 	{ 
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.h",
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.cpp",
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.inl",
 		"%{wks.location}/%{prj.name}/premake5.*",
+		"%{wks.location}/premake5.lua"
 	}
 
 	filter "system:windows"

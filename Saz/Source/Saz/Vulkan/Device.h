@@ -32,6 +32,8 @@ namespace vulkan
 
 	class Device
 	{
+		friend class Renderer;
+
 	public:
 		Device(Saz::WindowsWindow& window);
 		~Device();
@@ -40,7 +42,7 @@ namespace vulkan
 		SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(m_PhysicalDevice); }
 		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
 		VkSurfaceKHR GetSurface() { return m_Surface; }
-		VkDevice GetDevice() { return m_Device; }
+		VkDevice device() { return m_Device; }
 		VkCommandPool GetCommandPool() { return m_CommandPool; }
 
 	private:

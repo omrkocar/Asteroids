@@ -29,9 +29,12 @@ namespace vulkan
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
 
+		void DrawFrame();
+
 	private:
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+		void CreateSyncObjects();
 
 	private:
 		Saz::WindowsWindow& m_Window;
@@ -39,6 +42,10 @@ namespace vulkan
 
 		std::unique_ptr<vulkan::SwapChain> m_SwapChain = nullptr;
 		std::unique_ptr<vulkan::Pipeline> m_Pipeline = nullptr;
+
+		VkSemaphore m_ImageAvailableSemaphore;
+		VkSemaphore m_RenderFinishedSemaphore;
+		VkFence m_InFlightFence;
 
 		VkCommandBuffer m_CommandBuffer;
 	};

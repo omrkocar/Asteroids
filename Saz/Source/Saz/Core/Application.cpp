@@ -58,6 +58,7 @@ namespace Saz
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		m_Window->OnUpdate(gameTime);
+		m_Renderer->DrawFrame();
 	}
 
 	void Application::Run()
@@ -77,6 +78,8 @@ namespace Saz
 
 			Update(gameTime);
 		}
+
+		vkDeviceWaitIdle(m_Device->device());
 	}
 
 	void Application::Close()

@@ -26,13 +26,13 @@ namespace vulkan
 	Pipeline::Pipeline(Device& device, const PipelineConfig& config)
 		: m_Device(device)
 	{
-		CreateGraphicsPipeline(device.GetDevice(), config);
+		CreateGraphicsPipeline(device.device(), config);
 	}
 
 	Pipeline::~Pipeline()
 	{
-		vkDestroyPipeline(m_Device.GetDevice(), m_GraphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(m_Device.GetDevice(), m_PipelineLayout, nullptr);
+		vkDestroyPipeline(m_Device.device(), m_GraphicsPipeline, nullptr);
+		vkDestroyPipelineLayout(m_Device.device(), m_PipelineLayout, nullptr);
 	}
 
 	void Pipeline::DefaultPipelineConfig(PipelineConfig& config)
