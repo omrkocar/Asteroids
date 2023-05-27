@@ -23,10 +23,10 @@ namespace Saz
 		WindowProps props;
 		props.Title = name;
 		props.Size = Vector2Int(1920, 1080);
-		m_Window = new WindowsWindow(props);
-		m_Device = new vulkan::Device(*m_Window);
-		m_SwapChain = new vulkan::SwapChain(*m_Device, m_Window->GetSize());
-		m_Pipeline = new vulkan::Pipeline(*m_Device);
+		m_Window = std::make_unique<WindowsWindow>(props);
+		m_Device = std::make_unique<vulkan::Device>(*m_Window);
+		m_SwapChain = std::make_unique<vulkan::SwapChain>(*m_Device, m_Window->GetSize());
+		m_Pipeline = std::make_unique<vulkan::Pipeline>(*m_Device);
 	}
 
 	Application::~Application()

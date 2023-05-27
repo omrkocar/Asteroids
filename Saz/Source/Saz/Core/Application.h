@@ -50,10 +50,10 @@ namespace Saz
 		float m_LastFrameTime = 0.0f;
 
 	protected:
-		WindowsWindow* m_Window = nullptr;
-		vulkan::Device* m_Device = nullptr;
-		vulkan::SwapChain* m_SwapChain = nullptr;
-		vulkan::Pipeline* m_Pipeline = nullptr;
+		std::unique_ptr<WindowsWindow> m_Window = nullptr;
+		std::unique_ptr<vulkan::Device> m_Device = nullptr;
+		std::unique_ptr<vulkan::SwapChain> m_SwapChain = nullptr;
+		std::unique_ptr<vulkan::Pipeline> m_Pipeline = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 

@@ -20,5 +20,13 @@ namespace vulkan
 		static DynamicArray<char> ReadFile(const String& filename);
 	private:
 		Device& m_Device;
+
+	private:
+		VkPipelineLayout m_PipelineLayout;
+
+		DynamicArray<VkDynamicState> dynamicStates = {
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR
+		};
 	};
 }

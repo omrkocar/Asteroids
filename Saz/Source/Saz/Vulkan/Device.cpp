@@ -92,12 +92,13 @@ namespace vulkan
 
 	Device::~Device()
 	{
+		vkDestroyDevice(m_Device, nullptr);
+
 		if (enableValidationLayers)
 			DestroyDebugUtilsMessengerEXT(m_VkInstance, m_DebugMessenger, nullptr);
 
 		vkDestroySurfaceKHR(m_VkInstance, m_Surface, nullptr);
 		vkDestroyInstance(m_VkInstance, nullptr);
-		vkDestroyDevice(m_Device, nullptr);
 	}
 
 	void Device::CreateInstance()
