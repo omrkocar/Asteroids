@@ -23,6 +23,7 @@ namespace Saz
 		WindowProps props;
 		props.Title = name;
 		props.Size = Vector2Int(1920, 1080);
+		// TODO OK: Move these into Renderer
 		m_Window = std::make_unique<WindowsWindow>(props);
 		m_Device = std::make_unique<vulkan::Device>(*m_Window);
 		m_SwapChain = std::make_unique<vulkan::SwapChain>(*m_Device, m_Window->GetSize());
