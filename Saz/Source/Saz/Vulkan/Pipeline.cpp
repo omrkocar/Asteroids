@@ -41,14 +41,6 @@ namespace vulkan
 		config.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		config.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
 
-		config.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-		config.viewportInfo.viewportCount = 1;
-		//config.viewportInfo.pViewports = &viewport;
-		config.viewportInfo.pViewports = nullptr;
-		config.viewportInfo.scissorCount = 1;
-		//config.viewportInfo.pScissors = &scissor;
-		config.viewportInfo.pScissors = nullptr;
-
 		config.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		config.rasterizationInfo.depthClampEnable = VK_FALSE;
 		config.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
@@ -122,19 +114,6 @@ namespace vulkan
 		vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
 		vertexInputInfo.vertexAttributeDescriptionCount = 0;
 		vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
-
-		// TODO OK: Move these into Renderer and use SwapChain's extent for width and height
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = (float)1920;
-		viewport.height = (float)1080;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-
-		VkRect2D scissor{};
-		scissor.offset = { 0, 0 };
-		scissor.extent = { 1920, 1080 };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

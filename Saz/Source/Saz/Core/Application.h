@@ -9,6 +9,7 @@ namespace vulkan
 {
 	class Device;
 	class Pipeline;
+	class Renderer;
 	class SwapChain;
 }
 
@@ -52,8 +53,7 @@ namespace Saz
 	protected:
 		std::unique_ptr<WindowsWindow> m_Window = nullptr;
 		std::unique_ptr<vulkan::Device> m_Device = nullptr;
-		std::unique_ptr<vulkan::SwapChain> m_SwapChain = nullptr;
-		std::unique_ptr<vulkan::Pipeline> m_Pipeline = nullptr;
+		std::unique_ptr<vulkan::Renderer> m_Renderer = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 

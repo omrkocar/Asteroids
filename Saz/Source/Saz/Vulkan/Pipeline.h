@@ -30,6 +30,8 @@ namespace vulkan
 
 	class Pipeline
 	{
+		friend class Renderer;
+
 	public:
 		Pipeline(Device& device, const PipelineConfig& config);
 		~Pipeline();

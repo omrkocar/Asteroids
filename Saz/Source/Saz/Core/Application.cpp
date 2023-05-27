@@ -6,6 +6,7 @@
 #include "Saz/Vulkan/Device.h"
 #include "Saz/Vulkan/Pipeline.h"
 #include "Saz/Vulkan/SwapChain.h"
+#include "Saz/Vulkan/Renderer.h"
 
 #include <GLFW/glfw3.h>
 
@@ -26,11 +27,7 @@ namespace Saz
 		// TODO OK: Move these into Renderer
 		m_Window = std::make_unique<WindowsWindow>(props);
 		m_Device = std::make_unique<vulkan::Device>(*m_Window);
-		m_SwapChain = std::make_unique<vulkan::SwapChain>(*m_Device, m_Window->GetSize());
-		vulkan::PipelineConfig pipelineConfig{};
-		vulkan::Pipeline::DefaultPipelineConfig(pipelineConfig);
-		pipelineConfig.renderPass = m_SwapChain->GetRenderPass();
-		m_Pipeline = std::make_unique<vulkan::Pipeline>(*m_Device, pipelineConfig);
+		m_Renderer = std::make_unique<vulkan::Renderer>(*m_Window, *m_Device);
 	}
 
 	Application::~Application()

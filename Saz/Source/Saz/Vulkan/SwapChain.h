@@ -9,12 +9,16 @@ namespace vulkan
 {
 	class SwapChain
 	{
+		friend class Renderer;
+
 	public:
 		SwapChain(Device& device, Vector2Int extent);
 		~SwapChain();
 
 
 		VkRenderPass GetRenderPass() { return m_RenderPass; }
+		VkFramebuffer GetFrameBuffer(int index) { return m_SwapChainFramebuffers[index]; }
+		Vector2Int GetExtent() { return m_Extent; }
 
 	private:
 		void CreateSwapChain();

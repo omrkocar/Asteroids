@@ -41,18 +41,20 @@ namespace vulkan
 		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
 		VkSurfaceKHR GetSurface() { return m_Surface; }
 		VkDevice GetDevice() { return m_Device; }
+		VkCommandPool GetCommandPool() { return m_CommandPool; }
 
 	private:
 		void CreateInstance();
-		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-		void SetupDebugMessenger();
-
-		void PickPhysicalDevice();
-		bool IsDeviceSuitable(VkPhysicalDevice device);
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
-
 		void CreateLogicalDevice();
 		void CreateSurface();
+		void PickPhysicalDevice();
+		void SetupDebugMessenger();
+		void CreateCommandPool();
+
+		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+
+		bool IsDeviceSuitable(VkPhysicalDevice device);
+		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
 		bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 
@@ -60,12 +62,12 @@ namespace vulkan
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const DynamicArray<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR ChooseSwapPresentMode(const DynamicArray<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-		void CreateSwapChain();
 
 	private:
 		// Implicitly destroyed when VkInstance is
 		VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 		VkDevice m_Device;
+		VkCommandPool m_CommandPool;
 		VkQueue m_GraphicsQueue;
 		VkQueue m_PresentQueue;
 		VkInstance m_VkInstance;
