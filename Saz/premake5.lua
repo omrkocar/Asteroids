@@ -23,6 +23,11 @@ project "Saz"
 			"Source/Saz/**.inl" } },
 	}
 
+	files
+	{
+		"%{wks.location}/Data/**",
+	}
+
 	flags
 	{
 		"MultiProcessorCompile"
