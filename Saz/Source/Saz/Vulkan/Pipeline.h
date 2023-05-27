@@ -8,20 +8,42 @@
 
 namespace vulkan
 {
+	struct PipelineConfig
+	{
+		PipelineConfig() = default;
+		PipelineConfig(const PipelineConfig&) = delete;
+		PipelineConfig& operator=(const PipelineConfig&) = delete;
+
+		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+		VkPipelineViewportStateCreateInfo viewportInfo;
+		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+		VkPipelineMultisampleStateCreateInfo multisampleInfo;
+		VkPipelineColorBlendAttachmentState colorBlendAttachment;
+		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+		VkPipelineLayout pipelineLayout = nullptr;
+		DynamicArray<VkDynamicState> dynamicStateEnables;
+		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
+		VkRenderPass renderPass = nullptr;
+		uint32_t subpass = 0;
+	};
+
 	class Pipeline
 	{
 	public:
-		Pipeline(Device& device);
+		Pipeline(Device& device, const PipelineConfig& config);
 		~Pipeline();
 
+		static void DefaultPipelineConfig(PipelineConfig& config);
+
 	private:
-		void CreateGraphicsPipeline();
+		void CreateGraphicsPipeline(VkDevice device, const PipelineConfig& config);
 
 		static DynamicArray<char> ReadFile(const String& filename);
 	private:
 		Device& m_Device;
 
-	private:
+		VkPipeline m_GraphicsPipeline;
 		VkPipelineLayout m_PipelineLayout;
 
 		DynamicArray<VkDynamicState> dynamicStates = {

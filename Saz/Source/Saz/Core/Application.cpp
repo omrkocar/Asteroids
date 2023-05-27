@@ -27,7 +27,10 @@ namespace Saz
 		m_Window = std::make_unique<WindowsWindow>(props);
 		m_Device = std::make_unique<vulkan::Device>(*m_Window);
 		m_SwapChain = std::make_unique<vulkan::SwapChain>(*m_Device, m_Window->GetSize());
-		m_Pipeline = std::make_unique<vulkan::Pipeline>(*m_Device);
+		vulkan::PipelineConfig pipelineConfig{};
+		vulkan::Pipeline::DefaultPipelineConfig(pipelineConfig);
+		pipelineConfig.renderPass = m_SwapChain->GetRenderPass();
+		m_Pipeline = std::make_unique<vulkan::Pipeline>(*m_Device, pipelineConfig);
 	}
 
 	Application::~Application()
