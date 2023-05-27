@@ -19,6 +19,7 @@ namespace Saz
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		m_Window = glfwCreateWindow(props.Size.x, props.Size.y, "Saz Engine", nullptr, nullptr);
+		Properties = props;
 	}
 
 	WindowsWindow::~WindowsWindow()
@@ -47,16 +48,6 @@ namespace Saz
 	bool WindowsWindow::IsVSync() const
 	{
 		return true;
-	}
-
-	uint32_t WindowsWindow::GetWidth() const
-	{
-		return 0;
-	}
-
-	uint32_t WindowsWindow::GetHeight() const
-	{
-		return 0;
 	}
 
 	bool WindowsWindow::ShouldClose() const

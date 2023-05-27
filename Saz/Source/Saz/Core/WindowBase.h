@@ -37,10 +37,9 @@ namespace Saz
 
 		virtual void OnUpdate(const Saz::GameTime& gameTime) = 0;
 		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;		
+		virtual bool IsVSync() const = 0;
 
-		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GetHeight() const = 0;
+		Vector2Int GetSize() const { return Properties.Size; }
 
 		virtual bool ShouldClose() const = 0;
 
@@ -50,6 +49,8 @@ namespace Saz
 		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
+
+		WindowProps Properties;
 
 		static Saz::WindowBase* Create(const WindowProps& props = WindowProps());
 

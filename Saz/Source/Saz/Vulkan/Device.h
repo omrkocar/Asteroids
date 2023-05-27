@@ -24,11 +24,23 @@ namespace vulkan
 		}
 	};
 
+	struct SwapChainSupportDetails {
+		VkSurfaceCapabilitiesKHR capabilities;
+		DynamicArray<VkSurfaceFormatKHR> formats;
+		DynamicArray<VkPresentModeKHR> presentModes;
+	};
+
 	class Device
 	{
 	public:
 		Device(Saz::WindowsWindow& window);
 		~Device();
+
+	public:
+		SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(m_PhysicalDevice); }
+		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
+		VkSurfaceKHR GetSurface() { return m_Surface; }
+		VkDevice GetDevice() { return m_Device; }
 
 	private:
 		void CreateInstance();
@@ -41,6 +53,14 @@ namespace vulkan
 
 		void CreateLogicalDevice();
 		void CreateSurface();
+
+		bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+
+		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const DynamicArray<VkSurfaceFormatKHR>& availableFormats);
+		VkPresentModeKHR ChooseSwapPresentMode(const DynamicArray<VkPresentModeKHR>& availablePresentModes);
+		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+		void CreateSwapChain();
 
 	private:
 		// Implicitly destroyed when VkInstance is
@@ -56,6 +76,7 @@ namespace vulkan
 		VkPhysicalDeviceProperties m_DeviceProperties;
 
 		const DynamicArray<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+		const DynamicArray<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 	private:
 		Saz::WindowsWindow& m_Window;

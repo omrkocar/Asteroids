@@ -19,8 +19,6 @@ namespace Saz
 		void Destroy() override;
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
-		uint32_t GetWidth() const override;
-		uint32_t GetHeight() const override;
 		bool ShouldClose() const override;
 		void Shutdown() override;
 		void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const override;

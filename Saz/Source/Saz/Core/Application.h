@@ -8,6 +8,7 @@
 namespace vulkan
 {
 	class Device;
+	class SwapChain;
 }
 
 namespace Saz
@@ -50,6 +51,7 @@ namespace Saz
 	protected:
 		WindowsWindow* m_Window = nullptr;
 		vulkan::Device* m_Device = nullptr;
+		vulkan::SwapChain* m_SwapChain = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 
