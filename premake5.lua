@@ -38,19 +38,12 @@ workspace "Saz"
 		"SAZ_PROFILE=0"
 	}
 
-	vpaths 
-	{ 
-		{ ["Worskspace/*"] = {  
-			"premake5.lua" } }
-	}
-
 	files 
 	{ 
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.h",
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.cpp",
 		"%{wks.location}/%{prj.name}/Source/%{prj.name}/**.inl",
 		"%{wks.location}/%{prj.name}/premake5.*",
-		"%{wks.location}/premake5.lua"
 	}
 
 	filter "system:windows"

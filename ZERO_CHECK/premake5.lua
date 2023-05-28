@@ -4,3 +4,9 @@ project "ZERO_CHECK"
 	
 	buildcommands { "cd %{wks.location}/Scripts & call Win-GenProjects.bat" }
 	buildoutputs { "unused.txt" }
+
+	vpaths 
+	{ 
+		{ ["Worskspace/*"] = {  
+			"premake5.lua" } }
+	}
