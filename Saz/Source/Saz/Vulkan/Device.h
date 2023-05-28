@@ -33,6 +33,7 @@ namespace vulkan
 	class Device
 	{
 		friend class Renderer;
+		friend class Model;
 
 	public:
 		Device(Saz::WindowsWindow& window);
@@ -40,7 +41,6 @@ namespace vulkan
 
 	public:
 		SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(m_PhysicalDevice); }
-		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(m_PhysicalDevice); }
 		VkSurfaceKHR GetSurface() { return m_Surface; }
 		VkDevice device() { return m_Device; }
@@ -50,6 +50,7 @@ namespace vulkan
 		void CreateInstance();
 		void CreateLogicalDevice();
 		void CreateSurface();
+		void CreateVertexBuffer();
 		void PickPhysicalDevice();
 		void SetupDebugMessenger();
 		void CreateCommandPool();

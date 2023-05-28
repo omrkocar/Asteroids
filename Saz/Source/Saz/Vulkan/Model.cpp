@@ -1,6 +1,8 @@
 #include "SazPCH.h"
 #include "Model.h"
+
 #include "Saz/Vulkan/Device.h"
+#include "Saz/Vulkan/Utils.h"
 
 #include <GLFW/glfw3.h>
 
@@ -21,32 +23,36 @@ namespace vulkan
 
 	void Model::CreateVertexBuffer(const DynamicArray<Vertex>& vertices)
 	{
-		VkBufferCreateInfo bufferInfo{};
-		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		bufferInfo.size = sizeof(vertices[0]) * vertices.size();
-		bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		const VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-		if (vkCreateBuffer(m_Device.device(), &bufferInfo, nullptr, &m_VertexBuffer) != VK_SUCCESS)
-			SAZ_CORE_ASSERT(false, "failed to create vertex buffer!");
-
-		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(m_Device.device(), m_VertexBuffer, &memRequirements);
-		
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = m_Device.FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-		if (vkAllocateMemory(m_Device.device(), &allocInfo, nullptr, &m_VertexBufferMemory) != VK_SUCCESS)
-			SAZ_CORE_ASSERT(false, "failed to allocate vertex buffer memory!");
-
-		vkBindBufferMemory(m_Device.device(), m_VertexBuffer, m_VertexBufferMemory, 0);
+		VkBuffer stagingBuffer;
+		VkDeviceMemory stagingBufferMemory;
+		Utils::CreateBuffer(
+			m_Device.device(),
+			m_Device.m_PhysicalDevice,
+			bufferSize,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			stagingBuffer, 
+			stagingBufferMemory);
 
 		void* data;
-		vkMapMemory(m_Device.device(), m_VertexBufferMemory, 0, bufferInfo.size, 0, &data);
-		memcpy(data, vertices.data(), (size_t)bufferInfo.size);
-		vkUnmapMemory(m_Device.device(), m_VertexBufferMemory);
+		vkMapMemory(m_Device.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
+		memcpy(data, vertices.data(), bufferSize);
+		vkUnmapMemory(m_Device.device(), stagingBufferMemory);
+
+		Utils::CreateBuffer(
+			m_Device.device(),
+			m_Device.m_PhysicalDevice, 
+			bufferSize, 
+			VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+			m_VertexBuffer, 
+			m_VertexBufferMemory);
+
+		Utils::CopyBuffer(m_Device.m_CommandPool, m_Device.device(), m_Device.m_GraphicsQueue, stagingBuffer, m_VertexBuffer, bufferSize);
+		vkDestroyBuffer(m_Device.device(), stagingBuffer, nullptr);
+		vkFreeMemory(m_Device.device(), stagingBufferMemory, nullptr);
 	}
 
 	void Model::Bind(VkCommandBuffer commandBuffer)

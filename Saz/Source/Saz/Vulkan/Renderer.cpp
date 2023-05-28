@@ -59,6 +59,18 @@ namespace vulkan
 		CreateSyncObjects();
 	}
 
+	Renderer::~Renderer()
+	{
+		for (size_t i = 0; i < s_MaxFramesInFlight; i++)
+		{
+			auto device = m_Device.device();
+			vkDestroySemaphore(device, m_ImageAvailableSemaphores[i], nullptr);
+			vkDestroySemaphore(device, m_RenderFinishedSemaphores[i], nullptr);
+			vkDestroyFence(device, m_InFlightFences[i], nullptr);
+		}
+	}
+
+
 	void Renderer::DrawFrame()
 	{
 		auto device = m_Device.device();
@@ -152,18 +164,6 @@ namespace vulkan
 
 		if (vkAllocateCommandBuffers(m_Device.device(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 			SAZ_CORE_ASSERT(false, "Failed to allocate command buffers!");
-	}
-
-	Renderer::~Renderer()
-	{
-		for (size_t i = 0; i < s_MaxFramesInFlight; i++)
-		{
-			auto device = m_Device.device();
-			vkDestroySemaphore(device, m_ImageAvailableSemaphores[i], nullptr);
-			vkDestroySemaphore(device, m_RenderFinishedSemaphores[i], nullptr);
-			vkDestroyFence(device, m_InFlightFences[i], nullptr);
-		}
-
 	}
 
 	void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
