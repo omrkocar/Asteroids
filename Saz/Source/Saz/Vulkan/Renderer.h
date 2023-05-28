@@ -24,6 +24,8 @@ namespace vulkan
 	class Renderer final
 	{
 	public:
+		static constexpr int s_MaxFramesInFlight = 2;
+
 		Renderer(Saz::WindowsWindow& window, Device& device);
 		~Renderer();
 		Renderer(const Renderer&) = delete;
@@ -43,10 +45,12 @@ namespace vulkan
 		std::unique_ptr<vulkan::SwapChain> m_SwapChain = nullptr;
 		std::unique_ptr<vulkan::Pipeline> m_Pipeline = nullptr;
 
-		VkSemaphore m_ImageAvailableSemaphore;
-		VkSemaphore m_RenderFinishedSemaphore;
-		VkFence m_InFlightFence;
+		DynamicArray<VkSemaphore> m_ImageAvailableSemaphores;
+		DynamicArray<VkSemaphore> m_RenderFinishedSemaphores;
+		DynamicArray<VkFence> m_InFlightFences;
 
-		VkCommandBuffer m_CommandBuffer;
+		DynamicArray<VkCommandBuffer> m_CommandBuffers;
+
+		uint32_t m_CurrentFrame = 0;
 	};
 }

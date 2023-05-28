@@ -27,12 +27,12 @@ namespace vulkan
 		viewport.height = (float)1080;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(m_CommandBuffer, 0, 1, &viewport);
+		vkCmdSetViewport(m_CommandBuffers[m_CurrentFrame], 0, 1, &viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
 		scissor.extent = { 1920, 1080 };
-		vkCmdSetScissor(m_CommandBuffer, 0, 1, &scissor);
+		vkCmdSetScissor(m_CommandBuffers[m_CurrentFrame], 0, 1, &scissor);
 
 		VkPipelineViewportStateCreateInfo viewportInfo{};
 		viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -51,32 +51,32 @@ namespace vulkan
 	void Renderer::DrawFrame()
 	{
 		auto device = m_Device.device();
-		vkWaitForFences(device, 1, &m_InFlightFence, VK_TRUE, UINT64_MAX);
+		vkWaitForFences(device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
-		vkResetFences(device, 1, &m_InFlightFence);
+		vkResetFences(device, 1, &m_InFlightFences[m_CurrentFrame]);
 
 		uint32_t imageIndex;
-		vkAcquireNextImageKHR(device, m_SwapChain->m_SwapChain, UINT64_MAX, m_ImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+		vkAcquireNextImageKHR(device, m_SwapChain->m_SwapChain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentFrame], VK_NULL_HANDLE, &imageIndex);
 
-		vkResetCommandBuffer(m_CommandBuffer, 0);
-		RecordCommandBuffer(m_CommandBuffer, imageIndex);
+		vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
+		RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-		VkSemaphore waitSemaphores[] = { m_ImageAvailableSemaphore };
+		VkSemaphore waitSemaphores[] = { m_ImageAvailableSemaphores[m_CurrentFrame] };
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &m_CommandBuffer;
+		submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentFrame];
 
-		VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphore };
+		VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentFrame] };
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (vkQueueSubmit(m_Device.m_GraphicsQueue, 1, &submitInfo, m_InFlightFence) != VK_SUCCESS)
+		if (vkQueueSubmit(m_Device.m_GraphicsQueue, 1, &submitInfo, m_InFlightFences[m_CurrentFrame]) != VK_SUCCESS)
 			SAZ_CORE_ASSERT(false, "Failed to submit draw command buffer!");
 
 		VkPresentInfoKHR presentInfo{};
@@ -91,26 +91,34 @@ namespace vulkan
 		presentInfo.pImageIndices = &imageIndex;
 
 		vkQueuePresentKHR(m_Device.m_PresentQueue, &presentInfo);
+
+		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
 	}
 
 	void Renderer::CreateCommandBuffers()
 	{
+		m_CommandBuffers.resize(s_MaxFramesInFlight);
+
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_Device.GetCommandPool();
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = 1;
+		allocInfo.commandBufferCount = (uint32_t)m_CommandBuffers.size();
 
-		if (vkAllocateCommandBuffers(m_Device.device(), &allocInfo, &m_CommandBuffer) != VK_SUCCESS)
+		if (vkAllocateCommandBuffers(m_Device.device(), &allocInfo, m_CommandBuffers.data()) != VK_SUCCESS)
 			SAZ_CORE_ASSERT(false, "Failed to allocate command buffers!");
 	}
 
 	Renderer::~Renderer()
 	{
-		auto device = m_Device.device();
-		vkDestroySemaphore(device, m_ImageAvailableSemaphore, nullptr);
-		vkDestroySemaphore(device, m_RenderFinishedSemaphore, nullptr);
-		vkDestroyFence(device, m_InFlightFence, nullptr);
+		for (size_t i = 0; i < s_MaxFramesInFlight; i++)
+		{
+			auto device = m_Device.device();
+			vkDestroySemaphore(device, m_ImageAvailableSemaphores[i], nullptr);
+			vkDestroySemaphore(device, m_RenderFinishedSemaphores[i], nullptr);
+			vkDestroyFence(device, m_InFlightFences[i], nullptr);
+		}
+
 	}
 
 	void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
@@ -158,6 +166,11 @@ namespace vulkan
 
 	void Renderer::CreateSyncObjects()
 	{
+		int maxFramesInFlight = s_MaxFramesInFlight;
+		m_ImageAvailableSemaphores.resize(maxFramesInFlight);
+		m_RenderFinishedSemaphores.resize(maxFramesInFlight);
+		m_InFlightFences.resize(maxFramesInFlight);
+
 		VkSemaphoreCreateInfo semaphoreInfo{};
 		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -165,11 +178,14 @@ namespace vulkan
 		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-		auto device = m_Device.device();
-		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphore) != VK_SUCCESS ||
-			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphore) != VK_SUCCESS ||
-			vkCreateFence(device, &fenceInfo, nullptr, &m_InFlightFence) != VK_SUCCESS)
-			SAZ_CORE_ASSERT(false, "failed to create semaphores!");
+		for (int i = 0; i < maxFramesInFlight; i++)
+		{
+			auto device = m_Device.device();
+			if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_ImageAvailableSemaphores[i]) != VK_SUCCESS ||
+				vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_RenderFinishedSemaphores[i]) != VK_SUCCESS ||
+				vkCreateFence(device, &fenceInfo, nullptr, &m_InFlightFences[i]) != VK_SUCCESS)
+				SAZ_CORE_ASSERT(false, "failed to create semaphores!");
+		}
 	}
 
 }
