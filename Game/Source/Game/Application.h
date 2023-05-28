@@ -11,7 +11,7 @@ namespace Game
 		virtual ~Application() override;
 
 		virtual void Init() override;
-		virtual void Destroy() override;
+		virtual void Shutdown() override;
 		virtual void Register() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
 	};

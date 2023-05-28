@@ -43,9 +43,8 @@ namespace Saz
 
 	protected:
 		virtual void Init();
-		virtual void PostInit();
 		virtual void Register();
-		virtual void Destroy();
+		virtual void Shutdown();
 		virtual void Update(const Saz::GameTime& gameTime);
 
 		float m_LastFrameTime = 0.0f;

@@ -28,7 +28,7 @@ Application::Application()
 
 Application::~Application()
 {
-	Destroy();
+	
 }
 
 void Application::Init()
@@ -38,9 +38,9 @@ void Application::Init()
 	m_World.Init();
 }
 
-void Application::Destroy()
+void Application::Shutdown()
 {
-	Saz::Application::Destroy();
+	Saz::Application::Shutdown();
 
 	m_World.Destroy();
 }

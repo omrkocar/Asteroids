@@ -20,9 +20,9 @@ namespace Game
 		Saz::Application::Init();
 	}
 
-	void Application::Destroy()
+	void Application::Shutdown()
 	{
-		Saz::Application::Destroy();
+		Saz::Application::Shutdown();
 	}
 
 	void Application::Register()

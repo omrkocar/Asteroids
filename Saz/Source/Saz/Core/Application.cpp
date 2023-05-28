@@ -32,27 +32,20 @@ namespace Saz
 
 	Application::~Application()
 	{
-		Destroy();
+		
 	}
 
 	void Application::Init()
 	{
 		//Renderer::Init();
 	}
-
-	void Application::PostInit()
-	{
-
-		m_Window->PostInit();
-	}
-
 	void Application::Register()
 	{
 	}
 
-	void Application::Destroy()
+	void Application::Shutdown()
 	{
-		m_Window->Destroy();
+		m_Window->Shutdown();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
@@ -65,7 +58,6 @@ namespace Saz
 	{
 		Register();
 		Init();
-		PostInit();
 
 		Saz::GameTime gameTime;
 
@@ -80,6 +72,7 @@ namespace Saz
 		}
 
 		vkDeviceWaitIdle(m_Device->device());
+		Shutdown();
 	}
 
 	void Application::Close()
