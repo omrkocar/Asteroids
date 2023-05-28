@@ -1,8 +1,10 @@
 #include "SazPCH.h"
 #include "Renderer.h"
+
+#include "Saz/Core/WindowBase.h"
+#include "Saz/Vulkan/Model.h"
 #include "Saz/Vulkan/Pipeline.h"
 #include "Saz/Vulkan/SwapChain.h"
-#include "Saz/Core/WindowBase.h"
 
 #include <GLFW/glfw3.h>
 
@@ -13,6 +15,15 @@ namespace vulkan
 		: m_Window(window)
 		, m_Device(device)
 	{
+		// TODO OK: Remove Model
+		const std::vector<Vertex> vertices = {
+			{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		};
+
+		m_Model = std::make_unique<Model>(m_Device, vertices);
+
 		RecreateSwapChain();
 		CreateCommandBuffers();
 
@@ -190,7 +201,8 @@ namespace vulkan
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline->m_GraphicsPipeline);
 
-		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+		m_Model->Bind(commandBuffer);
+		m_Model->Draw(commandBuffer);
 
 		vkCmdEndRenderPass(commandBuffer);
 

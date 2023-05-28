@@ -5,11 +5,11 @@
 
 #include <Vulkan/vulkan.h>
 
-namespace vulkan { class SwapChain; }
-
 namespace vulkan 
 { 
-	class Pipeline; 
+	class Pipeline;
+	class SwapChain;
+	class Model;
 }
 
 namespace vulkan
@@ -44,6 +44,8 @@ namespace vulkan
 		DynamicArray<VkFence> m_InFlightFences;
 
 		DynamicArray<VkCommandBuffer> m_CommandBuffers;
+
+		std::unique_ptr<Model> m_Model = nullptr;
 
 		uint32_t m_CurrentFrame = 0;
 	};
