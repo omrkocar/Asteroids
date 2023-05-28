@@ -1,9 +1,10 @@
 #include "SazPCH.h"
 #include "Renderer.h"
-#include "Pipeline.h"
-#include "SwapChain.h"
-#include <memory>
+#include "Saz/Vulkan/Pipeline.h"
+#include "Saz/Vulkan/SwapChain.h"
 #include "Saz/Core/WindowBase.h"
+
+#include <GLFW/glfw3.h>
 
 namespace vulkan
 {
@@ -12,9 +13,8 @@ namespace vulkan
 		: m_Window(window)
 		, m_Device(device)
 	{
+		RecreateSwapChain();
 		CreateCommandBuffers();
-
-		m_SwapChain = std::make_unique<vulkan::SwapChain>(m_Device, m_Window.GetSize());
 
 		vulkan::PipelineConfig pipelineConfig{};
 		vulkan::Pipeline::DefaultPipelineConfig(pipelineConfig);
@@ -53,10 +53,25 @@ namespace vulkan
 		auto device = m_Device.device();
 		vkWaitForFences(device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
-		vkResetFences(device, 1, &m_InFlightFences[m_CurrentFrame]);
-
 		uint32_t imageIndex;
-		vkAcquireNextImageKHR(device, m_SwapChain->m_SwapChain, UINT64_MAX, m_ImageAvailableSemaphores[m_CurrentFrame], VK_NULL_HANDLE, &imageIndex);
+		auto result = vkAcquireNextImageKHR(
+			device, 
+			m_SwapChain->m_SwapChain, 
+			UINT64_MAX, 
+			m_ImageAvailableSemaphores[m_CurrentFrame], 
+			VK_NULL_HANDLE, 
+			&imageIndex);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window.HasResized())
+		{
+			RecreateSwapChain();
+			m_Window.SetResized(false);
+			return;
+		}
+
+		SAZ_CORE_ASSERT(result == VK_SUCCESS, "Failed to acquire swap chain image!");
+
+		vkResetFences(device, 1, &m_InFlightFences[m_CurrentFrame]);
 
 		vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
 		RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex);
@@ -93,6 +108,25 @@ namespace vulkan
 		vkQueuePresentKHR(m_Device.m_PresentQueue, &presentInfo);
 
 		m_CurrentFrame = (m_CurrentFrame + 1) % s_MaxFramesInFlight;
+	}
+
+	void Renderer::RecreateSwapChain()
+	{
+		Vector2Int extent = m_Window.GetSize();
+		while (extent.x == 0 || extent.y == 0) {
+			extent = m_Window.GetSize();
+			glfwWaitEvents();
+		}
+
+		vkDeviceWaitIdle(m_Device.device());
+
+		if (m_SwapChain == nullptr)
+			m_SwapChain = std::make_unique<vulkan::SwapChain>(m_Device, m_Window.GetSize());
+		else
+		{
+			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_SwapChain);
+			m_SwapChain = std::make_unique<vulkan::SwapChain>(m_Device, m_Window.GetSize(), oldSwapChain);
+		}
 	}
 
 	void Renderer::CreateCommandBuffers()
@@ -150,7 +184,7 @@ namespace vulkan
 		viewport.height = static_cast<float>(m_SwapChain->m_Extent.y);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		VkRect2D scissor{ {0, 0}, { m_SwapChain->m_Extent.x, m_SwapChain->m_Extent.y } };
+		VkRect2D scissor{ {0, 0}, { static_cast<uint32_t>(m_SwapChain->m_Extent.x), static_cast<uint32_t>(m_SwapChain->m_Extent.y) } };
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 

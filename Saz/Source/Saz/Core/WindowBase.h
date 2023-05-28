@@ -32,25 +32,21 @@ namespace Saz
 		virtual ~WindowBase() {}
 
 		virtual void Init() {}
-		virtual void PostInit() {}
-		virtual void Destroy() {}
+		virtual void Shutdown() {};
 
 		virtual void OnUpdate(const Saz::GameTime& gameTime) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-		Vector2Int GetSize() const { return Properties.Size; }
+		virtual Vector2Int GetSize() const = 0;
 
 		virtual bool ShouldClose() const = 0;
-
-		virtual void Shutdown() = 0;
+		virtual bool HasResized() const = 0;
 
 		virtual void GatherKeyboard(Set<Input::KeyCode>& out_Keys) const = 0;
 		virtual void GatherMouse(Set<Input::MouseCode>& out_Keys, Vector2& out_Delta, Vector2& out_Position) const = 0;
 
 		virtual void* GetNativeWindow() const = 0;
-
-		WindowProps Properties;
 
 		static Saz::WindowBase* Create(const WindowProps& props = WindowProps());
 

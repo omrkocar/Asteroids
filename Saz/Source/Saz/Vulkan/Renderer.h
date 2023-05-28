@@ -1,8 +1,6 @@
 #pragma once
 
-#include <Core/DynamicArray.h>
-
-#include "Saz/Core/WindowsWindow.h"
+#include <Saz/Core/WindowsWindow.h>
 #include <Saz/Vulkan/Device.h>
 
 #include <Vulkan/vulkan.h>
@@ -12,11 +10,6 @@ namespace vulkan { class SwapChain; }
 namespace vulkan 
 { 
 	class Pipeline; 
-}
-
-namespace Saz
-{
-	
 }
 
 namespace vulkan
@@ -34,6 +27,7 @@ namespace vulkan
 		void DrawFrame();
 
 	private:
+		void RecreateSwapChain();
 		void CreateCommandBuffers();
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 		void CreateSyncObjects();

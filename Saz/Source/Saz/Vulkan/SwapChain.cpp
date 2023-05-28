@@ -3,9 +3,16 @@
 
 namespace vulkan
 {
-	SwapChain::SwapChain(Device& device, Vector2Int extent)
+	SwapChain::SwapChain(Device& device, Vector2Int extent, std::shared_ptr<SwapChain> previousSwapChain)
 		: m_Device(device)
 		, m_Extent(extent)
+		, m_OldSwapChain(previousSwapChain)
+	{
+		Init();
+		m_OldSwapChain = nullptr;
+	}
+
+	void SwapChain::Init()
 	{
 		CreateSwapChain();
 		CreateImageViews();
@@ -65,7 +72,7 @@ namespace vulkan
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
+		createInfo.oldSwapchain = m_OldSwapChain != nullptr ? m_OldSwapChain->m_SwapChain : VK_NULL_HANDLE;
 
 		if (vkCreateSwapchainKHR(m_Device.device(), &createInfo, nullptr, &m_SwapChain) != VK_SUCCESS)
 			SAZ_CORE_ASSERT(false, "Failed to create swap chain!");
@@ -142,9 +149,8 @@ namespace vulkan
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		if (vkCreateRenderPass(m_Device.device(), &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create render pass!");
-		}
+		if (vkCreateRenderPass(m_Device.device(), &renderPassInfo, nullptr, &m_RenderPass) != VK_SUCCESS)
+			SAZ_CORE_ASSERT(false, "Failed to create render pass!");
 	}
 
 	void SwapChain::CreateFrameBuffers()

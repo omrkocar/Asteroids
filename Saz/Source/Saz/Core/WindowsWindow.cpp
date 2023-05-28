@@ -8,23 +8,23 @@ namespace Saz
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 		: WindowBase(props)
 	{
-		Initialize(props);
-	}
-
-	void WindowsWindow::Initialize(const WindowProps& props)
-	{
 		glfwInit();
 
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		m_Size = props.Size;
+		m_Name = props.Title;
 
-		m_Window = glfwCreateWindow(props.Size.x, props.Size.y, "Saz Engine", nullptr, nullptr);
-		Properties = props;
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+		m_Window = glfwCreateWindow(props.Size.x, props.Size.y, m_Name.c_str(), nullptr, nullptr);
+		glfwSetWindowUserPointer(m_Window, this);
+		glfwSetFramebufferSizeCallback(m_Window, FrameBufferResizeCallback);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
-
+		glfwDestroyWindow(m_Window);
+		glfwTerminate();
 	}
 
 	void WindowsWindow::OnUpdate(const Saz::GameTime& gameTime)
@@ -32,17 +32,9 @@ namespace Saz
 		glfwPollEvents();
 	}
 
-	void WindowsWindow::Destroy()
-	{
-		WindowBase::Destroy();
-
-		glfwDestroyWindow(m_Window);
-		glfwTerminate();
-	}
-
 	void WindowsWindow::SetVSync(bool enabled)
 	{
-
+		
 	}
 
 	bool WindowsWindow::IsVSync() const
@@ -53,11 +45,6 @@ namespace Saz
 	bool WindowsWindow::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_Window);
-	}
-
-	void WindowsWindow::Shutdown()
-	{
-
 	}
 
 	void WindowsWindow::GatherKeyboard(Set<Input::KeyCode>& out_Keys) const
@@ -75,9 +62,27 @@ namespace Saz
 		return m_Window;
 	}
 
+
+	bool WindowsWindow::HasResized() const
+	{
+		return m_Resized;
+	}
+
+	Vector2Int WindowsWindow::GetSize() const
+	{
+		return m_Size;
+	}
+
 	void WindowsWindow::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* surface)
 	{
 		glfwCreateWindowSurface(instance, m_Window, nullptr, surface);
 	}
 
+	void WindowsWindow::FrameBufferResizeCallback(GLFWwindow* glfwWindow, int width, int height)
+	{
+		auto* window = reinterpret_cast<WindowsWindow*>(glfwGetWindowUserPointer(glfwWindow));
+		window->m_Size.x = static_cast<uint32_t>(width);
+		window->m_Size.y = static_cast<uint32_t>(height);
+		window->m_Resized = true;
+	}
 }
