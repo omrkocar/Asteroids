@@ -1,30 +1,27 @@
 #pragma once
 
-#include "glm/glm.hpp"
+#include <Core/Color.h>
+#include "Saz/Vulkan/Model.h"
 
 namespace Saz
 {
 	class FrameBuffer;
-	class Texture2D;
 }
 
 namespace component
 {
 	struct SpriteComponent
 	{
-		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
-		Saz::Ref<Saz::Texture2D> Texture;
-		float TilingFactor = 1.0f;
+		Color color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		vulkan::Model* model;
 
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
-		SpriteComponent(const glm::vec4& color)
-			: Color(color) {}
 	};
 
 	struct CircleRendererComponent
 	{
-		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		Color Color{ 1.0f, 1.0f, 1.0f, 1.0f };
 		float Thickness = 1.0f;
 		float Fade = 0.005f;
 

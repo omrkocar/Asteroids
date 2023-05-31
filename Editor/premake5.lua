@@ -23,6 +23,7 @@ project "Editor"
 		"%{wks.location}/Core/Source",
 		"%{wks.location}/Saz/Source",
 		"%{wks.location}/Editor/Source",
+		"%{wks.location}/3rdParty/Vulkan/Include/",
 		"%{wks.location}/3rdParty/GLFW/GLFW/include",
 		"%{wks.location}/3rdParty/GLAD/include",
 		"%{wks.location}/3rdParty/spdlog/include",

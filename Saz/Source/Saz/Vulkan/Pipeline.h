@@ -38,6 +38,8 @@ namespace vulkan
 
 		static void DefaultPipelineConfig(PipelineConfig& config);
 
+		void Bind(VkCommandBuffer commandBuffer);
+
 	private:
 		void CreateGraphicsPipeline(VkDevice device, const PipelineConfig& config);
 

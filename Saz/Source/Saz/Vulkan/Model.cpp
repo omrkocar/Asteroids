@@ -5,9 +5,16 @@
 #include "Saz/Vulkan/Utils.h"
 
 #include <GLFW/glfw3.h>
+#include <Core/Matrix.h>
 
 namespace vulkan
 {
+	struct UniformBufferObject {
+		Saz::Matrix model;
+		Saz::Matrix view;
+		Saz::Matrix proj;
+	};
+
 	Model::Model(Device& device, const DynamicArray<Vertex>& vertices, const DynamicArray<uint32_t>& indices)
 		: m_Device(device)
 		, m_VertexCount(static_cast<uint32_t>(vertices.size()))

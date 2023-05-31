@@ -1,29 +1,28 @@
 #pragma once
 
 #include <Saz/Systems/System.h>
-#include <Saz/Core/WindowBase.h>
-#include <glm/glm.hpp>
-
+#include "Saz/Vulkan/Renderer.h"
+#include "Saz/Vulkan/Device.h"
 
 namespace Saz
 {
 	class GameTime;
-	class FrameBuffer;
-
-	class WindowBase;
 }
 namespace ecs 
 {
 	class RenderSystem final : public System
 	{
 	public:
-		
-		RenderSystem();
+		RenderSystem(vulkan::Device& device, vulkan::Renderer& renderer);
 		~RenderSystem();
+
+		virtual void Destroy() override;
 
 		virtual void Init() override;
 		virtual void Update(const Saz::GameTime& gameTime) override;
-		void RenderScene();
-		void RenderRuntime();
+
+	private:
+		vulkan::Renderer& m_Renderer;
+		vulkan::Device& m_Device;
 	};
 }

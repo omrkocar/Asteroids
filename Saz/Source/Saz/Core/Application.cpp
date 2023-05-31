@@ -3,6 +3,7 @@
 
 #include "Saz/Core/GameTime.h"
 #include "Saz/Core/WindowsWindow.h"
+#include "Saz/Systems/RenderSystem.h"
 #include "Saz/Vulkan/Device.h"
 #include "Saz/Vulkan/Pipeline.h"
 #include "Saz/Vulkan/SwapChain.h"
@@ -26,32 +27,37 @@ namespace Saz
 		props.Size = Vector2Int(1920, 1080);
 		// TODO OK: Move these into Renderer
 		m_Window = std::make_unique<WindowsWindow>(props);
-		m_Device = std::make_unique<vulkan::Device>(*m_Window);
-		m_Renderer = std::make_unique<vulkan::Renderer>(*m_Window, *m_Device);
+		m_Device = new vulkan::Device(*m_Window);
+		m_Renderer = new vulkan::Renderer(*m_Window, *m_Device);
 	}
 
 	Application::~Application()
 	{
-		
+		delete m_Renderer;
+		delete m_Device;
 	}
 
 	void Application::Init()
 	{
 		//Renderer::Init();
+		m_World.Init();
 	}
+
 	void Application::Register()
 	{
+		m_World.RegisterSystem<ecs::RenderSystem>(*m_Device, *m_Renderer);
 	}
 
 	void Application::Shutdown()
 	{
 		m_Window->Shutdown();
+		m_World.Destroy();
 	}
 
 	void Application::Update(const Saz::GameTime& gameTime)
 	{
 		m_Window->OnUpdate(gameTime);
-		m_Renderer->DrawFrame();
+		m_World.Update(gameTime);
 	}
 
 	void Application::Run()

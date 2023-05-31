@@ -159,6 +159,7 @@ public:
 	Vector4(Vector3 vec, float nw) { x = vec.x; y = vec.y; z = vec.z; w = nw; }
 	//virtual ~Vector4() {}
 
+	static const Vector4 Zero;
 	inline Vector3 XYZ() { return Vector3(x, y, z); }
 
 	inline void Set(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
@@ -219,6 +220,8 @@ inline Vector4 operator *(float scalar, const Vector4& vec) { return Vector4(sca
 inline Vector4 operator /(float scalar, const Vector4& vec) { return Vector4(scalar / vec.x, scalar / vec.y, scalar / vec.z, scalar / vec.w); }
 inline Vector4 operator +(float scalar, const Vector4& vec) { return Vector4(scalar + vec.x, scalar + vec.y, scalar + vec.z, scalar + vec.w); }
 inline Vector4 operator -(float scalar, const Vector4& vec) { return Vector4(scalar - vec.x, scalar - vec.y, scalar - vec.z, scalar - vec.w); }
+
+inline const Vector4 Vector4::Zero = Vector4(0, 0, 0, 0);
 
 class Vector2Int
 {

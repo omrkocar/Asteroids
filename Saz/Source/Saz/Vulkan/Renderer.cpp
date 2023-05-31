@@ -15,20 +15,6 @@ namespace vulkan
 		: m_Window(window)
 		, m_Device(device)
 	{
-		// TODO OK: Remove Model
-		const std::vector<Vertex> vertices = {
-			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-			{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
-		};
-
-		const std::vector<uint32_t> indices = {
-			0, 1, 2, 2, 3, 0
-		};
-
-		m_Model = std::make_unique<Model>(m_Device, vertices, indices);
-
 		RecreateSwapChain();
 		CreateCommandBuffers();
 
@@ -75,34 +61,77 @@ namespace vulkan
 		}
 	}
 
-
-	void Renderer::DrawFrame()
+	VkCommandBuffer Renderer::BeginFrame()
 	{
 		auto device = m_Device.device();
 		vkWaitForFences(device, 1, &m_InFlightFences[m_CurrentFrame], VK_TRUE, UINT64_MAX);
 
-		uint32_t imageIndex;
 		auto result = vkAcquireNextImageKHR(
-			device, 
-			m_SwapChain->m_SwapChain, 
-			UINT64_MAX, 
-			m_ImageAvailableSemaphores[m_CurrentFrame], 
-			VK_NULL_HANDLE, 
-			&imageIndex);
+			device,
+			m_SwapChain->m_SwapChain,
+			UINT64_MAX,
+			m_ImageAvailableSemaphores[m_CurrentFrame],
+			VK_NULL_HANDLE,
+			&m_ImageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_Window.HasResized())
 		{
 			RecreateSwapChain();
 			m_Window.SetResized(false);
-			return;
+			return nullptr;
 		}
 
 		SAZ_CORE_ASSERT(result == VK_SUCCESS, "Failed to acquire swap chain image!");
 
 		vkResetFences(device, 1, &m_InFlightFences[m_CurrentFrame]);
 
-		vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
-		RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex);
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+		auto commandBuffer = GetCurrentCommandBuffer();
+		// this also implicitly resets the previously recorded buffer if any.
+		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
+			SAZ_CORE_ASSERT(false, "Failed to begin recording command buffer!");
+
+		return commandBuffer;
+	}
+
+	void Renderer::BeginSwapChainRenderPass(VkCommandBuffer commandBuffer)
+	{
+		m_Pipeline->Bind(commandBuffer);
+
+		VkRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = m_SwapChain->m_RenderPass;
+		renderPassInfo.framebuffer = m_SwapChain->GetFrameBuffer(m_ImageIndex);
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = { (uint32_t)m_SwapChain->m_Extent.x, (uint32_t)m_SwapChain->m_Extent.y };
+
+		VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
+		renderPassInfo.clearValueCount = 1;
+		renderPassInfo.pClearValues = &clearColor;
+
+		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(m_SwapChain->m_Extent.x);
+		viewport.height = static_cast<float>(m_SwapChain->m_Extent.y);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		VkRect2D scissor{ {0, 0}, { static_cast<uint32_t>(m_SwapChain->m_Extent.x), static_cast<uint32_t>(m_SwapChain->m_Extent.y) } };
+		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+	}
+
+	void Renderer::EndFrame()
+	{
+		auto commandBuffer = GetCurrentCommandBuffer();
+		vkCmdEndRenderPass(commandBuffer);
+
+		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+			SAZ_CORE_ASSERT(false, "Failed to record command buffer!");
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -131,7 +160,7 @@ namespace vulkan
 		VkSwapchainKHR swapChains[] = { m_SwapChain->m_SwapChain };
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapChains;
-		presentInfo.pImageIndices = &imageIndex;
+		presentInfo.pImageIndices = &m_ImageIndex;
 
 		vkQueuePresentKHR(m_Device.m_PresentQueue, &presentInfo);
 
@@ -171,50 +200,6 @@ namespace vulkan
 			SAZ_CORE_ASSERT(false, "Failed to allocate command buffers!");
 	}
 
-	void Renderer::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
-	{
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-		// this also implicitly resets the previously recorded buffer if any.
-		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
-			SAZ_CORE_ASSERT(false, "Failed to begin recording command buffer!");
-
-		VkRenderPassBeginInfo renderPassInfo{};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_SwapChain->m_RenderPass;
-		renderPassInfo.framebuffer = m_SwapChain->GetFrameBuffer(imageIndex);
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = { (uint32_t)m_SwapChain->m_Extent.x, (uint32_t)m_SwapChain->m_Extent.y };
-
-		VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
-
-		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_SwapChain->m_Extent.x);
-		viewport.height = static_cast<float>(m_SwapChain->m_Extent.y);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		VkRect2D scissor{ {0, 0}, { static_cast<uint32_t>(m_SwapChain->m_Extent.x), static_cast<uint32_t>(m_SwapChain->m_Extent.y) } };
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline->m_GraphicsPipeline);
-
-		m_Model->Bind(commandBuffer);
-		m_Model->Draw(commandBuffer);
-
-		vkCmdEndRenderPass(commandBuffer);
-
-		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-			SAZ_CORE_ASSERT(false, "Failed to record command buffer!");
-	}
-
 	void Renderer::CreateSyncObjects()
 	{
 		int maxFramesInFlight = s_MaxFramesInFlight;
@@ -237,6 +222,11 @@ namespace vulkan
 				vkCreateFence(device, &fenceInfo, nullptr, &m_InFlightFences[i]) != VK_SUCCESS)
 				SAZ_CORE_ASSERT(false, "failed to create semaphores!");
 		}
+	}
+
+	VkCommandBuffer Renderer::GetCurrentCommandBuffer() const
+	{
+		return m_CommandBuffers[m_CurrentFrame];
 	}
 
 }

@@ -51,8 +51,8 @@ namespace Saz
 
 	protected:
 		std::unique_ptr<WindowsWindow> m_Window = nullptr;
-		std::unique_ptr<vulkan::Device> m_Device = nullptr;
-		std::unique_ptr<vulkan::Renderer> m_Renderer = nullptr;
+		vulkan::Device* m_Device = nullptr;
+		vulkan::Renderer* m_Renderer = nullptr;
 		ImGuiLayer* m_ImGuiLayer;
 		LayerStack m_LayerStack;
 

@@ -23,7 +23,7 @@ namespace vulkan
 	class Model
 	{
 	public:
-		Model(Device& device, const DynamicArray<Vertex>& vertices, const DynamicArray<uint32_t>& indices);
+		Model(Device& device, const DynamicArray<Vertex>& vertices, const DynamicArray<uint32_t>& indices = {});
 		~Model();
 
 		void CreateVertexBuffer(const DynamicArray<Vertex>& vertices);

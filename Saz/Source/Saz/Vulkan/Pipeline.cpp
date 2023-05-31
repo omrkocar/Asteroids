@@ -88,6 +88,11 @@ namespace vulkan
 		config.dynamicStateInfo.pDynamicStates = config.dynamicStateEnables.data();
 	}
 
+	void Pipeline::Bind(VkCommandBuffer commandBuffer)
+	{
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+	}
+
 	void Pipeline::CreateGraphicsPipeline(VkDevice device, const PipelineConfig& config)
 	{
 		auto vertShaderCode = ReadFile("../Data/SimpleShader.vert.spv");

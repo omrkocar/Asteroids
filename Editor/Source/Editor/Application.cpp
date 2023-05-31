@@ -34,15 +34,11 @@ Application::~Application()
 void Application::Init()
 {
 	Saz::Application::Init();
-
-	m_World.Init();
 }
 
 void Application::Shutdown()
 {
 	Saz::Application::Shutdown();
-
-	m_World.Destroy();
 }
  
 void Application::Register()
@@ -69,7 +65,7 @@ void Application::Register()
 	m_World.RegisterSystem<ecs::SceneSystem>();
 	m_World.RegisterSystem<ecs::WorldOutliner>();
 	m_World.RegisterSystem<ecs::ProjectSettingsWindow>();
-	m_World.RegisterSystem<ecs::RenderSystem>();
+	//m_World.RegisterSystem<ecs::RenderSystem>();
 
 }
 

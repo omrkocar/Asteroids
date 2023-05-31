@@ -9,7 +9,6 @@ namespace vulkan
 { 
 	class Pipeline;
 	class SwapChain;
-	class Model;
 }
 
 namespace vulkan
@@ -24,13 +23,16 @@ namespace vulkan
 		Renderer(const Renderer&) = delete;
 		Renderer& operator=(const Renderer&) = delete;
 
-		void DrawFrame();
+		VkCommandBuffer BeginFrame();
+		void BeginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+
+		void EndFrame();
 
 	private:
 		void RecreateSwapChain();
 		void CreateCommandBuffers();
-		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 		void CreateSyncObjects();
+		VkCommandBuffer GetCurrentCommandBuffer() const;
 
 	private:
 		Saz::WindowsWindow& m_Window;
@@ -45,8 +47,7 @@ namespace vulkan
 
 		DynamicArray<VkCommandBuffer> m_CommandBuffers;
 
-		std::unique_ptr<Model> m_Model = nullptr;
-
 		uint32_t m_CurrentFrame = 0;
+		uint32_t m_ImageIndex = 0;
 	};
 }
